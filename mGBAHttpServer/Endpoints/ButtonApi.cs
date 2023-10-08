@@ -16,7 +16,7 @@ namespace mGBAHttpServer.Endpoints
 
             group.MapPost("/", async (SocketService socket, KeysEnum key) =>
             {
-                await socket.SendMessage(key.ToString());
+                await socket.SendMessage(new MessageModel("button", key.ToString()));
             });            
 
             return group;

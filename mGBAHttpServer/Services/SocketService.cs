@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using mGBAHttpServer.Models;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -15,12 +15,10 @@ namespace mGBAHttpServer.Services
         public SocketService() {
             var ipAddress = IPAddress.Parse("127.0.0.1");
             _tcpEndPoint = new(ipAddress, 8888);
-
-            // https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/sockets/socket-services
             _tcpSocket = new(_tcpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         }
 
-        public async Task SendMessage(string message)
+        public async Task SendMessage(MessageModel message)
         {
             if (!_isConnected)
             {
@@ -28,7 +26,7 @@ namespace mGBAHttpServer.Services
                 _isConnected = true;
             }
 
-            var messageBytes = Encoding.UTF8.GetBytes(message);
+            var messageBytes = Encoding.UTF8.GetBytes(message.ToString());
             _ = await _tcpSocket.SendAsync(messageBytes, SocketFlags.None);
 
             var buffer = new byte[1_024];
@@ -38,8 +36,8 @@ namespace mGBAHttpServer.Services
 
         public void Dispose()
         {
-            // https://twitter.com/Nick_Craver/status/1551578701564977153
             _tcpSocket?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
