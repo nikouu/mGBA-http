@@ -18,7 +18,7 @@ namespace mGBAHttpServer.Services
             _tcpSocket = new(_tcpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         }
 
-        public async Task SendMessage(MessageModel message)
+        public async Task<string> SendMessage(MessageModel message)
         {
             if (!_isConnected)
             {
@@ -32,6 +32,8 @@ namespace mGBAHttpServer.Services
             var buffer = new byte[1_024];
             var received = await _tcpSocket.ReceiveAsync(buffer, SocketFlags.None);
             var response = Encoding.UTF8.GetString(buffer, 0, received);
+
+            return response;
         }
 
         public void Dispose()

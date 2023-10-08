@@ -51,22 +51,21 @@ function SocketReceived(id)
 	if not sock then return end
 	while true do
 		local message, error = sock:receive(1024)
+	
 		console:log("SocketReceived 2")
 		if message then
 			console:log("SocketReceived 3")
 			console:log(FormatMessage(id, message:match("^(.-)%s*$")))
 			console:log(message:match("^(.-)%s*$"))
 			
-			--press_key(3)
-			--emu:clearKey(3)
-
-			MessageRouter(message:match("^(.-)%s*$"))
-
+			-- it seems that the value must be non-empty in order to actually send back?
+			-- thus the ACK message default
+			local returnValue = MessageRouter(message:match("^(.-)%s*$"))
+			sock:send(returnValue)
 		else
-			sock:send("<|ACK|>")
-			console:log("SocketReceived 4")
+			-- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
 			if error ~= socket.ERRORS.AGAIN then
-				console:log("SocketReceived 5")
+				console:log("SocketReceived 4")
 				console:error(FormatMessage(id, error, true))
 				SocketStop(id)
 			end
@@ -100,16 +99,86 @@ end
 -- Message Router
 -- ***********************
 
-function MessageRouter(rawMessage)
-	local messageType, messageValue = rawMessage:match("([^,]+),([^,]+)")
+function MessageRouter(rawMessage)	
+	local messageType, messageValue = rawMessage:match("([^,]*),([^,]*)")
+	local returnValue = "<|ACK|>";
 
-	if messageType == "button" then press_key(messageValue)
+	console:log("MessageRouter: " .. rawMessage .. " messageType: " .. (messageType or "") .. " messageValue: " .. (messageValue or ""))
+
+	if messageType == "custom.button" then press_key(messageValue)
+	elseif messageType == "core.addkey" then AddKey(messageValue)
+	elseif messageType == "core.addkeys" then emu:addKeys(messageValue)
+	elseif messageType == "core.autoloadsave" then returnValue = emu:autoloadSave()
+	elseif messageType == "core.checksum" then returnValue = emu:checksum(C.CHECKSUM.CRC32)
+	elseif messageType == "core.clearkey" then emu:clearKey(messageValue)
+	elseif messageType == "core.clearKeys" then emu:clearKeys(messageValue)
+	elseif messageType == "core.currentframe" then returnValue = emu:currentFrame()
+	elseif messageType == "core.framecycles" then returnValue = emu:frameCycles()
+	elseif messageType == "core.frequency" then returnValue = emu:frequency()
+	elseif messageType == "core.getgamecode" then returnValue = emu:getGameCode()
+	elseif messageType == "core.getgametitle" then returnValue = emu:getGameTitle()
+	elseif messageType == "core.getkey" then returnValue = emu:getKey(messageValue)
+	elseif messageType == "core.getkeys" then returnValue = emu:getKeys()
+	elseif messageType == "core.loadfile" then returnValue = emu:loadFile(messageValue)
+	
+	--[[	
+	TODO: work out how to cleanly deal with multiple input parameters
+	elseif messageType == "loadsavefile" then returnValue = emu:loadSaveFile(path, temporary)
+	elseif messageType == "loadstatebuffer" then returnValue = emu:loadStateBuffer(buffer, flags)
+	elseif messageType == "loadstatefile" then returnValue = emu:loadStateFile(path, flags)
+	elseif messageType == "loadstateslot" then returnValue = emu:loadStateSlot(slot, flags)
+	elseif messageType == "readrange" then returnValue = emu:readRange(address, length)
+	elseif messageType == "savestatefile" then returnValue = emu:saveStateFile(path, flags)
+	elseif messageType == "savestateslot" then returnValue = emu:saveStateSlot(path, flags)
+	elseif messageType == "write16" then returnValue = emu:write16(address, value)
+	elseif messageType == "write32" then returnValue = emu:write32(address, value)
+	elseif messageType == "write8" then returnValue = emu:write8(address, value)
+	elseif messageType == "writeregister" then returnValue = emu:writeRegister(regName, value)
+	--]]
+
+	elseif messageType == "core.platform" then returnValue = emu:platform()
+	elseif messageType == "core.read16" then returnValue = emu:read16(messageValue)
+	elseif messageType == "core.read32" then returnValue = emu:read32(messageValue)
+	elseif messageType == "core.read8" then returnValue = emu:read8(messageValue)	
+	elseif messageType == "core.readregister" then returnValue = emu:readRegister(messageValue)
+	elseif messageType == "core.reset" then emu:reset()
+	elseif messageType == "core.romsize" then emu:romSize()
+	elseif messageType == "core.runFrame" then emu:runFrame()
+	elseif messageType == "core.savestatebuffer" then emu:saveStateBuffer(messageValue)
+	elseif messageType == "core.screenshot" then emu:screenshot(messageValue)
+	elseif messageType == "core.setkeys" then emu:setKeys(messageValue)
+	elseif messageType == "core.step" then emu:step()
+
+	--elseif messageType == "createbuffer" then console:createBuffer(messageValue)
+	elseif messageType == "console.error" then console:error(messageValue)
+	elseif messageType == "console.log" then console:log(messageValue)
+	elseif messageType == "console.warn" then console:warn(messageValue)
+
+	-- TODO: check if this is the correct syntax
+	elseif messageType == "coreadapter.reset" then CoreAdapter:reset()
+
+	-- continue with memorydomain
+
 	else console:log(rawMessage)
 	end
+
+	console:log("Returning: " .. returnValue)
+	return returnValue;
 end
 
 -- ***********************
--- Keys
+-- Core
+-- ***********************
+
+function AddKey(keyLetter)
+	local key = keyValues[keyLetter];
+	emu:addKey(key)
+end
+
+
+
+-- ***********************
+-- Button (Convenience abstraction)
 -- ***********************
 
 local keyValues = {

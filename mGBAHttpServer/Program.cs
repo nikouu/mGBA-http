@@ -19,5 +19,7 @@ app.UseSwaggerUI(options =>
 });
 
 app.MapButtonEndpoints();
+app.MapCoreEndpoints();
+app.MapConsoleEndpoints();
 
 app.Run();
