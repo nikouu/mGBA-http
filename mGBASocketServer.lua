@@ -1,17 +1,92 @@
-lastkeys = nil
+-- ***********************
+-- Sockets
+-- ***********************
+
 server = nil
-ST_sockets = {}
+socketList = {}
 nextID = 1
+local port = 8888
 
-local KEY_NAMES = { "A", "B", "s", "S", "<", ">", "^", "v", "R", "L" }
+function BeginSocket()
+	while not server do
+		server, error = socket.bind(nil, port)
+		if error then
+			if error == socket.ERRORS.ADDRESS_IN_USE then
+				port = port + 1
+			else
+				console:error(FormatMessage("Bind", error, true))
+				break
+			end
+		else
+			local ok
+			ok, error = server:listen()
+			if error then
+				server:close()
+				console:error(FormatMessage("Listen", error, true))
+			else
+				console:log("Socket Server Test: Listening on port " .. port)
+				server:add("received", SocketAccept)
+			end
+		end
+	end
+end
 
-function ST_stop(id)
-	local sock = ST_sockets[id]
-	ST_sockets[id] = nil
+function SocketAccept()
+	local sock, error = server:accept()
+	if error then
+		console:error(FormatMessage("Accept", error, true))
+		return
+	end
+	local id = nextID
+	nextID = id + 1
+	socketList[id] = sock
+	sock:add("received", function() SocketReceived(id) end)
+	sock:add("error", function() SocketError(id) end)
+	console:log(FormatMessage(id, "Connected"))
+end
+
+function SocketReceived(id)
+	console:log("SocketReceived 1")
+	local sock = socketList[id]
+	if not sock then return end
+	while true do
+		local message, error = sock:receive(1024)
+		console:log("SocketReceived 2")
+		if message then
+			console:log("SocketReceived 3")
+			console:log(FormatMessage(id, message:match("^(.-)%s*$")))
+			console:log(message:match("^(.-)%s*$"))
+			
+			--press_key(3)
+			--emu:clearKey(3)
+
+			MessageRouter(message:match("^(.-)%s*$"))
+
+		else
+			sock:send("<|ACK|>")
+			console:log("SocketReceived 4")
+			if error ~= socket.ERRORS.AGAIN then
+				console:log("SocketReceived 5")
+				console:error(FormatMessage(id, error, true))
+				SocketStop(id)
+			end
+			return
+		end
+	end
+end
+
+function SocketStop(id)
+	local sock = socketList[id]
+	socketList[id] = nil
 	sock:close()
 end
 
-function ST_format(id, msg, isError)
+function SocketError(id, error)
+	console:error(FormatMessage(id, error, true))
+	SocketStop(id)
+end
+
+function FormatMessage(id, msg, isError)
 	local prefix = "Socket " .. id
 	if isError then
 		prefix = prefix .. " Error: "
@@ -21,52 +96,34 @@ function ST_format(id, msg, isError)
 	return prefix .. msg
 end
 
-function ST_error(id, err)
-	console:error(ST_format(id, err, true))
-	ST_stop(id)
-end
+-- ***********************
+-- Message Router
+-- ***********************
 
-function ST_received(id)
-	console:log("ST_received 1")
-	local sock = ST_sockets[id]
-	if not sock then return end
-	while true do
-		local p, err = sock:receive(1024)
-		console:log("ST_received 2")
-		if p then
-			console:log("ST_received 3")
-			console:log(ST_format(id, p:match("^(.-)%s*$")))
-			console:log(p:match("^(.-)%s*$"))
-			
-			press_key(3)
-			--emu:clearKey(3)
+function MessageRouter(rawMessage)
+	local messageType, messageValue = rawMessage:match("([^,]+),([^,]+)")
 
-		else
-			sock:send("<|ACK|>")
-			console:log("ST_received 4")
-			if err ~= socket.ERRORS.AGAIN then
-				console:log("ST_received 5")
-				console:error(ST_format(id, err, true))
-				ST_stop(id)
-			end
-			return
-		end
+	if messageType == "button" then press_key(messageValue)
+	else console:log(rawMessage)
 	end
 end
 
-function ST_accept()
-	local sock, err = server:accept()
-	if err then
-		console:error(ST_format("Accept", err, true))
-		return
-	end
-	local id = nextID
-	nextID = id + 1
-	ST_sockets[id] = sock
-	sock:add("received", function() ST_received(id) end)
-	sock:add("error", function() ST_error(id) end)
-	console:log(ST_format(id, "Connected"))
-end
+-- ***********************
+-- Keys
+-- ***********************
+
+local keyValues = {
+    ["A"] = 0,
+    ["B"] = 1,
+    ["Select"] = 2,
+    ["Start"] = 3,
+    ["Right"] = 4,
+    ["Left"] = 5,
+    ["Up"] = 6,
+    ["Down"] = 7,
+    ["R"] = 8,
+    ["L"] = 9
+}
 
 -- code via ZachHandley
 -- https://discord.com/channels/453962671499509772/979634439237816360/1124075643143995522
@@ -81,7 +138,7 @@ function updateKeys()
     if head ~= tail then
         -- Get the key press at the head of the queue
         local keyPress = keyQueue[head]
-        console:log("currentFrame: " .. emu:currentFrame() .. "startFrame: " .. keyPress.startFrame .. " endFrame: " .. keyPress.endFrame .. " key: " .. keyPress.key)
+        --console:log("currentFrame: " .. emu:currentFrame() .. "startFrame: " .. keyPress.startFrame .. " endFrame: " .. keyPress.endFrame .. " key: " .. keyPress.key)
         -- Check if the current frame is within the key press duration
         if emu:currentFrame() >= keyPress.startFrame and emu:currentFrame() <= keyPress.endFrame and not keyPress.keyPressed then
             -- If the current frame is within the key press duration, press the key
@@ -113,35 +170,16 @@ function pressKey(key, duration)
     totalDuration = totalDuration + duration
 end
 
-function press_key(key)
-    pressKey(key, 10)
+function press_key(keyLetter)
+	local key = keyValues[keyLetter];
+    pressKey(key, 15)
     LastKey = key
 end
 
-
 callbacks:add("frame", updateKeys)
 
+-- ***********************
+-- Start
+-- ***********************
 
-local port = 8888
-server = nil
-while not server do
-	server, err = socket.bind(nil, port)
-	if err then
-		if err == socket.ERRORS.ADDRESS_IN_USE then
-			port = port + 1
-		else
-			console:error(ST_format("Bind", err, true))
-			break
-		end
-	else
-		local ok
-		ok, err = server:listen()
-		if err then
-			server:close()
-			console:error(ST_format("Listen", err, true))
-		else
-			console:log("Socket Server Test: Listening on port " .. port)
-			server:add("received", ST_accept)
-		end
-	end
-end
+BeginSocket()
