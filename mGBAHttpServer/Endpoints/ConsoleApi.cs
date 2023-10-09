@@ -12,17 +12,17 @@ namespace mGBAHttpServer.Endpoints
 
             group.MapPost("/error", async (SocketService socket, string message) =>
             {
-                await socket.SendMessage(new MessageModel("console.error", message));
+                await socket.SendMessageAsync(new MessageModel("console.error", message));
             });
 
             group.MapPost("/log", async (SocketService socket, string message) =>
             {
-                await socket.SendMessage(new MessageModel("console.log", message));
+                await socket.SendMessageAsync(new MessageModel("console.log", message));
             });
 
             group.MapPost("/warn", async (SocketService socket, string message) =>
             {
-                await socket.SendMessage(new MessageModel("console.warn", message));
+                await socket.SendMessageAsync(new MessageModel("console.warn", message));
             });
 
             return group;

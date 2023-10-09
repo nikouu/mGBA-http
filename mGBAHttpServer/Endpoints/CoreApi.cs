@@ -16,12 +16,13 @@ namespace mGBAHttpServer.Endpoints
 
             group.MapGet("/checksum", async (SocketService socket) =>
             {
-                return await socket.SendMessage(new MessageModel("core.checksum"));
+                return await socket.SendMessageAsync(new MessageModel("core.checksum"));
             });
 
             group.MapGet("/currentFrame", async (SocketService socket) =>
             {
-                return await socket.SendMessage(new MessageModel("core.currentframe"));
+                var g = await socket.SendMessageAsync(new MessageModel("core.currentframe"));
+                return g;
             });
 
             return group;
