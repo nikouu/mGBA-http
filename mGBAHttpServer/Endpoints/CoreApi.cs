@@ -21,8 +21,7 @@ namespace mGBAHttpServer.Endpoints
 
             group.MapGet("/currentFrame", async (SocketService socket) =>
             {
-                var g = await socket.SendMessageAsync(new MessageModel("core.currentframe"));
-                return g;
+                return await socket.SendMessageAsync(new MessageModel("core.currentframe"));
             });
 
             return group;

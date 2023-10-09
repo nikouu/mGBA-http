@@ -7,14 +7,10 @@ namespace mGBAHttpServer.Services
 {
     public class SocketService : IDisposable
     {
-        // TODO: this isn't a correct way to check if mGBA has closed the connection 
-        // Reconnecting after an Scripting > File > Reset seems to be difficult. Maybe mGBA doesn't
-        // successfully drop the socket?
         private bool _isConnected = false;
         private readonly IPEndPoint _tcpEndPoint;
         private readonly Socket _tcpSocket;
         private const int _maxRetries = 3;
-        private int _retryAttempts = 0;
 
         public SocketService()
         {
@@ -25,13 +21,7 @@ namespace mGBAHttpServer.Services
 
         public async Task<string> SendMessageAsync(MessageModel message)
         {
-            if (_retryAttempts > 3)
-            {
-                throw new Exception();
-            }
-
             var response = "";
-
             for (int i = 0; i < _maxRetries; i++)
             {
                 try
@@ -52,8 +42,14 @@ namespace mGBAHttpServer.Services
                 }
                 catch (SocketException ex) when (ex.NativeErrorCode.Equals(10053))
                 {
+                    // Maybe mGBA closes the socket but doesn't inform the other side?
+                    // Like how client.Shutdown(SocketShutdown.Both) in C# would
                     _tcpSocket.Disconnect(true);
-                    _isConnected = false;                    
+                    _isConnected = false;
+                }
+                catch (Exception ex)
+                {
+                    throw;
                 }
             }
 
