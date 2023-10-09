@@ -1,1 +1,1 @@
-dotnet publish .\mGBAHttpServer.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:TrimMode=full -p:DebugType=embedded -p:IncludeAllContentForSelfExtract=true --self-contained true
+dotnet publish .\mGBAHttpServer.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:TrimMode=partial -p:DebugType=embedded -p:PublishTrimmed=true -p:IncludeAllContentForSelfExtract=true --self-contained true 
