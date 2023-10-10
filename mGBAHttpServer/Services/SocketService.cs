@@ -47,7 +47,7 @@ namespace mGBAHttpServer.Services
                     _tcpSocket.Disconnect(true);
                     _isConnected = false;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     throw;
                 }
