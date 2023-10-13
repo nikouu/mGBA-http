@@ -1,10 +1,10 @@
 ﻿namespace mGBAHttpServer.Models
 {
-    public record struct MessageModel(string Type, string Value = "")
+    public record struct MessageModel(string Type, string Value1 = "", string Value2 = "")
     {
-        public override string ToString()
+        public override readonly string ToString()
         {
-            return $"{Type},{Value}";
+            return $"{Type},{Value1},{Value2}";
         }
     }
 }

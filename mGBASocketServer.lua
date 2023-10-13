@@ -100,26 +100,31 @@ end
 -- ***********************
 
 function MessageRouter(rawMessage)	
-	local messageType, messageValue = rawMessage:match("([^,]*),([^,]*)")
+	local parsedInput = splitStringToTable(rawMessage, ",")
+
+	local messageType = parsedInput[1]
+	local messageValue1 = parsedInput[2]
+	local messageValue2 = parsedInput[3]
+	
 	local returnValue = "<|ACK|>";
 
-	console:log("MessageRouter: " .. rawMessage .. " messageType: " .. (messageType or "") .. " messageValue: " .. (messageValue or ""))
+	console:log("MessageRouter: " .. rawMessage .. " messageType: " .. (messageType or "") .. " messageValue1: " .. (messageValue1 or "") .. " messageValue2: " .. (messageValue2 or ""))
 
-	if messageType == "custom.button" then press_key(messageValue)
-	elseif messageType == "core.addkey" then AddKey(messageValue)
-	elseif messageType == "core.addkeys" then emu:addKeys(messageValue)
+	if messageType == "custom.button" then press_key(messageValue1)
+	elseif messageType == "core.addkey" then AddKey(messageValue1)
+	elseif messageType == "core.addkeys" then emu:addKeys(messageValue1)
 	elseif messageType == "core.autoloadsave" then returnValue = emu:autoloadSave()
 	elseif messageType == "core.checksum" then returnValue = emu:checksum(C.CHECKSUM.CRC32)
-	elseif messageType == "core.clearkey" then emu:clearKey(messageValue)
-	elseif messageType == "core.clearKeys" then emu:clearKeys(messageValue)
+	elseif messageType == "core.clearkey" then emu:clearKey(messageValue1)
+	elseif messageType == "core.clearKeys" then emu:clearKeys(messageValue1)
 	elseif messageType == "core.currentframe" then returnValue = emu:currentFrame()
 	elseif messageType == "core.framecycles" then returnValue = emu:frameCycles()
 	elseif messageType == "core.frequency" then returnValue = emu:frequency()
 	elseif messageType == "core.getgamecode" then returnValue = emu:getGameCode()
 	elseif messageType == "core.getgametitle" then returnValue = emu:getGameTitle()
-	elseif messageType == "core.getkey" then returnValue = emu:getKey(messageValue)
+	elseif messageType == "core.getkey" then returnValue = emu:getKey(messageValue1)
 	elseif messageType == "core.getkeys" then returnValue = emu:getKeys()
-	elseif messageType == "core.loadfile" then returnValue = emu:loadFile(messageValue)
+	elseif messageType == "core.loadfile" then returnValue = emu:loadFile(messageValue1)
 	
 	--[[	
 	TODO: work out how to cleanly deal with multiple input parameters
@@ -137,27 +142,33 @@ function MessageRouter(rawMessage)
 	--]]
 
 	elseif messageType == "core.platform" then returnValue = emu:platform()
-	elseif messageType == "core.read16" then returnValue = emu:read16(messageValue)
-	elseif messageType == "core.read32" then returnValue = emu:read32(messageValue)
-	elseif messageType == "core.read8" then returnValue = emu:read8(messageValue)	
-	elseif messageType == "core.readregister" then returnValue = emu:readRegister(messageValue)
+	elseif messageType == "core.read16" then returnValue = emu:read16(messageValue1)
+	elseif messageType == "core.read32" then returnValue = emu:read32(messageValue1)
+	elseif messageType == "core.read8" then returnValue = emu:read8(messageValue1)	
+	elseif messageType == "core.readregister" then returnValue = emu:readRegister(messageValue1)
 	elseif messageType == "core.reset" then emu:reset()
 	elseif messageType == "core.romsize" then emu:romSize()
 	elseif messageType == "core.runFrame" then emu:runFrame()
-	elseif messageType == "core.savestatebuffer" then emu:saveStateBuffer(messageValue)
-	elseif messageType == "core.screenshot" then emu:screenshot(messageValue)
-	elseif messageType == "core.setkeys" then emu:setKeys(messageValue)
+	elseif messageType == "core.savestatebuffer" then emu:saveStateBuffer(messageValue1)
+	elseif messageType == "core.screenshot" then emu:screenshot(messageValue1)
+	elseif messageType == "core.setkeys" then emu:setKeys(messageValue1)
 	elseif messageType == "core.step" then emu:step()
 
-	--elseif messageType == "createbuffer" then console:createBuffer(messageValue)
-	elseif messageType == "console.error" then console:error(messageValue)
-	elseif messageType == "console.log" then console:log(messageValue)
-	elseif messageType == "console.warn" then console:warn(messageValue)
+	--elseif messageType == "createbuffer" then console:createBuffer(messageValue1)
+	elseif messageType == "console.error" then console:error(messageValue1)
+	elseif messageType == "console.log" then console:log(messageValue1)
+	elseif messageType == "console.warn" then console:warn(messageValue1)
 
 	-- TODO: check if this is the correct syntax
 	elseif messageType == "coreadapter.reset" then CoreAdapter:reset()
 
-	-- continue with memorydomain
+	elseif messageType == "memorydomain.gameboyadvance.base" then returnValue = emu.memory[messageValue1]:base()
+	elseif messageType == "memorydomain.gameboyadvance.bound" then returnValue = emu.memory[messageValue1]:bound()
+	elseif messageType == "memorydomain.gameboyadvance.name" then returnValue = emu.memory[messageValue1]:name()
+	elseif messageType == "memorydomain.gameboyadvance.read16" then returnValue = emu.memory[messageValue1]:read16(tonumber(messageValue2))
+	elseif messageType == "memorydomain.gameboyadvance.read32" then returnValue = emu.memory[messageValue1]:read32(tonumber(messageValue2))
+	elseif messageType == "memorydomain.gameboyadvance.read8" then returnValue = emu.memory[messageValue1]:read8(tonumber(messageValue2))
+	elseif messageType == "memorydomain.gameboyadvance.size" then returnValue = emu.memory[messageValue1]:size()
 
 	else console:log(rawMessage)
 	end
@@ -174,8 +185,6 @@ function AddKey(keyLetter)
 	local key = keyValues[keyLetter];
 	emu:addKey(key)
 end
-
-
 
 -- ***********************
 -- Button (Convenience abstraction)
@@ -248,7 +257,49 @@ end
 callbacks:add("frame", updateKeys)
 
 -- ***********************
+-- MemoryDomain
+-- ***********************
+
+function memoryDomainGameboyAdvance(messageType, domain, value)
+	console:log("moasmdoasd")
+	if string.find(messageType, ".base") then return emu.memory[domain]:base()
+	elseif string.find(messageType, ".bound") then return emu.memory[domain]:bound()
+	elseif string.find(messageType, ".name") then return emu.memory[domain]:name()
+	end
+	
+	return "lmapo3"
+end
+
+-- ***********************
+-- Utility
+-- ***********************
+
+function splitStringToTable(inputstr, sep)
+    if sep == nil then
+        sep = "%s"
+    end
+    local t={}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+        table.insert(t, str)
+    end
+    return t
+end
+
+function numberStringToHex(string)
+	return string.format('%x', tonumber(string, 16))
+end
+
+-- ***********************
 -- Start
 -- ***********************
+
+--local read = emu:read8(0x00000000)
+--local read2 = emu.memory.vram:base()
+-- local read2 = emu.memory["vram"]:read8(0x00000000)
+--local read2= emu.memory["bios"]:name()
+local read2 = emu.memory["bios"]:read16(tonumber("0x7DE"))
+console:log("" .. read2)
+
+--console:log(emu:memory.currentFrame())
 
 BeginSocket()

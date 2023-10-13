@@ -85,25 +85,25 @@ namespace mGBAHttpServer.Endpoints
                 return await socket.SendMessageAsync(new MessageModel("core.platform"));
             });
 
-            group.MapGet("/read16", async (SocketService socket, string address) =>
-            {
-                return await socket.SendMessageAsync(new MessageModel("core.read16", address));
-            });
+            //group.MapGet("/read16", async (SocketService socket, string address) =>
+            //{
+            //    return await socket.SendMessageAsync(new MessageModel("core.read16", address));
+            //});
 
-            group.MapGet("/read32", async (SocketService socket, string address) =>
-            {
-                return await socket.SendMessageAsync(new MessageModel("core.read32", address));
-            });
+            //group.MapGet("/read32", async (SocketService socket, string address) =>
+            //{
+            //    return await socket.SendMessageAsync(new MessageModel("core.read32", address));
+            //});
 
-            group.MapGet("/read8", async (SocketService socket, string address) =>
-            {
-                return await socket.SendMessageAsync(new MessageModel("core.read8", address));
-            });
+            //group.MapGet("/read8", async (SocketService socket, string address) =>
+            //{
+            //    return await socket.SendMessageAsync(new MessageModel("core.read8", address));
+            //});
 
-            group.MapGet("/readregister", async (SocketService socket, string regName) =>
-            {
-                return await socket.SendMessageAsync(new MessageModel("core.readregister", regName));
-            });
+            //group.MapGet("/readregister", async (SocketService socket, string regName) =>
+            //{
+            //    return await socket.SendMessageAsync(new MessageModel("core.readregister", regName));
+            //});
 
             group.MapPost("/reset", async (SocketService socket) =>
             {
