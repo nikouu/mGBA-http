@@ -2,6 +2,12 @@
 
 mGBA-http exposes the mGBA scripting API via HTTP REST. So as long as you make HTTP requests, you'll be able to interact with mGBA. 
 
+This project is great if you want to:
+- Create a "Twitch Plays" 
+- Write an AI bot in your preferred programming language
+- Create an information dashboard for the current game (e.g. show your current Pokémon's stats at all time)
+- Modify the running game
+
 ## Quick Installation
 mGBA-http works with 0.10.2 of mGBA.
 
@@ -13,9 +19,7 @@ For the full guide, see the [full guide doc](docs/FullInstallAndGuide.md).
 
 ## Limitations
 - No frame perfect calls. There is network latency between your application to mGBA-http and again latency between mGBA-http and mGBA. This will not be accurate for frame perfect manipulation and is meant for more general usage such as for "Twitch plays", AI playing bot, or other non frame specific application. For high accuracy manipulation see [Bizhawk](https://tasvideos.org/BizHawk/) which is used for TASBots.
-- The following are not implemented in mGBA-http:
-	- The Socket API
-	- The CallbackManager API
+- Not all scripting calls are implemented. See [ImplementedApis.md](docs/ImplementedApis.md) for the list of what is implemented.
 - When very quickly sending requests, the requests may queue and be actioned on long after the input requests stop. Or in other words, no key inputs are eaten. For example, holding down on the d-pad with original hardware didn't trigger the down action long after d-pad release.
 	- You may want to implement a rate limiter in your code. For instance, only send a request every x milliseconds and ignore input between. 
 
@@ -34,6 +38,8 @@ If there's a problem feel free to start an issue, otherwise see [my about page](
 - The mGBA GitHub team for having socket examples
 - [Zachary Handley](https://zachhandley.com/) for paving the way with [button press code](https://discord.com/channels/453962671499509772/979634439237816360/1124075643143995522)
 - [heroldev/AGB-buttontest](https://github.com/heroldev/AGB-buttontest) for a simple button testing ROM
+
+[References.md](docs/References.md) has useful links during development.
 
 ## Links
 - [mGBA Website](https://mgba.io/)
