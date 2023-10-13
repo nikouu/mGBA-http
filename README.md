@@ -6,16 +6,16 @@ This project is great if you want to:
 - Create a "Twitch Plays" 
 - Write an AI bot in your preferred programming language
 - Create an information dashboard for the current game (e.g. show your current Pokémon's stats at all time)
-- Modify the running game
+- Edit the memory of the running game
 
 ## Quick Installation
 mGBA-http works with 0.10.2 of mGBA.
 
-For the full installation, see the [full installation doc](docs/FullInstallAndGuide.md).
+For the full installation, see the [full installation doc](docs/FullInstallAndUsageGuide.md).
 
-## Quick Guide
+## Quick Usage Guide
 
-For the full guide, see the [full guide doc](docs/FullInstallAndGuide.md).
+For the full guide, see the [full guide doc](docs/FullInstallAndUsageGuide.md).
 
 ## Limitations
 - No frame perfect calls. There is network latency between your application to mGBA-http and again latency between mGBA-http and mGBA. This will not be accurate for frame perfect manipulation and is meant for more general usage such as for "Twitch plays", AI playing bot, or other non frame specific application. For high accuracy manipulation see [Bizhawk](https://tasvideos.org/BizHawk/) which is used for TASBots.
@@ -47,4 +47,4 @@ If there's a problem feel free to start an issue, otherwise see [my about page](
 - [mGBA Discord](https://discord.gg/em2M2sG)
 
 ## License
-
+[MIT](LICENSE)

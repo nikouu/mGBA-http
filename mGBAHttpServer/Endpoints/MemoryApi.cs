@@ -10,41 +10,40 @@ namespace mGBAHttpServer.Endpoints
             var group = routes.MapGroup("/memory");
             group.WithTags("Memory");
 
-            group.MapGet("/gameboyadvance/base", async (SocketService socket, GBAMemoryDomainsEnum memoryDomain) =>
+            group.MapGet("/base", async (SocketService socket, string memoryDomain) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memorydomain.gameboyadvance.base", memoryDomain.ToString()));
+                return await socket.SendMessageAsync(new MessageModel("memorydomain.base", memoryDomain.ToString()));
             });
 
-            group.MapGet("/gameboyadvance/bound", async (SocketService socket, GBAMemoryDomainsEnum memoryDomain) =>
+            group.MapGet("/bound", async (SocketService socket, string memoryDomain) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memorydomain.gameboyadvance.bound", memoryDomain.ToString()));
+                return await socket.SendMessageAsync(new MessageModel("memorydomain.bound", memoryDomain.ToString()));
             });
 
-            group.MapGet("/gameboyadvance/name", async (SocketService socket, GBAMemoryDomainsEnum memoryDomain) =>
+            group.MapGet("/name", async (SocketService socket, string memoryDomain) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memorydomain.gameboyadvance.name", memoryDomain.ToString()));
+                return await socket.SendMessageAsync(new MessageModel("memorydomain.name", memoryDomain.ToString()));
             });
 
-            group.MapGet("/gameboyadvance/read16", async (SocketService socket, GBAMemoryDomainsEnum memoryDomain, string address) =>
+            group.MapGet("/read16", async (SocketService socket, string memoryDomain, string address) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memorydomain.gameboyadvance.read16", memoryDomain.ToString(), address));
+                return await socket.SendMessageAsync(new MessageModel("memorydomain.read16", memoryDomain.ToString(), address));
             });
 
-            group.MapGet("/gameboyadvance/read32", async (SocketService socket, GBAMemoryDomainsEnum memoryDomain, string address) =>
+            group.MapGet("/read32", async (SocketService socket, string memoryDomain, string address) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memorydomain.gameboyadvance.read32", memoryDomain.ToString(), address));
+                return await socket.SendMessageAsync(new MessageModel("memorydomain.read32", memoryDomain.ToString(), address));
             });
 
-            group.MapGet("/gameboyadvance/read8", async (SocketService socket, GBAMemoryDomainsEnum memoryDomain, string address) =>
+            group.MapGet("/read8", async (SocketService socket, string memoryDomain, string address) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memorydomain.gameboyadvance.read8", memoryDomain.ToString(), address));
+                return await socket.SendMessageAsync(new MessageModel("memorydomain.read8", memoryDomain.ToString(), address));
             });
 
-            group.MapGet("/gameboyadvance/size", async (SocketService socket, GBAMemoryDomainsEnum memoryDomain) =>
+            group.MapGet("/size", async (SocketService socket, string memoryDomain) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memorydomain.gameboyadvance.size", memoryDomain.ToString()));
+                return await socket.SendMessageAsync(new MessageModel("memorydomain.size", memoryDomain.ToString()));
             });
-
 
             return group;
         }

@@ -162,13 +162,13 @@ function MessageRouter(rawMessage)
 	-- TODO: check if this is the correct syntax
 	elseif messageType == "coreadapter.reset" then CoreAdapter:reset()
 
-	elseif messageType == "memorydomain.gameboyadvance.base" then returnValue = emu.memory[messageValue1]:base()
-	elseif messageType == "memorydomain.gameboyadvance.bound" then returnValue = emu.memory[messageValue1]:bound()
-	elseif messageType == "memorydomain.gameboyadvance.name" then returnValue = emu.memory[messageValue1]:name()
-	elseif messageType == "memorydomain.gameboyadvance.read16" then returnValue = emu.memory[messageValue1]:read16(tonumber(messageValue2))
-	elseif messageType == "memorydomain.gameboyadvance.read32" then returnValue = emu.memory[messageValue1]:read32(tonumber(messageValue2))
-	elseif messageType == "memorydomain.gameboyadvance.read8" then returnValue = emu.memory[messageValue1]:read8(tonumber(messageValue2))
-	elseif messageType == "memorydomain.gameboyadvance.size" then returnValue = emu.memory[messageValue1]:size()
+	elseif messageType == "memorydomain.base" then returnValue = emu.memory[messageValue1]:base()
+	elseif messageType == "memorydomain.bound" then returnValue = emu.memory[messageValue1]:bound()
+	elseif messageType == "memorydomain.name" then returnValue = emu.memory[messageValue1]:name()
+	elseif messageType == "memorydomain.read16" then returnValue = emu.memory[messageValue1]:read16(tonumber(messageValue2))
+	elseif messageType == "memorydomain.read32" then returnValue = emu.memory[messageValue1]:read32(tonumber(messageValue2))
+	elseif messageType == "memorydomain.read8" then returnValue = emu.memory[messageValue1]:read8(tonumber(messageValue2))
+	elseif messageType == "memorydomain.size" then returnValue = emu.memory[messageValue1]:size()
 
 	else console:log(rawMessage)
 	end
@@ -255,20 +255,6 @@ function press_key(keyLetter)
 end
 
 callbacks:add("frame", updateKeys)
-
--- ***********************
--- MemoryDomain
--- ***********************
-
-function memoryDomainGameboyAdvance(messageType, domain, value)
-	console:log("moasmdoasd")
-	if string.find(messageType, ".base") then return emu.memory[domain]:base()
-	elseif string.find(messageType, ".bound") then return emu.memory[domain]:bound()
-	elseif string.find(messageType, ".name") then return emu.memory[domain]:name()
-	end
-	
-	return "lmapo3"
-end
 
 -- ***********************
 -- Utility
