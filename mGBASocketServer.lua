@@ -115,7 +115,7 @@ function MessageRouter(rawMessage)
 	elseif messageType == "core.addKeys" then emu:addKeys(messageValue1)
 	elseif messageType == "core.autoloadSave" then returnValue = emu:autoloadSave()
 	elseif messageType == "core.checksum" then returnValue = emu:checksum(C.CHECKSUM.CRC32)
-	elseif messageType == "core.clearKey" then emu:clearKey(messageValue1)
+	elseif messageType == "core.clearKey" then ClearKey(messageValue1)
 	elseif messageType == "core.clearKeys" then emu:clearKeys(messageValue1)
 	elseif messageType == "core.currentFrame" then returnValue = emu:currentFrame()
 	elseif messageType == "core.frameCycles" then returnValue = emu:frameCycles()
@@ -178,15 +178,6 @@ function MessageRouter(rawMessage)
 end
 
 -- ***********************
--- Core
--- ***********************
-
-function AddKey(keyLetter)
-	local key = keyValues[keyLetter];
-	emu:addKey(key)
-end
-
--- ***********************
 -- Button (Convenience abstraction)
 -- ***********************
 
@@ -202,6 +193,20 @@ local keyValues = {
     ["R"] = 8,
     ["L"] = 9
 }
+
+-- ***********************
+-- Core
+-- ***********************
+
+function AddKey(keyLetter)
+	local key = keyValues[keyLetter];
+	emu:addKey(key)
+end
+
+function ClearKey(keyLetter)
+	local key = keyValues[keyLetter];
+	emu:clearKey(key)
+end
 
 -- code via ZachHandley
 -- https://discord.com/channels/453962671499509772/979634439237816360/1124075643143995522

@@ -1,6 +1,6 @@
 # mGBA-http
 
-mGBA-http exposes the mGBA scripting API via HTTP REST. So as long as you make HTTP requests, you'll be able to interact with mGBA. 
+An HTTP interface for mGBA scripting. As long as you make HTTP requests, you'll be able to interact with mGBA. 
 
 This project is great if you want to:
 - Create a "Twitch Plays" 
@@ -40,6 +40,8 @@ If there's a problem feel free to start an issue, otherwise see [my about page](
 - [heroldev/AGB-buttontest](https://github.com/heroldev/AGB-buttontest) for a simple button testing ROM
 
 [References.md](docs/References.md) has useful links during development.
+
+This project is not associated to the development or development team of mGBA. I'm just a fan ✌
 
 ## Links
 - [mGBA Website](https://mgba.io/)

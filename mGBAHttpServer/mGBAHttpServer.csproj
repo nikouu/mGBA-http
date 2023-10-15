@@ -4,11 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Version>0.1.0</Version>
   </PropertyGroup>
 
-  <PropertyGroup 
-      Label="Normalise stack trace file locations"
-      Condition="$(BuildingInsideVisualStudio) != 'true'">
+  <PropertyGroup Label="Normalise stack trace file locations" Condition="$(BuildingInsideVisualStudio) != 'true'">
     <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=X:\</PathMap>
   </PropertyGroup>
 

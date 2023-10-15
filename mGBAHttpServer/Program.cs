@@ -1,5 +1,6 @@
 ﻿using mGBAHttpServer.Endpoints;
 using mGBAHttpServer.Services;
+using Microsoft.OpenApi.Models;
 
 Console.Title ="mGBA-http";
 
@@ -19,7 +20,19 @@ Console.WriteLine(
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "mGBA-http",
+        Description = "An HTTP interface for mGBA scripting.",
+        Contact = new OpenApiContact
+        {
+            Name = "GitHub Repository",
+            Url = new Uri("https://github.com/nikouu/mGBA-http/")
+        }
+    });
+});
 builder.Services.AddSingleton<SocketService>();
 
 var app = builder.Build();
