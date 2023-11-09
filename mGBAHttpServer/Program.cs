@@ -44,9 +44,10 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = string.Empty;
 });
 
-app.MapButtonEndpoints();
-app.MapConsoleEndpoints();
 app.MapCoreEndpoints();
-app.MapMemoryEndpoints();
+app.MapConsoleEndpoints();
+app.MapCoreAdapterEndpoints();
+app.MapMemoryDomainEndpoints();
+app.MapButtonEndpoints();
 
 app.Run();

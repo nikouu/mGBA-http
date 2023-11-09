@@ -105,6 +105,7 @@ function MessageRouter(rawMessage)
 	local messageType = parsedInput[1]
 	local messageValue1 = parsedInput[2]
 	local messageValue2 = parsedInput[3]
+	local messageValue3 = parsedInput[4]
 	
 	local returnValue = "<|ACK|>";
 
@@ -124,35 +125,30 @@ function MessageRouter(rawMessage)
 	elseif messageType == "core.getGameTitle" then returnValue = emu:getGameTitle()
 	elseif messageType == "core.getKey" then returnValue = emu:getKey(messageValue1)
 	elseif messageType == "core.getKeys" then returnValue = emu:getKeys()
-	elseif messageType == "core.loadSaveFile" then returnValue = emu:loadFile(messageValue1)
-	
-	--[[	
-	TODO: work out how to cleanly deal with multiple input parameters
-	elseif messageType == "loadsavefile" then returnValue = emu:loadSaveFile(path, temporary)
-	elseif messageType == "loadstatebuffer" then returnValue = emu:loadStateBuffer(buffer, flags)
-	elseif messageType == "loadstatefile" then returnValue = emu:loadStateFile(path, flags)
-	elseif messageType == "loadstateslot" then returnValue = emu:loadStateSlot(slot, flags)
-	elseif messageType == "readrange" then returnValue = emu:readRange(address, length)
-	elseif messageType == "savestatefile" then returnValue = emu:saveStateFile(path, flags)
-	elseif messageType == "savestateslot" then returnValue = emu:saveStateSlot(path, flags)
-	elseif messageType == "write16" then returnValue = emu:write16(address, value)
-	elseif messageType == "write32" then returnValue = emu:write32(address, value)
-	elseif messageType == "write8" then returnValue = emu:write8(address, value)
-	elseif messageType == "writeregister" then returnValue = emu:writeRegister(regName, value)
-	--]]
-
+	elseif messageType == "core.loadFile" then returnValue = emu:loadFile(messageValue1)
+	elseif messageType == "core.loadSaveFile" then returnValue = emu:loadSaveFile(messageValue1, messageValue2)
+	elseif messageType == "core.loadStateBuffer" then returnValue = emu:loadStateBuffer(messageValue1, messageValue2)
+	elseif messageType == "core.loadStateFile" then returnValue = emu:loadStateFile(messageValue1, messageValue2)
+	elseif messageType == "core.loadStateSlot" then returnValue = emu:loadStateSlot(messageValue1, messageValue2)
 	elseif messageType == "core.platform" then returnValue = emu:platform()
 	elseif messageType == "core.read16" then returnValue = emu:read16(tonumber(messageValue1))
 	elseif messageType == "core.read32" then returnValue = emu:read32(tonumber(messageValue1))
 	elseif messageType == "core.read8" then returnValue = emu:read8(tonumber(messageValue1))	
+	elseif messageType == "core.readRange" then returnValue = emu:readRange(tonumber(messageValue1), tonumber(messageValue2))
 	elseif messageType == "core.readRegister" then returnValue = emu:readRegister(messageValue1)
 	elseif messageType == "core.reset" then emu:reset()
 	elseif messageType == "core.romSize" then emu:romSize()
 	elseif messageType == "core.runFrame" then emu:runFrame()
 	elseif messageType == "core.saveStateBuffer" then emu:saveStateBuffer(messageValue1)
+	elseif messageType == "core.saveStateFile" then returnValue = emu:saveStateFile(messageValue1, messageValue2)
+	elseif messageType == "core.saveStateSlot" then returnValue = emu:saveStateSlot(messageValue1, messageValue2)
 	elseif messageType == "core.screenshot" then emu:screenshot(messageValue1)
 	elseif messageType == "core.setKeys" then emu:setKeys(messageValue1)
 	elseif messageType == "core.step" then emu:step()
+	elseif messageType == "core.write16" then returnValue = emu:write16(messageValue1, messageValue2)
+	elseif messageType == "core.write32" then returnValue = emu:write32(messageValue1, messageValue2)
+	elseif messageType == "core.write8" then returnValue = emu:write8(messageValue1, messageValue2)
+	elseif messageType == "core.writeRegister" then returnValue = emu:writeRegister(messageValue1, messageValue2)
 
 	--elseif messageType == "createbuffer" then console:createBuffer(messageValue1)
 	elseif messageType == "console.error" then console:error(messageValue1)
@@ -160,15 +156,19 @@ function MessageRouter(rawMessage)
 	elseif messageType == "console.warn" then console:warn(messageValue1)
 
 	-- TODO: check if this is the correct syntax
-	elseif messageType == "coreadapter.reset" then CoreAdapter:reset()
+	elseif messageType == "coreAdapter.reset" then CoreAdapter:reset()
 
-	elseif messageType == "memorydomain.base" then returnValue = emu.memory[messageValue1]:base()
-	elseif messageType == "memorydomain.bound" then returnValue = emu.memory[messageValue1]:bound()
-	elseif messageType == "memorydomain.name" then returnValue = emu.memory[messageValue1]:name()
-	elseif messageType == "memorydomain.read16" then returnValue = emu.memory[messageValue1]:read16(tonumber(messageValue2))
-	elseif messageType == "memorydomain.read32" then returnValue = emu.memory[messageValue1]:read32(tonumber(messageValue2))
-	elseif messageType == "memorydomain.read8" then returnValue = emu.memory[messageValue1]:read8(tonumber(messageValue2))
-	elseif messageType == "memorydomain.size" then returnValue = emu.memory[messageValue1]:size()
+	elseif messageType == "memoryDomain.base" then returnValue = emu.memory[messageValue1]:base()
+	elseif messageType == "memoryDomain.bound" then returnValue = emu.memory[messageValue1]:bound()
+	elseif messageType == "memoryDomain.name" then returnValue = emu.memory[messageValue1]:name()
+	elseif messageType == "memoryDomain.read16" then returnValue = emu.memory[messageValue1]:read16(tonumber(messageValue2))
+	elseif messageType == "memoryDomain.read32" then returnValue = emu.memory[messageValue1]:read32(tonumber(messageValue2))
+	elseif messageType == "memoryDomain.read8" then returnValue = emu.memory[messageValue1]:read8(tonumber(messageValue2))
+	elseif messageType == "memoryDomain.readRange" then returnValue = emu.memory[messageValue1]:readRange(tonumber(messageValue2), tonumber(messageValue3))
+	elseif messageType == "memoryDomain.size" then returnValue = emu.memory[messageValue1]:size()
+	elseif messageType == "memoryDomain.write16" then returnValue = emu.memory[messageValue1]:write16(tonumber(messageValue2), tonumber(messageValue3))
+	elseif messageType == "memoryDomain.write32" then returnValue = emu.memory[messageValue1]:write32(tonumber(messageValue2), tonumber(messageValue3))
+	elseif messageType == "memoryDomain.write8" then returnValue = emu.memory[messageValue1]:write8(tonumber(messageValue2), tonumber(messageValue3))
 
 	else console:log(rawMessage)
 	end

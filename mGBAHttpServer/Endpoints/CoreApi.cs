@@ -80,6 +80,26 @@ namespace mGBAHttpServer.Endpoints
                 return await socket.SendMessageAsync(new MessageModel("core.loadFile", path));
             });
 
+            group.MapPost("/loadsavefile", async (SocketService socket, string path, bool temporary) =>
+            {
+                return await socket.SendMessageAsync(new MessageModel("core.loadSaveFile", path, temporary.ToString()));
+            });
+
+            group.MapPost("/loadstatebuffer", async (SocketService socket, string buffer, string flags) =>
+            {
+                return await socket.SendMessageAsync(new MessageModel("core.loadStateBuffer", buffer, flags));
+            });
+
+            group.MapPost("/loadstatefile", async (SocketService socket, string path, string flags) =>
+            {
+                return await socket.SendMessageAsync(new MessageModel("core.loadStateFile", path, flags));
+            });
+
+            group.MapPost("/loadstateslot", async (SocketService socket, string slot, string flags) =>
+            {
+                return await socket.SendMessageAsync(new MessageModel("core.loadStateSlot", slot, flags));
+            });
+
             group.MapGet("/platform", async (SocketService socket) =>
             {
                 return await socket.SendMessageAsync(new MessageModel("core.platform"));
@@ -98,6 +118,12 @@ namespace mGBAHttpServer.Endpoints
             group.MapGet("/read8", async (SocketService socket, string address) =>
             {
                 return await socket.SendMessageAsync(new MessageModel("core.read8", address));
+            });
+
+            // TODO: come back to these input datatypes for all the u32 and s32 types in the mGBA api documentation
+            group.MapGet("/readrange", async (SocketService socket, string address, string length) =>
+            {
+                return await socket.SendMessageAsync(new MessageModel("core.readRange", address, length));
             });
 
             group.MapGet("/readregister", async (SocketService socket, string regName) =>
@@ -125,6 +151,16 @@ namespace mGBAHttpServer.Endpoints
                 return await socket.SendMessageAsync(new MessageModel("core.saveStateBuffer", flags));
             });
 
+            group.MapPost("/savestatefile", async (SocketService socket, string path, string flags) =>
+            {
+                return await socket.SendMessageAsync(new MessageModel("core.saveStateFile", path, flags));
+            });
+
+            group.MapPost("/savestateslot", async (SocketService socket, string slot, string flags) =>
+            {
+                return await socket.SendMessageAsync(new MessageModel("core.saveStateSlot", slot, flags));
+            });
+
             group.MapPost("/screenshot", async (SocketService socket, string path) =>
             {
                 return await socket.SendMessageAsync(new MessageModel("core.screenshot", path));
@@ -138,6 +174,26 @@ namespace mGBAHttpServer.Endpoints
             group.MapPost("/step", async (SocketService socket) =>
             {
                 return await socket.SendMessageAsync(new MessageModel("core.step"));
+            });
+
+            group.MapPost("/write16", async (SocketService socket, string address, string value) =>
+            {
+                return await socket.SendMessageAsync(new MessageModel("core.write16", address, value));
+            });
+
+            group.MapPost("/write32", async (SocketService socket, string address, string value) =>
+            {
+                return await socket.SendMessageAsync(new MessageModel("core.write32", address, value));
+            });
+
+            group.MapPost("/write8", async (SocketService socket, string address, string value) =>
+            {
+                return await socket.SendMessageAsync(new MessageModel("core.write8", address, value));
+            });
+
+            group.MapPost("/writeregister", async (SocketService socket, string regName, string value) =>
+            {
+                return await socket.SendMessageAsync(new MessageModel("core.writeRegister", regName, value));
             });
 
             return group;
