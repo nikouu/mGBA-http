@@ -5,7 +5,7 @@ An HTTP interface for mGBA scripting. As long as you make HTTP requests, you'll 
 This project is great if you want to:
 - Create a "Twitch Plays" 
 - Write an AI bot in your preferred programming language
-- Create an information dashboard for the current game (e.g. show your current Pokémon's stats at all time)
+- Create an information dashboard for the current game (e.g. show your current Pokémon's stats like [Pokélink](https://twitter.com/pokelinkapp))
 - Edit the memory of the running game
 
 ## Quick Installation
@@ -24,7 +24,7 @@ For the full guide, see the [full guide doc](docs/FullInstallAndUsageGuide.md).
 	- You may want to implement a rate limiter in your code. For instance, only send a request every x milliseconds and ignore input between. 
 
 ## Why?
-This project came about because I didn't know lua and wanted to use C# control emulated Pokémon games in a cross platform way. I was there for and loved Twitch Plays Pokémon. Most GitHub projects for "X plays" style emulator controllers use the Windows SendKey API (or similar abstraction) regardless of language. 
+This project came about because I didn't know lua and wanted to use C# control emulated Pokémon games in a cross platform way. I was there for and loved Twitch Plays Pokémon and looking around, most GitHub projects for "X plays" style emulator controllers use the Windows SendKey API (or similar abstraction) regardless of language. 
 
 When investigating how [Ironmon-Tracker](https://github.com/besteon/Ironmon-Tracker) worked after seeing it on [Arex's stream](https://www.twitch.tv/arex), I noticed [mGBA has a scripting API](https://mgba.io/docs/scripting.html) and more specifically a [socket API](https://mgba.io/docs/scripting.html#lua-root-socket) which I could interact with via C# and it went from there<sup>[[1]](https://github.com/nikouu/mGBA-lua-HelloWorld)</sup><sup>[[2]](https://github.com/nikouu/mGBA-lua-Socket)</sup>.
 
@@ -47,6 +47,7 @@ This project is not associated to the development or development team of mGBA. I
 - [mGBA Website](https://mgba.io/)
 - [mGBA GitHub](https://github.com/mgba-emu/mgba)
 - [mGBA Discord](https://discord.gg/em2M2sG)
+- [My site](https://www.nikouusitalo.com/)
 
 ## License
 [MIT](LICENSE)
