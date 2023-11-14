@@ -13,7 +13,12 @@
 
   <PropertyGroup>
     <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
+    <ApplicationIcon>mGBA-http icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="mGBA-http icon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Update="appsettings.Development.json">
