@@ -2,7 +2,7 @@
 using mGBAHttpServer.Services;
 using Microsoft.OpenApi.Models;
 
-Console.Title ="mGBA-http";
+Console.Title = "mGBA-http";
 
 Console.WriteLine(
 """
@@ -33,7 +33,39 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+
 builder.Services.AddSingleton<SocketService>();
+var loggingSection = builder.Configuration.GetSection("logging");
+
+// Allow log filtering if the configs aren't present with prod exe
+if (!builder.Environment.IsDevelopment() && !loggingSection.Exists())
+{
+    builder.Logging.AddFilter((provider, category, logLevel) =>
+    {
+        if (category.Contains("Microsoft.AspNetCore.Hosting.Diagnostics") && logLevel <= LogLevel.Error)
+        {
+            return false;
+        }
+        else if (category.Contains("Microsoft.AspNetCore.Mvc.Infrastructure.DefaultActionDescriptorCollectionProvider")
+            && logLevel <= LogLevel.Error)
+        {
+            return false;
+        }
+        else if (category.Contains("Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware")
+            && logLevel <= LogLevel.Error)
+        {
+            return false;
+        }
+        else if (logLevel >= LogLevel.Information)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    });
+}
 
 var app = builder.Build();
 
@@ -44,10 +76,14 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = string.Empty;
 });
 
+Console.WriteLine("Swagger UI: /index.html");
+Console.WriteLine("Swagger JSON: /swagger/v1/swagger.json\n");
+
 app.MapCoreEndpoints();
 app.MapConsoleEndpoints();
 app.MapCoreAdapterEndpoints();
 app.MapMemoryDomainEndpoints();
 app.MapButtonEndpoints();
+
 
 app.Run();

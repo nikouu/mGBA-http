@@ -99,6 +99,19 @@ end
 -- Message Router
 -- ***********************
 
+local keyValues = {
+    ["A"] = 0,
+    ["B"] = 1,
+    ["Select"] = 2,
+    ["Start"] = 3,
+    ["Right"] = 4,
+    ["Left"] = 5,
+    ["Up"] = 6,
+    ["Down"] = 7,
+    ["R"] = 8,
+    ["L"] = 9
+}
+
 function MessageRouter(rawMessage)	
 	local parsedInput = splitStringToTable(rawMessage, ",")
 
@@ -123,7 +136,7 @@ function MessageRouter(rawMessage)
 	elseif messageType == "core.frequency" then returnValue = emu:frequency()
 	elseif messageType == "core.getGameCode" then returnValue = emu:getGameCode()
 	elseif messageType == "core.getGameTitle" then returnValue = emu:getGameTitle()
-	elseif messageType == "core.getKey" then returnValue = emu:getKey(messageValue1)
+	elseif messageType == "core.getKey" then returnValue = emu:getKey(keyValues[messageValue1])
 	elseif messageType == "core.getKeys" then returnValue = emu:getKeys()
 	elseif messageType == "core.loadFile" then returnValue = emu:loadFile(messageValue1)
 	elseif messageType == "core.loadSaveFile" then returnValue = emu:loadSaveFile(messageValue1, messageValue2)
@@ -181,18 +194,7 @@ end
 -- Button (Convenience abstraction)
 -- ***********************
 
-local keyValues = {
-    ["A"] = 0,
-    ["B"] = 1,
-    ["Select"] = 2,
-    ["Start"] = 3,
-    ["Right"] = 4,
-    ["Left"] = 5,
-    ["Up"] = 6,
-    ["Down"] = 7,
-    ["R"] = 8,
-    ["L"] = 9
-}
+
 
 -- ***********************
 -- Core
