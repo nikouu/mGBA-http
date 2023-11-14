@@ -401,3 +401,7 @@ FodyWeavers.xsd
 *.gb
 *.gba
 *.sav
+
+# Release 
+./release
+./releaseStaging
