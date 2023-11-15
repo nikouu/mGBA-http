@@ -27,13 +27,13 @@ while (Console.ReadKey() is ConsoleKeyInfo consoleKeyInfo)
     if (keysDictionary.ContainsKey(keyString))
     {
         await SendKey(keysDictionary[keyString]);
+        Console.WriteLine(Environment.NewLine + keysDictionary[keyString]);
     }
 }
 
 async Task SendKey(string key)
 {
-    var request = new HttpRequestMessage(HttpMethod.Post, $"https://localhost:7173/button?key={key}");
+    var request = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:5000/button?key={key}");
     var response = await client.SendAsync(request);
     response.EnsureSuccessStatusCode();
-    Console.WriteLine(await response.Content.ReadAsStringAsync());
 }
