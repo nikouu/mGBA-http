@@ -1,4 +1,10 @@
 -- ***********************
+-- mGBA-http
+-- Lua interface for mGBA-http
+-- https://github.com/nikouu/mGBA-http
+-- ***********************
+
+-- ***********************
 -- Sockets
 -- ***********************
 
@@ -46,17 +52,17 @@ function SocketAccept()
 end
 
 function SocketReceived(id)
-	console:log("SocketReceived 1")
+	--console:log("SocketReceived 1")
 	local sock = socketList[id]
 	if not sock then return end
 	while true do
 		local message, error = sock:receive(1024)
 	
-		console:log("SocketReceived 2")
+		--console:log("SocketReceived 2")
 		if message then
-			console:log("SocketReceived 3")
-			console:log(FormatMessage(id, message:match("^(.-)%s*$")))
-			console:log(message:match("^(.-)%s*$"))
+			--console:log("SocketReceived 3")
+			--console:log(FormatMessage(id, message:match("^(.-)%s*$")))
+			--console:log(message:match("^(.-)%s*$"))
 			
 			-- it seems that the value must be non-empty in order to actually send back?
 			-- thus the ACK message default
@@ -122,7 +128,7 @@ function MessageRouter(rawMessage)
 	
 	local returnValue = "<|ACK|>";
 
-	console:log("MessageRouter: " .. rawMessage .. " messageType: " .. (messageType or "") .. " messageValue1: " .. (messageValue1 or "") .. " messageValue2: " .. (messageValue2 or ""))
+	console:log("MessageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
 
 	if messageType == "custom.button" then press_key(messageValue1)
 	elseif messageType == "core.addKey" then AddKey(messageValue1)
@@ -162,15 +168,10 @@ function MessageRouter(rawMessage)
 	elseif messageType == "core.write32" then returnValue = emu:write32(messageValue1, messageValue2)
 	elseif messageType == "core.write8" then returnValue = emu:write8(messageValue1, messageValue2)
 	elseif messageType == "core.writeRegister" then returnValue = emu:writeRegister(messageValue1, messageValue2)
-
-	--elseif messageType == "createbuffer" then console:createBuffer(messageValue1)
 	elseif messageType == "console.error" then console:error(messageValue1)
 	elseif messageType == "console.log" then console:log(messageValue1)
 	elseif messageType == "console.warn" then console:warn(messageValue1)
-
-	-- TODO: check if this is the correct syntax
 	elseif messageType == "coreAdapter.reset" then CoreAdapter:reset()
-
 	elseif messageType == "memoryDomain.base" then returnValue = emu.memory[messageValue1]:base()
 	elseif messageType == "memoryDomain.bound" then returnValue = emu.memory[messageValue1]:bound()
 	elseif messageType == "memoryDomain.name" then returnValue = emu.memory[messageValue1]:name()
@@ -192,12 +193,6 @@ end
 
 -- ***********************
 -- Button (Convenience abstraction)
--- ***********************
-
-
-
--- ***********************
--- Core
 -- ***********************
 
 function AddKey(keyLetter)
@@ -290,9 +285,9 @@ end
 --local read2 = emu.memory.vram:base()
 -- local read2 = emu.memory["vram"]:read8(0x00000000)
 --local read2= emu.memory["bios"]:name()
-local read2 = emu.memory["bios"]:read16(tonumber("0x7DE"))
-read2 = emu:read16(tonumber("0x7DE"))
-console:log("" .. read2)
+--local read2 = emu.memory["bios"]:read16(tonumber("0x7DE"))
+--read2 = emu:read16(tonumber("0x7DE"))
+--console:log("" .. read2)
 
 --console:log(emu:memory.currentFrame())
 

@@ -19,23 +19,23 @@ Using the C# console app mGBAHttpServer.TestClient included in this repository, 
 ### Code
 See [mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient).
 
-## Reading memory
+## Reading what nature a wild Pokémon has
 
 Knowing what's ahead, or what secret things the game doesn't explicitly tell you is powerful. In this instance, we're using the in-built SwaggerUI functionality of mGBA-http to determine what nature the opposing wild Pokémon has in Pokémon Sapphire.
 
-| Scenario                               | Game             | Caller    | Endpoint |
-| -------------------------------------- | ---------------- | --------- | -------- |
-| Reading what nature a wild Pokémon has | Pokémon Sapphire | SwaggerUI |          |
+| Scenario                                                | Game             | Caller    | Endpoint |
+| ------------------------------------------------------- | ---------------- | --------- | -------- |
+| Reading the memory location for opposing Pokémon nature | Pokémon Sapphire | SwaggerUI |          |
 
 ### Code
 N/A, uses SwaggerUI.
 
-## Modifying memory 
+## Modifying bag to have 99 bombs 
 Modifying memory means you could do anything in game. Being invincible, unlocking everything, infinite amount of items, super speed, the list goes on. This example uses Postman to give the player 99 bombs in The Minish Cap.
 
-| Scenario                       | Game                                | Caller  | Endpoint |
-| ------------------------------ | ----------------------------------- | ------- | -------- |
-| Modifying bag to have 99 bombs | The Legend of Zelda: The Minish Cap | Postman |          |
+| Scenario                        | Game                                | Caller  | Endpoint |
+| ------------------------------- | ----------------------------------- | ------- | -------- |
+| Modifying memory for bomb count | The Legend of Zelda: The Minish Cap | Postman |          |
 
 ### Code
 N/A, uses Postman.
