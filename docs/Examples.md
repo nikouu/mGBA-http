@@ -33,6 +33,8 @@ N/A, uses SwaggerUI.
 ## Modifying bag to have 99 bombs 
 Modifying memory means you could do anything in game. Being invincible, unlocking everything, infinite amount of items, super speed, the list goes on. This example uses Postman to give the player 99 bombs in The Minish Cap.
 
+![](Images/zeldabombmemory.mp4)
+
 | Scenario                        | Game                                | Caller  | Endpoint |
 | ------------------------------- | ----------------------------------- | ------- | -------- |
 | Modifying memory for bomb count | The Legend of Zelda: The Minish Cap | Postman |          |

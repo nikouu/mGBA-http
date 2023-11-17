@@ -30,7 +30,7 @@ function BeginSocket()
 				server:close()
 				console:error(FormatMessage("Listen", error, true))
 			else
-				console:log("Socket Server Test: Listening on port " .. port)
+				console:log("Socket Server: Listening on port " .. port)
 				server:add("received", SocketAccept)
 			end
 		end
@@ -68,7 +68,7 @@ function SocketReceived(id)
 			-- thus the ACK message default
 			local returnValue = MessageRouter(message:match("^(.-)%s*$"))
 			sock:send(returnValue)
-		else
+		elseif error then
 			-- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
 			if error ~= socket.ERRORS.AGAIN then
 				console:log("SocketReceived 4")
@@ -125,10 +125,12 @@ function MessageRouter(rawMessage)
 	local messageValue1 = parsedInput[2]
 	local messageValue2 = parsedInput[3]
 	local messageValue3 = parsedInput[4]
-	
-	local returnValue = "<|ACK|>";
 
-	console:log("MessageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
+	local defaultReturnValue <const> = "<|ACK|>"; 
+	
+	local returnValue = defaultReturnValue;
+
+	console:log("[" .. os.date("%X", os.time()) .. "] MessageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
 
 	if messageType == "custom.button" then press_key(messageValue1)
 	elseif messageType == "core.addKey" then AddKey(messageValue1)
@@ -166,7 +168,7 @@ function MessageRouter(rawMessage)
 	elseif messageType == "core.step" then emu:step()
 	elseif messageType == "core.write16" then returnValue = emu:write16(messageValue1, messageValue2)
 	elseif messageType == "core.write32" then returnValue = emu:write32(messageValue1, messageValue2)
-	elseif messageType == "core.write8" then returnValue = emu:write8(messageValue1, messageValue2)
+	elseif messageType == "core.write8" then returnValue = emu:write8(tonumber(messageValue1), tonumber(messageValue2))
 	elseif messageType == "core.writeRegister" then returnValue = emu:writeRegister(messageValue1, messageValue2)
 	elseif messageType == "console.error" then console:error(messageValue1)
 	elseif messageType == "console.log" then console:log(messageValue1)
@@ -187,7 +189,9 @@ function MessageRouter(rawMessage)
 	else console:log(rawMessage)
 	end
 
-	console:log("Returning: " .. returnValue)
+	returnValue = (returnValue or defaultReturnValue);
+
+	console:log("\tReturning: " ..returnValue)
 	return returnValue;
 end
 
