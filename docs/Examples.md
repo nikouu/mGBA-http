@@ -8,7 +8,7 @@ Looking for inspiration on what to use mGBA-http with? The following is a mix of
 
 As long as you can make an HTTP call, you can interact with mGBA-http.
 
-## Moving and interacting
+## 1. Moving and interacting
 
 Using the C# console app mGBAHttpServer.TestClient included in this repository, we're able to move the main character around the overworld and interact with Pikachu in Pokémon Yellow.
 
@@ -19,30 +19,30 @@ Using the C# console app mGBAHttpServer.TestClient included in this repository, 
 ### Code
 See [mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient).
 
-## Reading what nature a wild Pokémon has
+## 2. Reading what nature a wild Pokémon has
 
 Knowing what's ahead, or what secret things the game doesn't explicitly tell you is powerful. In this instance, we're using the in-built SwaggerUI functionality of mGBA-http to determine what nature the opposing wild Pokémon has in Pokémon Sapphire.
 
-| Scenario                                                | Game             | Caller    | Endpoint |
-| ------------------------------------------------------- | ---------------- | --------- | -------- |
-| Reading the memory location for opposing Pokémon nature | Pokémon Sapphire | SwaggerUI |          |
+| Scenario                                                | Game             | Caller    | Endpoint     |
+| ------------------------------------------------------- | ---------------- | --------- | ------------ |
+| Reading the memory location for opposing Pokémon nature | Pokémon Sapphire | SwaggerUI | /core/read32 |
 
 ### Code
 N/A, uses SwaggerUI.
 
-## Modifying bag to have 99 bombs 
+## 3. Modifying bag to have 99 bombs 
 Modifying memory means you could do anything in game. Being invincible, unlocking everything, infinite amount of items, super speed, the list goes on. This example uses Postman to give the player 99 bombs in The Minish Cap. **The bomb count on the top right of the game going from 35 to 50.**
 
-| Scenario                        | Game                                | Caller  | Endpoint |
-| ------------------------------- | ----------------------------------- | ------- | -------- |
-| Modifying memory for bomb count | The Legend of Zelda: The Minish Cap | Postman | /core/write8         |
+| Scenario                        | Game                                | Caller  | Endpoint     |
+| ------------------------------- | ----------------------------------- | ------- | ------------ |
+| Modifying memory for bomb count | The Legend of Zelda: The Minish Cap | Postman | /core/write8 |
 
 https://github.com/nikouu/mGBA-http/assets/983351/d62275a0-7183-4f18-ac35-83a58941cf2a
 
 ### Code
 N/A, uses Postman.
 
-## Loading a save
+## 4. Loading a save
 Automating loading a save after a savestate goes awry. Perhaps your bot needs to reset the game to a known state. The following example is using Node.js to load a save file for Oracle of Seasons. 
 
 | Scenario                     | Game                                   | Caller  | Endpoint           |
@@ -74,7 +74,7 @@ req.on('error', error => {
 req.end();
 ```
 
-## Taking a screenshot
+## 5. Taking a screenshot
 Perhaps your AI bot needs a way to see the game world. Maybe your Twitch audience just completed Exodia and they want to take a screenshot. The following takes a screenshot of a Yu-Gi-Oh duel in mGBA with Python.
 
 | Scenario            | Game                                                       | Caller | Endpoint         |
@@ -92,7 +92,7 @@ response = requests.post(url)
 print(response.text)
 ```
 
-## Getting frame count
+## 6. Getting frame count
 
 A lot of the calls are simple GET requests, meaning we can even use the URL bar in a browser to successfully hit them. This example simply gets the number of frames that have passed since the Golden Sun ROM started, perhaps useful for waiting for an event, or approximating how long the ROM has been open for.
 
@@ -105,7 +105,7 @@ A lot of the calls are simple GET requests, meaning we can even use the URL bar 
 http://localhost:5000/core/getframecount
 ```
 
-## Checking game title
+## 7. Checking game title
 
 Each retail game has the game title in the header, here we use PowerShell (*???*) to get what this title is. Is it FireRed or is it LeafGreen?
 
