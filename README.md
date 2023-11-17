@@ -8,6 +8,10 @@ This project is great if you want to:
 - Create an information dashboard for the current game (e.g. show your current Pokémon's stats like [Pokélink](https://twitter.com/pokelinkapp))
 - Edit the memory of the running game
 
+https://github.com/nikouu/mGBA-http/assets/983351/08907201-b437-4930-a769-ee441fbdde0d
+
+Want to see more video examples? Head over to the [examples page](docs/Examples.md) to see C#, Node.js, Python, +more examples across Gameboy and Gameboy Advance games.
+
 ## Quick Installation
 mGBA-http works with 0.10.2 of mGBA.
 
