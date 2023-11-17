@@ -117,7 +117,7 @@ A lot of the calls are simple GET requests, meaning we can even use the URL bar 
 | ------------------------------------------- | ------------------------ | ---------------- | ------------------- |
 | Getting number of frames since ROM launched | Golden Sun: The Lost Age | Chrome (browser) | /core/currentframe  |
 
-https://github.com/nikouu/mGBA-http/assets/983351/f6962f40-987c-4f73-8c85-487185aa66b8
+https://github.com/nikouu/mGBA-http/assets/983351/6b69511c-6944-4598-92fc-6bfa95dd7070
 
 ### Code
 ```
@@ -132,7 +132,7 @@ Each retail game has the game title in the header, here we use PowerShell (*???*
 | ------------------------------ | --------------- | ---------- | ------------------ |
 | Get game title from ROM header | Pokémon FireRed | PowerShell | /core/getgametitle |
 
-https://github.com/nikouu/mGBA-http/assets/983351/837631c5-175b-423a-a824-978474fb7624
+https://github.com/nikouu/mGBA-http/assets/983351/d810f240-0079-4df1-8644-a9dc5acd3ac0
 
 ### Code
 ```powershell
