@@ -16,6 +16,8 @@ Using the C# console app mGBAHttpServer.TestClient included in this repository, 
 | -------------------- | -------------- | -------------- | -------- |
 | Moving the character | Pokémon Yellow | C# console app | /button  |
 
+https://github.com/nikouu/mGBA-http/assets/983351/08907201-b437-4930-a769-ee441fbdde0d
+
 ### Code
 See [mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient).
 
@@ -109,7 +111,9 @@ A lot of the calls are simple GET requests, meaning we can even use the URL bar 
 
 | Scenario                                    | Game                     | Caller           | Endpoint            |
 | ------------------------------------------- | ------------------------ | ---------------- | ------------------- |
-| Getting number of frames since ROM launched | Golden Sun: The Lost Age | Chrome (browser) | /core/getframecount |
+| Getting number of frames since ROM launched | Golden Sun: The Lost Age | Chrome (browser) | /core/currentframe  |
+
+https://github.com/nikouu/mGBA-http/assets/983351/f6962f40-987c-4f73-8c85-487185aa66b8
 
 ### Code
 ```
