@@ -128,6 +128,8 @@ Each retail game has the game title in the header, here we use PowerShell (*???*
 | ------------------------------ | --------------- | ---------- | ------------------ |
 | Get game title from ROM header | Pokémon FireRed | PowerShell | /core/getgametitle |
 
+https://github.com/nikouu/mGBA-http/assets/983351/65780908-ba19-42f5-a6cf-394e72093dea
+
 ### Code
 ```powershell
 Invoke-WebRequest -URI http://localhost:5000/core/getgametitle
