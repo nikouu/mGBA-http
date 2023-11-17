@@ -50,27 +50,29 @@ The bomb count on the top right of the game going from 35 to 50.
 | ------------------------------- | ----------------------------------- | ------- | ------------ |
 | Modifying memory for bomb count | The Legend of Zelda: The Minish Cap | Postman | /core/write8 |
 
-https://github.com/nikouu/mGBA-http/assets/983351/d62275a0-7183-4f18-ac35-83a58941cf2a
+https://github.com/nikouu/mGBA-http/assets/983351/e0781dc1-44af-43c0-8945-800f3a3d4338
 
 ### Code
 N/A, uses Postman.
 
-## 4. Loading a save
-Automating loading a save after a savestate goes awry. Perhaps your bot needs to reset the game to a known state. The following example is using Node.js to load a save file for Oracle of Seasons. 
+## 4. Loading a savestate
+Automating loading a savestate is easy. Perhaps your bot needs to reset the game to a known state. The following example is using Node.js to load a save file for Oracle of Seasons. 
 
 | Scenario                     | Game                                   | Caller  | Endpoint           |
 | ---------------------------- | -------------------------------------- | ------- | ------------------ |
-| Loading a specific save file | The Legend of Zelda: Oracle of Seasons | Node.js | /core/loadsavefile |
+| Loading a specific save file | The Legend of Zelda: Oracle of Seasons | Node.js | /core/loadstatefile |
+
+https://github.com/nikouu/mGBA-http/assets/983351/5b085c65-7fed-44e3-9525-6676f9fc2dab
 
 ### Code
 ```javascript
 const http = require('http');
 
-// url encoded path of: c:\saves\ZELDA DIN.sav
+// url encoded path of: C:\mgba-http\ZELDA DIN.ss1
 const options = {
   hostname: 'localhost',
   port: 5000,
-  path: '/core/loadsavefile?path=c%3A%5Csaves%5CZELDA%20DIN.sav&temporary=true',
+  path: '/core/loadstatefile?path=C%3A%5Cmgba-http%5CZELDA%20DIN.ss1&flags=2',
   method: 'POST'
 };
 
@@ -130,7 +132,7 @@ Each retail game has the game title in the header, here we use PowerShell (*???*
 | ------------------------------ | --------------- | ---------- | ------------------ |
 | Get game title from ROM header | Pokémon FireRed | PowerShell | /core/getgametitle |
 
-https://github.com/nikouu/mGBA-http/assets/983351/65780908-ba19-42f5-a6cf-394e72093dea
+https://github.com/nikouu/mGBA-http/assets/983351/837631c5-175b-423a-a824-978474fb7624
 
 ### Code
 ```powershell
