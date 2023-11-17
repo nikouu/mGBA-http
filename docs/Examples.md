@@ -23,15 +23,26 @@ See [mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient).
 
 Knowing what's ahead, or what secret things the game doesn't explicitly tell you is powerful. In this instance, we're using the in-built SwaggerUI functionality of mGBA-http to determine what nature the opposing wild Pokémon has in Pokémon Sapphire.
 
+To get the nature of a wild Pokémon in Sapphire from memory:
+1. Read the first dword (32 bits) starting from [address 0x030045C0](https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_data_structure_(Generation_III)#Data_location). In this case we get decimal: 3121544013
+2. Then do dword % 25. Here we get 3121544013 % 25 = 13
+3. See where the number corresponds on the [list of natures](https://bulbapedia.bulbagarden.net/wiki/Nature#List_of_Natures). Here, 13 corrsponds to Jolly
+
+We can validate this by checking the nature of the Pokémon just caught. In this case, the Wurmple is Jolly in nature.
+
 | Scenario                                                | Game             | Caller    | Endpoint     |
 | ------------------------------------------------------- | ---------------- | --------- | ------------ |
 | Reading the memory location for opposing Pokémon nature | Pokémon Sapphire | SwaggerUI | /core/read32 |
+
+https://github.com/nikouu/mGBA-http/assets/983351/1b137a6a-8679-47ca-87e5-3f037bcb29ca
 
 ### Code
 N/A, uses SwaggerUI.
 
 ## 3. Modifying bag to have 99 bombs 
-Modifying memory means you could do anything in game. Being invincible, unlocking everything, infinite amount of items, super speed, the list goes on. This example uses Postman to give the player 99 bombs in The Minish Cap. **The bomb count on the top right of the game going from 35 to 50.**
+Modifying memory means you could do anything in game. Being invincible, unlocking everything, infinite amount of items, super speed, the list goes on. This example uses Postman to give the player 99 bombs in The Minish Cap. 
+
+The bomb count on the top right of the game going from 35 to 50.
 
 | Scenario                        | Game                                | Caller  | Endpoint     |
 | ------------------------------- | ----------------------------------- | ------- | ------------ |
