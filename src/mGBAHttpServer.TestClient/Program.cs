@@ -1,4 +1,5 @@
-﻿var client = new HttpClient();
+﻿Console.Title = "mGBA-http Test Client";
+var client = new HttpClient();
 
 var keysDictionary = new Dictionary<string, string>()
 {
@@ -20,14 +21,14 @@ Console.WriteLine("Buttons: A:X, B:Z, L:A, R:S, Start:Enter, Select:Backspace, A
 
 Console.Write(">>");
 
-while (Console.ReadKey() is ConsoleKeyInfo consoleKeyInfo)
+while (Console.ReadKey(true) is ConsoleKeyInfo consoleKeyInfo)
 {
     var keyString = consoleKeyInfo.Key.ToString();
 
     if (keysDictionary.ContainsKey(keyString))
     {
         await SendKey(keysDictionary[keyString]);
-        Console.WriteLine(Environment.NewLine + keysDictionary[keyString]);
+        Console.WriteLine(keysDictionary[keyString]);
     }
 }
 

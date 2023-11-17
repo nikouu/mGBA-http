@@ -39,7 +39,7 @@ https://github.com/nikouu/mGBA-http/assets/983351/1b137a6a-8679-47ca-87e5-3f037b
 ### Code
 N/A, uses SwaggerUI.
 
-## 3. Modifying bag to have 99 bombs 
+## 3. Modifying bag to have 50 bombs 
 Modifying memory means you could do anything in game. Being invincible, unlocking everything, infinite amount of items, super speed, the list goes on. This example uses Postman to give the player 99 bombs in The Minish Cap. 
 
 The bomb count on the top right of the game going from 35 to 50.
