@@ -94,12 +94,14 @@ Perhaps your AI bot needs a way to see the game world. Maybe your Twitch audienc
 | ------------------- | ---------------------------------------------------------- | ------ | ---------------- |
 | Taking a screenshot | Yu-Gi-Oh! Worldwide Edition: Stairway to the Destined Duel | Python | /core/screenshot |
 
+https://github.com/nikouu/mGBA-http/assets/983351/8353411b-dabd-4167-b4d8-93829be339fd
+
 ### Code
 ```python
 import requests
 
-# url encoded path of: c:\screenshots
-url = "http://localhost:5000/core/screenshot?path=c%3A%5Cscreenshots"
+# url encoded path of: C:\screenshots\ygo.png
+url = "http://localhost:5000/core/screenshot?path=C%3A%5Cscreenshots%5Cygo.png"
 response = requests.post(url)
 
 print(response.text)
