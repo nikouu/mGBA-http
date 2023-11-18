@@ -43,8 +43,32 @@ mGBA-http builds on the mGBA socket API abstraction and adds an HTTP layer to si
 ## Contributing
 If you know Lua, GameBoy/Advance, or mGBA specifics, I'd love for help. 
 
+### Development
+
+If you're a .NET developer, the setup simple and familiar opening the [solution file](src/CmGBAHttpServer.sln) using Visual Studio (At least VS 17.9) and .NET 8. 
+
+If you're a .NET developer sans Visual Studio or Windows, you'll also feel the setup is simple and familiar with the [solution file](src/CmGBAHttpServer.sln).
+
+If you're not a .NET developer, check out the comprehensive [C# learning website](https://dotnet.microsoft.com/en-us/learn/csharp) from Microsoft. You can program in C# on whatever platform whether it's Windows, Mac, or Linux.
+
+#### Design Document
+
+The rough design philosphy is outlined in the [design document](docs/Design.md). Please understand and follow this when considering a contribution.
+
+### Build
+
+The PowerShell release script [ReleaseBuild.ps1](ReleaseBuild.ps1) creates the final binaries. PowerShell is cross platform and can be downloaded via the [PowerShell download documentation](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.3).
+
+The script generates binaries closely aligned with the operating systems and architectures that [mGBA provides downloads](https://mgba.io/downloads.html) for.
+
+#### AOT
+
+To reduce the barrier of entry, mGBA-http also has [self-contained builds](https://learn.microsoft.com/en-us/dotnet/core/deploying/#publish-self-contained) using Ahead of Time Compilation. These are the larger binaries with "self-contained" in the filename and bring the entirity of .NET needed to run the executable - meaning the user does not need to download the [.NET runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) to use mGBA-http.
+
 ## Contact
 If there's a problem feel free to start an issue, otherwise see [my about page](https://www.nikouusitalo.com/about/#contact) on how to contact me. 
+
+
 
 ## Acknowledgments
 - The mGBA GitHub team for having socket examples
