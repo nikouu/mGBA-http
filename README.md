@@ -8,6 +8,10 @@ This project is great if you want to:
 - Create an information dashboard for the current game (e.g. show your current Pokémon's stats like [Pokélink](https://twitter.com/pokelinkapp))
 - Edit the memory of the running game
 
+https://github.com/nikouu/mGBA-http/assets/983351/08907201-b437-4930-a769-ee441fbdde0d
+
+In the example above, the C# program _[mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient)_ (top left) is accepting key inputs that are sent to mGBA-http (top right), then the mGBA built-in scripting API (bottom left), then to the ROM.
+
 ## Quick Start Guide
 mGBA-http works with 0.10.2 of mGBA.
 
