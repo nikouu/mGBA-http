@@ -16,6 +16,8 @@ Using the C# console app mGBAHttpServer.TestClient included in this repository, 
 | -------------------- | -------------- | -------------- | -------- |
 | Moving the character | Pokémon Yellow | C# console app | /button  |
 
+https://github.com/nikouu/mGBA-http/assets/983351/08907201-b437-4930-a769-ee441fbdde0d
+
 ### Code
 See [mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient).
 
@@ -48,27 +50,29 @@ The bomb count on the top right of the game going from 35 to 50.
 | ------------------------------- | ----------------------------------- | ------- | ------------ |
 | Modifying memory for bomb count | The Legend of Zelda: The Minish Cap | Postman | /core/write8 |
 
-https://github.com/nikouu/mGBA-http/assets/983351/d62275a0-7183-4f18-ac35-83a58941cf2a
+https://github.com/nikouu/mGBA-http/assets/983351/e0781dc1-44af-43c0-8945-800f3a3d4338
 
 ### Code
 N/A, uses Postman.
 
-## 4. Loading a save
-Automating loading a save after a savestate goes awry. Perhaps your bot needs to reset the game to a known state. The following example is using Node.js to load a save file for Oracle of Seasons. 
+## 4. Loading a savestate
+Automating loading a savestate is easy. Perhaps your bot needs to reset the game to a known state. The following example is using Node.js to load a save file for Oracle of Seasons. 
 
 | Scenario                     | Game                                   | Caller  | Endpoint           |
 | ---------------------------- | -------------------------------------- | ------- | ------------------ |
-| Loading a specific save file | The Legend of Zelda: Oracle of Seasons | Node.js | /core/loadsavefile |
+| Loading a specific save file | The Legend of Zelda: Oracle of Seasons | Node.js | /core/loadstatefile |
+
+https://github.com/nikouu/mGBA-http/assets/983351/5b085c65-7fed-44e3-9525-6676f9fc2dab
 
 ### Code
 ```javascript
 const http = require('http');
 
-// url encoded path of: c:\saves\ZELDA DIN.sav
+// url encoded path of: C:\mgba-http\ZELDA DIN.ss1
 const options = {
   hostname: 'localhost',
   port: 5000,
-  path: '/core/loadsavefile?path=c%3A%5Csaves%5CZELDA%20DIN.sav&temporary=true',
+  path: '/core/loadstatefile?path=C%3A%5Cmgba-http%5CZELDA%20DIN.ss1&flags=2',
   method: 'POST'
 };
 
@@ -92,12 +96,14 @@ Perhaps your AI bot needs a way to see the game world. Maybe your Twitch audienc
 | ------------------- | ---------------------------------------------------------- | ------ | ---------------- |
 | Taking a screenshot | Yu-Gi-Oh! Worldwide Edition: Stairway to the Destined Duel | Python | /core/screenshot |
 
+https://github.com/nikouu/mGBA-http/assets/983351/8353411b-dabd-4167-b4d8-93829be339fd
+
 ### Code
 ```python
 import requests
 
-# url encoded path of: c:\screenshots
-url = "http://localhost:5000/core/screenshot?path=c%3A%5Cscreenshots"
+# url encoded path of: C:\screenshots\ygo.png
+url = "http://localhost:5000/core/screenshot?path=C%3A%5Cscreenshots%5Cygo.png"
 response = requests.post(url)
 
 print(response.text)
@@ -109,7 +115,9 @@ A lot of the calls are simple GET requests, meaning we can even use the URL bar 
 
 | Scenario                                    | Game                     | Caller           | Endpoint            |
 | ------------------------------------------- | ------------------------ | ---------------- | ------------------- |
-| Getting number of frames since ROM launched | Golden Sun: The Lost Age | Chrome (browser) | /core/getframecount |
+| Getting number of frames since ROM launched | Golden Sun: The Lost Age | Chrome (browser) | /core/currentframe  |
+
+https://github.com/nikouu/mGBA-http/assets/983351/6b69511c-6944-4598-92fc-6bfa95dd7070
 
 ### Code
 ```
@@ -123,6 +131,8 @@ Each retail game has the game title in the header, here we use PowerShell (*???*
 | Scenario                       | Game            | Caller     | Endpoint           |
 | ------------------------------ | --------------- | ---------- | ------------------ |
 | Get game title from ROM header | Pokémon FireRed | PowerShell | /core/getgametitle |
+
+https://github.com/nikouu/mGBA-http/assets/983351/d810f240-0079-4df1-8644-a9dc5acd3ac0
 
 ### Code
 ```powershell
