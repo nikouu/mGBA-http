@@ -1,6 +1,6 @@
 # Design
 
-This document outlines the rough design philosophies for mGBA-http. 
+This document outlines the rough design philosophies for mGBA-http. It's to help keep the "spirit" of the project going the same direction. However, it is not set in stone and if it makes sense, it can always be updated.
 
 ## Goal
 
