@@ -8,14 +8,17 @@ This project is great if you want to:
 - Create an information dashboard for the current game (e.g. show your current Pokémon's stats like [Pokélink](https://twitter.com/pokelinkapp))
 - Edit the memory of the running game
 
-## Quick Installation
+## Quick Start Guide
 mGBA-http works with 0.10.2 of mGBA.
 
-For the full installation, see the [full installation doc](docs/FullInstallAndUsageGuide.md).
+1. Ensure you have [mGBA](https://mgba.io/downloads.html)
+1. Download mGBA-http and mGBASocketServer.lua from the [Releases](https://github.com/nikouu/mGBA-http/releases/latest) section 
+1. Run mGBA-http
+1. In mGBA, go to Tools > Scripting, then File > Load script and load in mGBASocketServer.lua
 
-## Quick Usage Guide
+Once a ROM is laoded, you are now ready to start using mGBA-http.
 
-For the full guide, see the [full guide doc](docs/FullInstallAndUsageGuide.md).
+For a more in-depth guide with pictures, see the [Full Guide](docs/FullGuide.md).
 
 ## Limitations
 - No frame perfect calls. There is network latency between your application to mGBA-http and again latency between mGBA-http and mGBA. This will not be accurate for frame perfect manipulation and is meant for more general usage such as for "Twitch plays", AI playing bot, or other non frame specific application. For high accuracy manipulation see [Bizhawk](https://tasvideos.org/BizHawk/) which is used for TASBots.
@@ -47,7 +50,9 @@ This project is not associated to the development or development team of mGBA. I
 - [mGBA Website](https://mgba.io/)
 - [mGBA GitHub](https://github.com/mgba-emu/mgba)
 - [mGBA Discord](https://discord.gg/em2M2sG)
-- [My site](https://www.nikouusitalo.com/)
+- [My Website](https://www.nikouusitalo.com/)
 
 ## License
 [MIT](LICENSE)
+
+If you end up using mGBA-http, [drop me a message](https://www.nikouusitalo.com/about/#contact) and tell me what you're up to!

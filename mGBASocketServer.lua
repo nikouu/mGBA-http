@@ -1,5 +1,6 @@
 -- ***********************
 -- mGBA-http
+-- Version: 0.1.0
 -- Lua interface for mGBA-http
 -- https://github.com/nikouu/mGBA-http
 -- ***********************
@@ -147,9 +148,9 @@ function MessageRouter(rawMessage)
 	elseif messageType == "core.getKey" then returnValue = emu:getKey(keyValues[messageValue1])
 	elseif messageType == "core.getKeys" then returnValue = emu:getKeys()
 	elseif messageType == "core.loadFile" then returnValue = emu:loadFile(messageValue1)
-	elseif messageType == "core.loadSaveFile" then returnValue = emu:loadSaveFile(messageValue1, messageValue2)
+	elseif messageType == "core.loadSaveFile" then returnValue = emu:loadSaveFile(messageValue1, toboolean(messageValue2))
 	elseif messageType == "core.loadStateBuffer" then returnValue = emu:loadStateBuffer(messageValue1, messageValue2)
-	elseif messageType == "core.loadStateFile" then returnValue = emu:loadStateFile(messageValue1, messageValue2)
+	elseif messageType == "core.loadStateFile" then returnValue = emu:loadStateFile(messageValue1, tonumber(messageValue2))
 	elseif messageType == "core.loadStateSlot" then returnValue = emu:loadStateSlot(messageValue1, messageValue2)
 	elseif messageType == "core.platform" then returnValue = emu:platform()
 	elseif messageType == "core.read16" then returnValue = emu:read16(tonumber(messageValue1))
@@ -189,9 +190,9 @@ function MessageRouter(rawMessage)
 	else console:log(rawMessage)
 	end
 
-	returnValue = (returnValue or defaultReturnValue);
+	returnValue = tostring(returnValue or defaultReturnValue);
 
-	console:log("\tReturning: " ..returnValue)
+	console:log("\tReturning: " .. returnValue)
 	return returnValue;
 end
 
@@ -279,6 +280,14 @@ end
 
 function numberStringToHex(string)
 	return string.format('%x', tonumber(string, 16))
+end
+
+function toboolean(str)
+    local bool = false
+    if string.lower(str) == "true" then
+        bool = true
+    end
+    return bool
 end
 
 -- ***********************

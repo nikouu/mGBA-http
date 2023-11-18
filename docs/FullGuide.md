@@ -1,4 +1,4 @@
-# Full Install and Usage Guide
+# Full Guide
 
 ## Installation
 
