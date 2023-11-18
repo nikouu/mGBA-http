@@ -10,9 +10,10 @@ This project is great if you want to:
 - Create an information dashboard for the current game (e.g. show your current Pokémon's stats like [Pokélink](https://twitter.com/pokelinkapp))
 - Edit the memory of the running game
 
+In the example below, a C# program _[mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient)_ (top left) is accepting key inputs that are sent to mGBA-http (top right), then the mGBA built-in scripting API (bottom left), then to the ROM. If you want to see more real examples with videos and explanations, check out the [examples page](docs/Examples.md).
+
 https://github.com/nikouu/mGBA-http/assets/983351/08907201-b437-4930-a769-ee441fbdde0d
 
-In the example above, the C# program _[mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient)_ (top left) is accepting key inputs that are sent to mGBA-http (top right), then the mGBA built-in scripting API (bottom left), then to the ROM.
 
 ## Quick Start Guide
 mGBA-http works with 0.10.2 of mGBA.
@@ -36,6 +37,8 @@ For a more in-depth guide with pictures, see the [Full Guide](docs/FullGuide.md)
 This project came about because I didn't know lua and wanted to use C# control emulated Pokémon games in a cross platform way. I was there for and loved Twitch Plays Pokémon and looking around, most GitHub projects for "X plays" style emulator controllers use the Windows SendKey API (or similar abstraction) regardless of language. 
 
 When investigating how [Ironmon-Tracker](https://github.com/besteon/Ironmon-Tracker) worked after seeing it on [Arex's stream](https://www.twitch.tv/arex), I noticed [mGBA has a scripting API](https://mgba.io/docs/scripting.html) and more specifically a [socket API](https://mgba.io/docs/scripting.html#lua-root-socket) which I could interact with via C# and it went from there<sup>[[1]](https://github.com/nikouu/mGBA-lua-HelloWorld)</sup><sup>[[2]](https://github.com/nikouu/mGBA-lua-Socket)</sup>.
+
+mGBA-http builds on the socket API abstraction and adds an HTTP layer to simplify interaction and development - which is exactly what I want for future projects.
 
 ## Contributing
 If you know lua, GameBoy/Advance, or mGBA specifics, I'd love for help. 
