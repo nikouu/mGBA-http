@@ -27,7 +27,7 @@ Developer:
 - Data transformations should be at a minimum.
 - mGBA-http calls should as closely as possible map 1 to 1 with the mGBA socket API. 
 - Code does not need needless abstractions or overengineering. 
-- It needs to remain readable and workable by any skill level .NET developer as long as they're up to date with features.
+- It needs to remain readable and workable by an intermediate skill level .NET developer as long as they're up to date with features.
 - Unless there is a compelling reason, the UI will be a simple console.
 	- The UI for the bundled in SwaggerUI for quick prototyping is outside of the scope of this document. 
 
