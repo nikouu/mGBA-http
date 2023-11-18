@@ -23,7 +23,7 @@ mGBA-http works with 0.10.2 of mGBA.
 1. Run mGBA-http
 1. In mGBA, go to Tools > Scripting, then File > Load script and load in mGBASocketServer.lua
 
-Once a ROM is laoded, you are now ready to start using mGBA-http.
+Once a ROM is loaded, you are now ready to start using mGBA-http.
 
 For a more in-depth guide with pictures, see the [Full Guide](docs/FullGuide.md).
 
@@ -38,10 +38,10 @@ This project came about because I didn't know lua and wanted to use C# control e
 
 When investigating how [Ironmon-Tracker](https://github.com/besteon/Ironmon-Tracker) worked after seeing it on [Arex's stream](https://www.twitch.tv/arex), I noticed [mGBA has a scripting API](https://mgba.io/docs/scripting.html) and more specifically a [socket API](https://mgba.io/docs/scripting.html#lua-root-socket) which I could interact with via C# and it went from there<sup>[[1]](https://github.com/nikouu/mGBA-lua-HelloWorld)</sup><sup>[[2]](https://github.com/nikouu/mGBA-lua-Socket)</sup>.
 
-mGBA-http builds on the socket API abstraction and adds an HTTP layer to simplify interaction and development - which is exactly what I want for future projects.
+mGBA-http builds on the mGBA socket API abstraction and adds an HTTP layer to simplify interaction and development - which is exactly what I want for future projects.
 
 ## Contributing
-If you know lua, GameBoy/Advance, or mGBA specifics, I'd love for help. 
+If you know Lua, GameBoy/Advance, or mGBA specifics, I'd love for help. 
 
 ## Contact
 If there's a problem feel free to start an issue, otherwise see [my about page](https://www.nikouusitalo.com/about/#contact) on how to contact me. 

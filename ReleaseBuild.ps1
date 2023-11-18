@@ -13,7 +13,7 @@ if ($luaVersion -ne $version){
 
 # Setup publish variables
 $filenamePrefix = "mGBA-http-{0}" -f $version
-$rids = @("win-x64", "linux-x64", "osx-x64")
+$rids = @("win-x86","win-x64", "linux-x64", "osx-x64")
 
 # Clean folder
 Remove-Item .\release\* -Recurse -Force
