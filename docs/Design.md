@@ -4,7 +4,7 @@ This document outlines the rough design philosophies for mGBA-http.
 
 ## Goal
 
-The goal of mGBA-http is to simplify developer/user experience with programmatically interfacing with mGBA in a cross platform way via HTTP.
+The goal of mGBA-http is to simplify developer/user experience by programmatically interfacing with mGBA in a cross platform way via HTTP.
 
 ## Target Audience
 
