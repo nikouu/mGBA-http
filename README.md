@@ -1,6 +1,8 @@
 # mGBA-http
 
-An HTTP interface for mGBA scripting. As long as you make HTTP requests, you'll be able to interact with mGBA. 
+An HTTP interface for mGBA scripting. As long as you make HTTP requests, you'll be able to interact with mGBA.
+
+![](docs\Images\FlowDiagram.jpg)
 
 This project is great if you want to:
 - Create a "Twitch Plays" 
