@@ -31,7 +31,7 @@ function beginSocket()
 				server:close()
 				console:error(formatMessage("Listen", error, true))
 			else
-				console:log("Socket Server: Listening on port " .. port)
+				formattedLog("Socket Server: Listening on port " .. port)
 				server:add("received", socketAccept)
 			end
 		end
@@ -49,30 +49,23 @@ function socketAccept()
 	socketList[id] = sock
 	sock:add("received", function() socketReceived(id) end)
 	sock:add("error", function() socketError(id) end)
-	console:log(formatMessage(id, "Connected"))
+	formattedLog(formatMessage(id, "Connected"))
 end
 
 function socketReceived(id)
-	--console:log("socketReceived 1")
 	local sock = socketList[id]
 	if not sock then return end
 	while true do
 		local message, error = sock:receive(1024)
-	
-		--console:log("socketReceived 2")
 		if message then
-			--console:log("socketReceived 3")
-			--console:log(formatMessage(id, message:match("^(.-)%s*$")))
-			--console:log(message:match("^(.-)%s*$"))
-			
 			-- it seems that the value must be non-empty in order to actually send back?
 			-- thus the ACK message default
 			local returnValue = messageRouter(message:match("^(.-)%s*$"))
 			sock:send(returnValue)
 		elseif error then
-			-- seems to go into this sOCKETERRORAGAIN state for each call, but it seems fine.
+			-- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
 			if error ~= socket.ERRORS.AGAIN then
-				console:log("socketReceived 4")
+				formattedLog("socketReceived 4")
 				console:error(formatMessage(id, error, true))
 				socketStop(id)
 			end
@@ -119,7 +112,7 @@ local keyValues = {
     ["L"] = 9
 }
 
-function messageRouter(rawMessage)	
+function messageRouter(rawMessage)
 	local parsedInput = splitStringToTable(rawMessage, ",")
 
 	local messageType = parsedInput[1]
@@ -128,10 +121,10 @@ function messageRouter(rawMessage)
 	local messageValue3 = parsedInput[4]
 
 	local defaultReturnValue <const> = "<|ACK|>";
-	
+
 	local returnValue = defaultReturnValue;
 
-	console:log("[" .. os.date("%X", os.time()) .. "] messageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
+	formattedLog("[" .. os.date("%X", os.time()) .. "] messageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
 
 	if messageType == "custom.button" then pressKey(messageValue1)
 	elseif messageType == "core.addKey" then addKey(messageValue1)
@@ -155,7 +148,7 @@ function messageRouter(rawMessage)
 	elseif messageType == "core.platform" then returnValue = emu:platform()
 	elseif messageType == "core.read16" then returnValue = emu:read16(tonumber(messageValue1))
 	elseif messageType == "core.read32" then returnValue = emu:read32(tonumber(messageValue1))
-	elseif messageType == "core.read8" then returnValue = emu:read8(tonumber(messageValue1))	
+	elseif messageType == "core.read8" then returnValue = emu:read8(tonumber(messageValue1))
 	elseif messageType == "core.readRange" then returnValue = emu:readRange(tonumber(messageValue1), tonumber(messageValue2))
 	elseif messageType == "core.readRegister" then returnValue = emu:readRegister(messageValue1)
 	elseif messageType == "core.reset" then emu:reset()
@@ -172,7 +165,7 @@ function messageRouter(rawMessage)
 	elseif messageType == "core.write8" then returnValue = emu:write8(tonumber(messageValue1), tonumber(messageValue2))
 	elseif messageType == "core.writeRegister" then returnValue = emu:writeRegister(messageValue1, messageValue2)
 	elseif messageType == "console.error" then console:error(messageValue1)
-	elseif messageType == "console.log" then console:log(messageValue1)
+	elseif messageType == "console.log" then formattedLog(messageValue1)
 	elseif messageType == "console.warn" then console:warn(messageValue1)
 	elseif messageType == "coreAdapter.reset" then CoreAdapter:reset()
 	elseif messageType == "memoryDomain.base" then returnValue = emu.memory[messageValue1]:base()
@@ -186,13 +179,12 @@ function messageRouter(rawMessage)
 	elseif messageType == "memoryDomain.write16" then returnValue = emu.memory[messageValue1]:write16(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write32" then returnValue = emu.memory[messageValue1]:write32(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write8" then returnValue = emu.memory[messageValue1]:write8(tonumber(messageValue2), tonumber(messageValue3))
-
-	else console:log(rawMessage)
+	else formattedLog(rawMessage)
 	end
 
 	returnValue = tostring(returnValue or defaultReturnValue);
 
-	console:log("\tReturning: " .. returnValue)
+	formattedLog("\tReturning: " .. returnValue)
 	return returnValue;
 end
 
@@ -223,13 +215,13 @@ function updateKeys()
     if head ~= tail then
         -- Get the key press at the head of the queue
         local keyPress = keyQueue[head]
-        --console:log("currentFrame: " .. emu:currentFrame() .. "startFrame: " .. keyPress.startFrame .. " endFrame: " .. keyPress.endFrame .. " key: " .. keyPress.key)
+        --formattedLog("currentFrame: " .. emu:currentFrame() .. "startFrame: " .. keyPress.startFrame .. " endFrame: " .. keyPress.endFrame .. " key: " .. keyPress.key)
         -- Check if the current frame is within the key press duration
         if emu:currentFrame() >= keyPress.startFrame and emu:currentFrame() <= keyPress.endFrame and not keyPress.keyPressed then
             -- If the current frame is within the key press duration, press the key
             emu:addKey(keyPress.key)
             keyPress.keyPressed = true
-            console:log("Pressed: " .. keyPress.key)
+            formattedLog("Pressed: " .. keyPress.key)
         elseif emu:currentFrame() > keyPress.endFrame then
             -- If the key press duration has ended, release the key and remove it from the queue
             emu:clearKey(keyPress.key)
@@ -249,7 +241,7 @@ function pressKey(keyLetter, duration)
     -- Calculate the start and end frames for this key press
     local startFrame = emu:currentFrame() + totalDuration
     local endFrame = startFrame + duration + 1
-    console:log("pressKey: " .. startFrame .. " - " .. endFrame .. " CF: " .. emu:currentFrame())
+    formattedLog("pressKey: " .. startFrame .. " - " .. endFrame .. " CF: " .. emu:currentFrame())
     -- Add the key, start frame, and end frame to the queue
     keyQueue[tail] = {key = key, startFrame = startFrame, endFrame = endFrame, keyPressed = false}
     tail = tail + 1
@@ -286,18 +278,13 @@ function toBoolean(str)
     return bool
 end
 
+function formattedLog(string)
+	local timestamp = "[" .. os.date("%X", os.time()) .. "] "
+	console:log(timestamp .. string)
+end
+
 -- ***********************
 -- Start
 -- ***********************
-
---local read = emu:read8(0x00000000)
---local read2 = emu.memory.vram:base()
--- local read2 = emu.memory["vram"]:read8(0x00000000)
---local read2= emu.memory["bios"]:name()
---local read2 = emu.memory["bios"]:read16(tonumber("0x7DE"))
---read2 = emu:read16(tonumber("0x7DE"))
---console:log("" .. read2)
-
---console:log(emu:memory.currentFrame())
 
 beginSocket()
