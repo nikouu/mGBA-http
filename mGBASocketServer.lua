@@ -9,9 +9,9 @@
 -- Sockets
 -- ***********************
 
-server = nil
-socketList = {}
-nextID = 1
+local server = nil
+local socketList = {}
+local nextID = 1
 local port = 8888
 
 function beginSocket()
@@ -127,13 +127,13 @@ function messageRouter(rawMessage)
 	local messageValue2 = parsedInput[3]
 	local messageValue3 = parsedInput[4]
 
-	local defaultReturnValue <const> = "<|ACK|>"; 
+	local defaultReturnValue <const> = "<|ACK|>";
 	
 	local returnValue = defaultReturnValue;
 
 	console:log("[" .. os.date("%X", os.time()) .. "] messageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
 
-	if messageType == "custom.button" then press_key(messageValue1)
+	if messageType == "custom.button" then pressKey(messageValue1)
 	elseif messageType == "core.addKey" then addKey(messageValue1)
 	elseif messageType == "core.addKeys" then emu:addKeys(messageValue1)
 	elseif messageType == "core.autoloadSave" then returnValue = emu:autoloadSave()
@@ -148,7 +148,7 @@ function messageRouter(rawMessage)
 	elseif messageType == "core.getKey" then returnValue = emu:getKey(keyValues[messageValue1])
 	elseif messageType == "core.getKeys" then returnValue = emu:getKeys()
 	elseif messageType == "core.loadFile" then returnValue = emu:loadFile(messageValue1)
-	elseif messageType == "core.loadSaveFile" then returnValue = emu:loadSaveFile(messageValue1, toboolean(messageValue2))
+	elseif messageType == "core.loadSaveFile" then returnValue = emu:loadSaveFile(messageValue1, toBoolean(messageValue2))
 	elseif messageType == "core.loadStateBuffer" then returnValue = emu:loadStateBuffer(messageValue1, messageValue2)
 	elseif messageType == "core.loadStateFile" then returnValue = emu:loadStateFile(messageValue1, tonumber(messageValue2))
 	elseif messageType == "core.loadStateSlot" then returnValue = emu:loadStateSlot(messageValue1, messageValue2)
@@ -243,7 +243,9 @@ function updateKeys()
 end
 
 -- Function to add a key press
-function pressKey(key, duration)
+function pressKey(keyLetter, duration)
+	duration = duration or 15
+	local key = keyValues[keyLetter];
     -- Calculate the start and end frames for this key press
     local startFrame = emu:currentFrame() + totalDuration
     local endFrame = startFrame + duration + 1
@@ -253,12 +255,6 @@ function pressKey(key, duration)
     tail = tail + 1
     -- Update the total duration
     totalDuration = totalDuration + duration
-end
-
-function press_key(keyLetter)
-	local key = keyValues[keyLetter];
-    pressKey(key, 15)
-    LastKey = key
 end
 
 callbacks:add("frame", updateKeys)
@@ -282,7 +278,7 @@ function numberStringToHex(string)
 	return string.format('%x', tonumber(string, 16))
 end
 
-function toboolean(str)
+function toBoolean(str)
     local bool = false
     if string.lower(str) == "true" then
         bool = true

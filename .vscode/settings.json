@@ -1,0 +1,10 @@
+{
+    "Lua.diagnostics.globals": [
+        "console",
+        "socket",
+        "emu",
+        "CoreAdapter",
+        "C",
+        "callbacks"
+    ]
+}
