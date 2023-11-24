@@ -13,7 +13,12 @@ namespace mGBAHttpServer.Endpoints
             group.MapPost("/reset", async (SocketService socket) =>
             {
                 await socket.SendMessageAsync(new MessageModel("coreAdapter.reset"));
-            });            
+            }).WithOpenApi(o =>
+            {
+                o.Summary = "Reset the emulation.";
+                o.Description = "Reset the emulation. As opposed to Core.reset, this version calls the reset callback.";
+                return o;
+            });
 
             return group;
         }

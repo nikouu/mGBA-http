@@ -87,4 +87,4 @@ A table of which [mGBA scripting calls](https://mgba.io/docs/scripting.html) are
 
 | mGBA call | lua endpoint key | mGBA-http endpoint |
 | :-------: | ---------------- | ------------------ |
-|     -     | custom.button    | /button            |
+|     -     | custom.button    | /custom/button            |

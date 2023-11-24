@@ -7,18 +7,18 @@ namespace mGBAHttpServer.Endpoints
     {
         public static RouteGroupBuilder MapButtonEndpoints(this IEndpointRouteBuilder routes)
         {
-            var group = routes.MapGroup("/button");
+            var group = routes.MapGroup("/custom/button");
             group.WithTags("Button");
 
-            //waiting for .net8 i think
-            //group.WithSummary("summary");
-            //group.WithDescription("Description");
-
-            // TODO: come back and potentially rename this path and endpoint to be more descriptive such as /custom/button/press
             group.MapPost("/", async (SocketService socket, KeysEnum key) =>
             {
                 await socket.SendMessageAsync(new MessageModel("custom.button", key.ToString()));
-            });            
+            }).WithOpenApi(o =>
+            {
+                o.Summary = "Sends button presses.";
+                o.Description = "A convenience custom API that implements a key press and release. This is as opposed to the key based core API that sends only either a press or release message.";
+                return o;
+            });
 
             return group;
         }
