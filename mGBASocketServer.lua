@@ -14,14 +14,14 @@ socketList = {}
 nextID = 1
 local port = 8888
 
-function BeginSocket()
+function beginSocket()
 	while not server do
 		server, error = socket.bind(nil, port)
 		if error then
 			if error == socket.ERRORS.ADDRESS_IN_USE then
 				port = port + 1
 			else
-				console:error(FormatMessage("Bind", error, true))
+				console:error(formatMessage("Bind", error, true))
 				break
 			end
 		else
@@ -29,70 +29,70 @@ function BeginSocket()
 			ok, error = server:listen()
 			if error then
 				server:close()
-				console:error(FormatMessage("Listen", error, true))
+				console:error(formatMessage("Listen", error, true))
 			else
 				console:log("Socket Server: Listening on port " .. port)
-				server:add("received", SocketAccept)
+				server:add("received", socketAccept)
 			end
 		end
 	end
 end
 
-function SocketAccept()
+function socketAccept()
 	local sock, error = server:accept()
 	if error then
-		console:error(FormatMessage("Accept", error, true))
+		console:error(formatMessage("Accept", error, true))
 		return
 	end
 	local id = nextID
 	nextID = id + 1
 	socketList[id] = sock
-	sock:add("received", function() SocketReceived(id) end)
-	sock:add("error", function() SocketError(id) end)
-	console:log(FormatMessage(id, "Connected"))
+	sock:add("received", function() socketReceived(id) end)
+	sock:add("error", function() socketError(id) end)
+	console:log(formatMessage(id, "Connected"))
 end
 
-function SocketReceived(id)
-	--console:log("SocketReceived 1")
+function socketReceived(id)
+	--console:log("socketReceived 1")
 	local sock = socketList[id]
 	if not sock then return end
 	while true do
 		local message, error = sock:receive(1024)
 	
-		--console:log("SocketReceived 2")
+		--console:log("socketReceived 2")
 		if message then
-			--console:log("SocketReceived 3")
-			--console:log(FormatMessage(id, message:match("^(.-)%s*$")))
+			--console:log("socketReceived 3")
+			--console:log(formatMessage(id, message:match("^(.-)%s*$")))
 			--console:log(message:match("^(.-)%s*$"))
 			
 			-- it seems that the value must be non-empty in order to actually send back?
 			-- thus the ACK message default
-			local returnValue = MessageRouter(message:match("^(.-)%s*$"))
+			local returnValue = messageRouter(message:match("^(.-)%s*$"))
 			sock:send(returnValue)
 		elseif error then
-			-- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
+			-- seems to go into this sOCKETERRORAGAIN state for each call, but it seems fine.
 			if error ~= socket.ERRORS.AGAIN then
-				console:log("SocketReceived 4")
-				console:error(FormatMessage(id, error, true))
-				SocketStop(id)
+				console:log("socketReceived 4")
+				console:error(formatMessage(id, error, true))
+				socketStop(id)
 			end
 			return
 		end
 	end
 end
 
-function SocketStop(id)
+function socketStop(id)
 	local sock = socketList[id]
 	socketList[id] = nil
 	sock:close()
 end
 
-function SocketError(id, error)
-	console:error(FormatMessage(id, error, true))
-	SocketStop(id)
+function socketError(id, error)
+	console:error(formatMessage(id, error, true))
+	socketStop(id)
 end
 
-function FormatMessage(id, msg, isError)
+function formatMessage(id, msg, isError)
 	local prefix = "Socket " .. id
 	if isError then
 		prefix = prefix .. " Error: "
@@ -119,7 +119,7 @@ local keyValues = {
     ["L"] = 9
 }
 
-function MessageRouter(rawMessage)	
+function messageRouter(rawMessage)	
 	local parsedInput = splitStringToTable(rawMessage, ",")
 
 	local messageType = parsedInput[1]
@@ -131,14 +131,14 @@ function MessageRouter(rawMessage)
 	
 	local returnValue = defaultReturnValue;
 
-	console:log("[" .. os.date("%X", os.time()) .. "] MessageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
+	console:log("[" .. os.date("%X", os.time()) .. "] messageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
 
 	if messageType == "custom.button" then press_key(messageValue1)
-	elseif messageType == "core.addKey" then AddKey(messageValue1)
+	elseif messageType == "core.addKey" then addKey(messageValue1)
 	elseif messageType == "core.addKeys" then emu:addKeys(messageValue1)
 	elseif messageType == "core.autoloadSave" then returnValue = emu:autoloadSave()
 	elseif messageType == "core.checksum" then returnValue = emu:checksum(C.CHECKSUM.CRC32)
-	elseif messageType == "core.clearKey" then ClearKey(messageValue1)
+	elseif messageType == "core.clearKey" then clearKey(messageValue1)
 	elseif messageType == "core.clearKeys" then emu:clearKeys(messageValue1)
 	elseif messageType == "core.currentFrame" then returnValue = emu:currentFrame()
 	elseif messageType == "core.frameCycles" then returnValue = emu:frameCycles()
@@ -200,12 +200,12 @@ end
 -- Button (Convenience abstraction)
 -- ***********************
 
-function AddKey(keyLetter)
+function addKey(keyLetter)
 	local key = keyValues[keyLetter];
 	emu:addKey(key)
 end
 
-function ClearKey(keyLetter)
+function clearKey(keyLetter)
 	local key = keyValues[keyLetter];
 	emu:clearKey(key)
 end
@@ -304,4 +304,4 @@ end
 
 --console:log(emu:memory.currentFrame())
 
-BeginSocket()
+beginSocket()
