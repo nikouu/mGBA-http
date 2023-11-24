@@ -8,6 +8,8 @@ Looking for inspiration on what to use mGBA-http with? The following is a mix of
 
 As long as you can make an HTTP call, you can interact with mGBA-http.
 
+_Note: There may be some differences with your experience in what mGBA or the scripting output looks like as time has moved on but the principles will be the same._
+
 ## 1. Moving and interacting
 
 Using the C# console app mGBAHttpServer.TestClient included in this repository, we're able to move the main character around the overworld and interact with Pikachu in Pokémon Yellow.
