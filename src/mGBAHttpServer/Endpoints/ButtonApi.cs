@@ -7,16 +7,16 @@ namespace mGBAHttpServer.Endpoints
     {
         public static RouteGroupBuilder MapButtonEndpoints(this IEndpointRouteBuilder routes)
         {
-            var group = routes.MapGroup("/custom/button");
+            var group = routes.MapGroup("/mgba-http/button");
             group.WithTags("Button");
 
             group.MapPost("/", async (SocketService socket, KeysEnum key) =>
             {
-                await socket.SendMessageAsync(new MessageModel("custom.button", key.ToString()));
+                await socket.SendMessageAsync(new MessageModel("mgba-http.button", key.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Sends button presses.";
-                o.Description = "A convenience custom API that implements a key press and release. This is as opposed to the key based core API that sends only either a press or release message.";
+                o.Description = "A custom convenience API that implements a key press and release. This is as opposed to the key based core API that sends only either a press or release message.";
                 return o;
             });
 

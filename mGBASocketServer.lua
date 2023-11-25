@@ -128,7 +128,7 @@ function messageRouter(rawMessage)
 
 	formattedLog("messageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
 
-	if messageType == "custom.button" then pressKey(messageValue1)
+	if messageType == "mgba-http.button" then pressKey(messageValue1)
 	elseif messageType == "core.addKey" then addKey(messageValue1)
 	elseif messageType == "core.addKeys" then emu:addKeys(tonumber(messageValue1))
 	elseif messageType == "core.autoloadSave" then returnValue = emu:autoloadSave()

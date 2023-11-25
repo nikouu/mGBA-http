@@ -6,45 +6,45 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 
 ## Core
 
-| mGBA call         | lua endpoint key     | mGBA-http endpoint    |
-| ----------------- | -------------------- | --------------------- |
-| addKey()          | core.addKey          | /core/addkey          |
-| addKeys()         | core.addKeys         | /core/addkeys         |
-| autoloadSave()    | core.autoloadSave    | /core/autoloadsave    |
-| checksum()        | core.checksum        | /core/checksum        |
-| clearKey()        | core.checksum        | /core/clearkey        |
-| clearKeys()       | core.clearKeys       | /core/clearkeys       |
-| currentFrame()    | core.currentFrame    | /core/currentframe    |
-| frameCycles()     | core.frameCycles     | /core/framecycles     |
-| frequency()       | core.frequency       | /core/frequency       |
-| getGameCode()     | core.getGameCode     | /core/getgamecode     |
-| getGameTitle()    | core.getGameTitle    | /core/getgametitle    |
-| getKey()          | core.getKey          | /core/getkey          |
-| getKeys()         | core.getKeys         | /core/getkeys         |
-| loadFile()        | core.loadFile        | /core/loadfile (_Unstable_)       |
-| loadSaveFile()    | core.loadSaveFile    | /core/loadsavefile (_Unstable_)   |
+| mGBA call         | lua endpoint key     | mGBA-http endpoint                 |
+| ----------------- | -------------------- | ---------------------------------- |
+| addKey()          | core.addKey          | /core/addkey                       |
+| addKeys()         | core.addKeys         | /core/addkeys                      |
+| autoloadSave()    | core.autoloadSave    | /core/autoloadsave                 |
+| checksum()        | core.checksum        | /core/checksum                     |
+| clearKey()        | core.checksum        | /core/clearkey                     |
+| clearKeys()       | core.clearKeys       | /core/clearkeys                    |
+| currentFrame()    | core.currentFrame    | /core/currentframe                 |
+| frameCycles()     | core.frameCycles     | /core/framecycles                  |
+| frequency()       | core.frequency       | /core/frequency                    |
+| getGameCode()     | core.getGameCode     | /core/getgamecode                  |
+| getGameTitle()    | core.getGameTitle    | /core/getgametitle                 |
+| getKey()          | core.getKey          | /core/getkey                       |
+| getKeys()         | core.getKeys         | /core/getkeys                      |
+| loadFile()        | core.loadFile        | /core/loadfile (_Unstable_)        |
+| loadSaveFile()    | core.loadSaveFile    | /core/loadsavefile (_Unstable_)    |
 | loadStateBuffer() | core.loadStateBuffer | /core/loadstatebuffer (_Unstable_) |
-| loadStateFile()   | core.loadStateFile   | /core/loadstatefile   |
-| loadStateSlot()   | core.loadStateSlot   | /core/loadstateslot   |
-| platform()        | core.platform        | /core/platform        |
-| read16()          | core.read16          | /core/read16          |
-| read32()          | core.read32          | /core/read32          |
-| read8()           | core.read8           | /core/read8           |
+| loadStateFile()   | core.loadStateFile   | /core/loadstatefile                |
+| loadStateSlot()   | core.loadStateSlot   | /core/loadstateslot                |
+| platform()        | core.platform        | /core/platform                     |
+| read16()          | core.read16          | /core/read16                       |
+| read32()          | core.read32          | /core/read32                       |
+| read8()           | core.read8           | /core/read8                        |
 | readRange()       | core.readRange       | /core/readrange (_Unstable_)       |
-| readRegister()    | core.readRegister    | /core/readregister    |
-| reset()           | -           | -           |
-| romSize()         | core.romSize         | /core/romsize         |
-| runFrame()        | core.runFrame        | /core/runframe (_Unstable_)       |
+| readRegister()    | core.readRegister    | /core/readregister                 |
+| reset()           | -                    | -                                  |
+| romSize()         | core.romSize         | /core/romsize                      |
+| runFrame()        | core.runFrame        | /core/runframe (_Unstable_)        |
 | saveStateBuffer() | core.saveStateBuffer | /core/savestatebuffer (_Unstable_) |
-| saveStateFile()   | core.saveStateFile   | /core/savestatefile   |
-| saveStateSlot()   | core.saveStateSlot   | /core/savestateslot   |
-| screenshot()      | core.screenshot      | /core/screenshot      |
-| setKeys()         | core.setKeys         | /core/setkeys         |
-| step()            | core.step            | /core/step            |
-| write16()         | core.write16         | /core/write16         |
-| write32()         | core.write32         | /core/write32         |
-| write8()          | core.write8          | /core/write8          |
-| writeRegister()   | core.writeRegister   | /core/writeregister   |
+| saveStateFile()   | core.saveStateFile   | /core/savestatefile                |
+| saveStateSlot()   | core.saveStateSlot   | /core/savestateslot                |
+| screenshot()      | core.screenshot      | /core/screenshot                   |
+| setKeys()         | core.setKeys         | /core/setkeys                      |
+| step()            | core.step            | /core/step                         |
+| write16()         | core.write16         | /core/write16                      |
+| write32()         | core.write32         | /core/write32                      |
+| write8()          | core.write8          | /core/write8                       |
+| writeRegister()   | core.writeRegister   | /core/writeregister                |
 
 ## CallbackManager
 `CallbackManager` is not implemented in mGBA-http. 
@@ -68,19 +68,19 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 
 ## MemoryDomain
 
-| mGBA call   | lua endpoint key       | mGBA-http endpoint      |
-| ----------- | ---------------------- | ----------------------- |
-| base()      | memoryDomain.base      | /memorydomain/base      |
-| bound()     | memoryDomain.bound     | /memorydomain/bound     |
-| name()      | memoryDomain.name      | /memorydomain/name      |
-| read16()    | memoryDomain.read16    | /memorydomain/read16    |
-| read32()    | memoryDomain.read32    | /memorydomain/read32    |
-| read8()     | memoryDomain.read8     | /memorydomain/read8     |
+| mGBA call   | lua endpoint key       | mGBA-http endpoint                   |
+| ----------- | ---------------------- | ------------------------------------ |
+| base()      | memoryDomain.base      | /memorydomain/base                   |
+| bound()     | memoryDomain.bound     | /memorydomain/bound                  |
+| name()      | memoryDomain.name      | /memorydomain/name                   |
+| read16()    | memoryDomain.read16    | /memorydomain/read16                 |
+| read32()    | memoryDomain.read32    | /memorydomain/read32                 |
+| read8()     | memoryDomain.read8     | /memorydomain/read8                  |
 | readRange() | memoryDomain.readRange | /memorydomain/readrange (_Unstable_) |
-| size()      | memoryDomain.size      | /memorydomain/size      |
-| write16()   | memoryDomain.write16   | /memorydomain/write16   |
-| write32()   | memoryDomain.write32   | /memorydomain/write32   |
-| write8()    | memoryDomain.write8    | /memorydomain/write8    |
+| size()      | memoryDomain.size      | /memorydomain/size                   |
+| write16()   | memoryDomain.write16   | /memorydomain/write16                |
+| write32()   | memoryDomain.write32   | /memorydomain/write32                |
+| write8()    | memoryDomain.write8    | /memorydomain/write8                 |
 
 ## TextBuffer
 `TextBuffer` is not implemented in mGBA-http. 
@@ -89,4 +89,4 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 
 | mGBA call | lua endpoint key | mGBA-http endpoint |
 | :-------: | ---------------- | ------------------ |
-|     -     | custom.button    | /custom/button            |
+|     -     | mgba-http.button | /mgba-http/button  |
