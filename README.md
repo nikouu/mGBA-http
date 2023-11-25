@@ -4,6 +4,14 @@ An HTTP interface for mGBA scripting. As long as you make HTTP requests, you'll 
 
 ![](docs/Images/FlowDiagram.jpg)
 
+## Features
+- Interact with mGBA with any language that supports HTTP
+- Full Swagger API documentation (swagger.json and SwaggerUI) for fast prototyping and integration
+- Maps 1 to 1 with most of the mGBA scripting API
+- Custom button APIs for easy button interaction
+- Cross platform
+- Easy to setup
+
 This project is great if you want to:
 - Create a "Twitch Plays" 
 - Write an AI bot in your preferred programming language
@@ -19,14 +27,6 @@ In the example below, a C# program _[mGBAHttpServer.TestClient](../src/mGBAHttpS
 If you want to see more real examples with videos and explanations, check out the [examples page](docs/Examples.md).
 
 https://github.com/nikouu/mGBA-http/assets/983351/08907201-b437-4930-a769-ee441fbdde0d
-
-## Features
-- Interact with mGBA with any language that supports HTTP
-- Full Swagger API documentation (swagger.json and SwaggerUI) for fast prototyping and integration
-- Maps 1 to 1 with most of the mGBA scripting API
-- Custom button APIs for easy button interaction
-- Cross platform
-- Easy to setup
 
 ## Quick Start Guide
 mGBA-http works with 0.10.2 of mGBA.
