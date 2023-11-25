@@ -18,10 +18,12 @@ This project is great if you want to:
 - Create an information dashboard for the current game (e.g. show your current Pokémon's stats like [Pokélink](https://twitter.com/pokelinkapp))
 - Edit the memory of the running game
 
-In the example below, a C# program _[mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient)_ 
+## Example
+
+In the example below, we accept inputs from one program and send them to mGBA:
 - (top left) is accepting key inputs from keyboard and sending them to mGBA-http
 - (top right) mGBA-http is forwarding these to mGBA
-- (bottom left) mGBA's built-in scripting API
+- (bottom left) mGBA's built-in scripting API accepting the requests from mGBA-http
 - (bottom right) then the key inputs are read by the ROM
 
 If you want to see more real examples with videos and explanations, check out the [examples page](docs/Examples.md).
