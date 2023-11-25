@@ -16,7 +16,7 @@ namespace mGBAHttpServer.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Reset the emulation.";
-                o.Description = "Reset the emulation. As opposed to Core.reset, this version calls the reset callback.";
+                o.Description = "Reset the emulation and calls the reset callback.";
                 return o;
             });
 

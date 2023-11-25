@@ -20,9 +20,9 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/addkeys", async (SocketService socket, string keyBitmask) =>
+            group.MapPost("/addkeys", async (SocketService socket, int keyBitmask) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.addKeys", keyBitmask));
+                return await socket.SendMessageAsync(new MessageModel("core.addKeys", keyBitmask.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Add a bitmask of keys.";
@@ -46,7 +46,7 @@ namespace mGBAHttpServer.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the checksum of the loaded ROM.";
-                o.Description = "Get the checksum of the loaded ROM.";
+                o.Description = "Get the checksum of the loaded ROM as base 10.";
                 return o;
             });
 
@@ -60,9 +60,9 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/clearkeys", async (SocketService socket, string keyBitmask) =>
+            group.MapPost("/clearkeys", async (SocketService socket, int keyBitmask) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.clearKeys", keyBitmask));
+                return await socket.SendMessageAsync(new MessageModel("core.clearKeys", keyBitmask.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Remove a bitmask of keys.";
@@ -251,15 +251,15 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/reset", async (SocketService socket) =>
-            {
-                return await socket.SendMessageAsync(new MessageModel("core.reset"));
-            }).WithOpenApi(o =>
-            {
-                o.Summary = "Reset the emulation.";
-                o.Description = "Reset the emulation. As opposed to CoreAdapter.reset, this does not invoke the reset callback.";
-                return o;
-            });
+            //group.MapPost("/reset", async (SocketService socket) =>
+            //{
+            //    return await socket.SendMessageAsync(new MessageModel("core.reset"));
+            //}).WithOpenApi(o =>
+            //{
+            //    o.Summary = "Reset the emulation.";
+            //    o.Description = "Reset the emulation. As opposed to CoreAdapter.reset, this does not invoke the reset callback.";
+            //    return o;
+            //});
 
             group.MapGet("/romsize", async (SocketService socket) =>
             {
@@ -321,9 +321,9 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/setkeys", async (SocketService socket, string keys) =>
+            group.MapPost("/setkeys", async (SocketService socket, int keys) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.setKeys", keys));
+                return await socket.SendMessageAsync(new MessageModel("core.setKeys", keys.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Set the currently active key list.";

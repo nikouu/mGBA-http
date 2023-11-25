@@ -5,6 +5,8 @@
 -- https://github.com/nikouu/mGBA-http
 -- ***********************
 
+local enableLogging = true
+
 -- ***********************
 -- Sockets
 -- ***********************
@@ -31,7 +33,7 @@ function beginSocket()
 				server:close()
 				console:error(formatMessage("Listen", error, true))
 			else
-				formattedLog("Socket Server: Listening on port " .. port)
+				console:log("Socket Server: Listening on port " .. port)
 				server:add("received", socketAccept)
 			end
 		end
@@ -124,15 +126,15 @@ function messageRouter(rawMessage)
 
 	local returnValue = defaultReturnValue;
 
-	formattedLog("[" .. os.date("%X", os.time()) .. "] messageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
+	formattedLog("messageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
 
 	if messageType == "custom.button" then pressKey(messageValue1)
 	elseif messageType == "core.addKey" then addKey(messageValue1)
-	elseif messageType == "core.addKeys" then emu:addKeys(messageValue1)
+	elseif messageType == "core.addKeys" then emu:addKeys(tonumber(messageValue1))
 	elseif messageType == "core.autoloadSave" then returnValue = emu:autoloadSave()
-	elseif messageType == "core.checksum" then returnValue = emu:checksum(C.CHECKSUM.CRC32)
+	elseif messageType == "core.checksum" then returnValue = computeChecksum()
 	elseif messageType == "core.clearKey" then clearKey(messageValue1)
-	elseif messageType == "core.clearKeys" then emu:clearKeys(messageValue1)
+	elseif messageType == "core.clearKeys" then emu:clearKeys(tonumber(messageValue1))
 	elseif messageType == "core.currentFrame" then returnValue = emu:currentFrame()
 	elseif messageType == "core.frameCycles" then returnValue = emu:frameCycles()
 	elseif messageType == "core.frequency" then returnValue = emu:frequency()
@@ -144,30 +146,29 @@ function messageRouter(rawMessage)
 	elseif messageType == "core.loadSaveFile" then returnValue = emu:loadSaveFile(messageValue1, toBoolean(messageValue2))
 	elseif messageType == "core.loadStateBuffer" then returnValue = emu:loadStateBuffer(messageValue1, messageValue2)
 	elseif messageType == "core.loadStateFile" then returnValue = emu:loadStateFile(messageValue1, tonumber(messageValue2))
-	elseif messageType == "core.loadStateSlot" then returnValue = emu:loadStateSlot(messageValue1, messageValue2)
+	elseif messageType == "core.loadStateSlot" then returnValue = emu:loadStateSlot(tonumber(messageValue1), tonumber(messageValue2))
 	elseif messageType == "core.platform" then returnValue = emu:platform()
 	elseif messageType == "core.read16" then returnValue = emu:read16(tonumber(messageValue1))
 	elseif messageType == "core.read32" then returnValue = emu:read32(tonumber(messageValue1))
 	elseif messageType == "core.read8" then returnValue = emu:read8(tonumber(messageValue1))
 	elseif messageType == "core.readRange" then returnValue = emu:readRange(tonumber(messageValue1), tonumber(messageValue2))
 	elseif messageType == "core.readRegister" then returnValue = emu:readRegister(messageValue1)
-	elseif messageType == "core.reset" then emu:reset()
-	elseif messageType == "core.romSize" then emu:romSize()
+	elseif messageType == "core.romSize" then returnValue = emu:romSize()
 	elseif messageType == "core.runFrame" then emu:runFrame()
-	elseif messageType == "core.saveStateBuffer" then emu:saveStateBuffer(messageValue1)
-	elseif messageType == "core.saveStateFile" then returnValue = emu:saveStateFile(messageValue1, messageValue2)
-	elseif messageType == "core.saveStateSlot" then returnValue = emu:saveStateSlot(messageValue1, messageValue2)
+	elseif messageType == "core.saveStateBuffer" then emu:saveStateBuffer(tonumber(messageValue1))
+	elseif messageType == "core.saveStateFile" then returnValue = emu:saveStateFile(messageValue1, tonumber(messageValue2))
+	elseif messageType == "core.saveStateSlot" then returnValue = emu:saveStateSlot(tonumber(messageValue1), tonumber(messageValue2))
 	elseif messageType == "core.screenshot" then emu:screenshot(messageValue1)
-	elseif messageType == "core.setKeys" then emu:setKeys(messageValue1)
+	elseif messageType == "core.setKeys" then emu:setKeys(tonumber(messageValue1))
 	elseif messageType == "core.step" then emu:step()
-	elseif messageType == "core.write16" then returnValue = emu:write16(messageValue1, messageValue2)
-	elseif messageType == "core.write32" then returnValue = emu:write32(messageValue1, messageValue2)
+	elseif messageType == "core.write16" then returnValue = emu:write16(tonumber(messageValue1), tonumber(messageValue2))
+	elseif messageType == "core.write32" then returnValue = emu:write32(tonumber(messageValue1), tonumber(messageValue2))
 	elseif messageType == "core.write8" then returnValue = emu:write8(tonumber(messageValue1), tonumber(messageValue2))
-	elseif messageType == "core.writeRegister" then returnValue = emu:writeRegister(messageValue1, messageValue2)
+	elseif messageType == "core.writeRegister" then returnValue = emu:writeRegister(messageValue1, tonumber(messageValue2))
 	elseif messageType == "console.error" then console:error(messageValue1)
-	elseif messageType == "console.log" then formattedLog(messageValue1)
+	elseif messageType == "console.log" then console:log(messageValue1)
 	elseif messageType == "console.warn" then console:warn(messageValue1)
-	elseif messageType == "coreAdapter.reset" then CoreAdapter:reset()
+	elseif messageType == "coreAdapter.reset" then emu:reset()
 	elseif messageType == "memoryDomain.base" then returnValue = emu.memory[messageValue1]:base()
 	elseif messageType == "memoryDomain.bound" then returnValue = emu.memory[messageValue1]:bound()
 	elseif messageType == "memoryDomain.name" then returnValue = emu.memory[messageValue1]:name()
@@ -179,12 +180,14 @@ function messageRouter(rawMessage)
 	elseif messageType == "memoryDomain.write16" then returnValue = emu.memory[messageValue1]:write16(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write32" then returnValue = emu.memory[messageValue1]:write32(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write8" then returnValue = emu.memory[messageValue1]:write8(tonumber(messageValue2), tonumber(messageValue3))
-	else formattedLog(rawMessage)
+	elseif (rawMessage == "<|ACK|>") then formattedLog("Connecting.")	
+	elseif (rawMessage ~= nil or rawMessage ~= '') then formattedLog("Unable to route raw message: " .. rawMessage)
+	else formattedLog(messageType)	
 	end
 
 	returnValue = tostring(returnValue or defaultReturnValue);
 
-	formattedLog("\tReturning: " .. returnValue)
+	formattedLog("Returning: " .. returnValue)
 	return returnValue;
 end
 
@@ -279,8 +282,18 @@ function toBoolean(str)
 end
 
 function formattedLog(string)
-	local timestamp = "[" .. os.date("%X", os.time()) .. "] "
-	console:log(timestamp .. string)
+	if enableLogging then
+		local timestamp = "[" .. os.date("%X", os.time()) .. "] "
+		console:log(timestamp .. string)
+	end
+end
+
+function computeChecksum()
+	local checksum = 0
+	for i, v in ipairs({emu:checksum(C.CHECKSUM.CRC32):byte(1, 4)}) do
+		checksum = checksum * 256 + v
+	end
+	return checksum
 end
 
 -- ***********************
