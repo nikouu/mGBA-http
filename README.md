@@ -20,6 +20,13 @@ If you want to see more real examples with videos and explanations, check out th
 
 https://github.com/nikouu/mGBA-http/assets/983351/08907201-b437-4930-a769-ee441fbdde0d
 
+## Features
+- Interact with mGBA with any language that supports HTTP
+- Full Swagger API documentation (swagger.json and SwaggerUI) for fast prototyping and integration
+- Maps 1 to 1 with most of the mGBA scripting API
+- Custom button APIs for easy button interaction
+- Cross platform
+- Easy to setup
 
 ## Quick Start Guide
 mGBA-http works with 0.10.2 of mGBA.
