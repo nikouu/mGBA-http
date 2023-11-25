@@ -2,6 +2,8 @@
 
 A table of which [mGBA scripting calls](https://mgba.io/docs/scripting.html) are reflected in mGBA-http. 
 
+_Unstable_ APIs may not work as expected and may be fixed in a future update.
+
 ## Core
 
 | mGBA call         | lua endpoint key     | mGBA-http endpoint    |
@@ -19,21 +21,21 @@ A table of which [mGBA scripting calls](https://mgba.io/docs/scripting.html) are
 | getGameTitle()    | core.getGameTitle    | /core/getgametitle    |
 | getKey()          | core.getKey          | /core/getkey          |
 | getKeys()         | core.getKeys         | /core/getkeys         |
-| loadFile()        | core.loadFile        | /core/loadfile        |
-| loadSaveFile()    | core.loadSaveFile    | /core/loadsavefile    |
-| loadStateBuffer() | core.loadStateBuffer | /core/loadstatebuffer |
+| loadFile()        | core.loadFile        | /core/loadfile (_Unstable_)       |
+| loadSaveFile()    | core.loadSaveFile    | /core/loadsavefile (_Unstable_)   |
+| loadStateBuffer() | core.loadStateBuffer | /core/loadstatebuffer (_Unstable_) |
 | loadStateFile()   | core.loadStateFile   | /core/loadstatefile   |
 | loadStateSlot()   | core.loadStateSlot   | /core/loadstateslot   |
 | platform()        | core.platform        | /core/platform        |
 | read16()          | core.read16          | /core/read16          |
 | read32()          | core.read32          | /core/read32          |
 | read8()           | core.read8           | /core/read8           |
-| readRange()       | core.readRange       | /core/readrange       |
+| readRange()       | core.readRange       | /core/readrange (_Unstable_)       |
 | readRegister()    | core.readRegister    | /core/readregister    |
-| reset()           | core.reset           | /core/reset           |
+| reset()           | -           | -           |
 | romSize()         | core.romSize         | /core/romsize         |
-| runFrame()        | core.runFrame        | /core/runframe        |
-| saveStateBuffer() | core.saveStateBuffer | /core/savestatebuffer |
+| runFrame()        | core.runFrame        | /core/runframe (_Unstable_)       |
+| saveStateBuffer() | core.saveStateBuffer | /core/savestatebuffer (_Unstable_) |
 | saveStateFile()   | core.saveStateFile   | /core/savestatefile   |
 | saveStateSlot()   | core.saveStateSlot   | /core/savestateslot   |
 | screenshot()      | core.screenshot      | /core/screenshot      |
@@ -74,7 +76,7 @@ A table of which [mGBA scripting calls](https://mgba.io/docs/scripting.html) are
 | read16()    | memoryDomain.read16    | /memorydomain/read16    |
 | read32()    | memoryDomain.read32    | /memorydomain/read32    |
 | read8()     | memoryDomain.read8     | /memorydomain/read8     |
-| readRange() | memoryDomain.readRange | /memorydomain/readrange |
+| readRange() | memoryDomain.readRange | /memorydomain/readrange (_Unstable_) |
 | size()      | memoryDomain.size      | /memorydomain/size      |
 | write16()   | memoryDomain.write16   | /memorydomain/write16   |
 | write32()   | memoryDomain.write32   | /memorydomain/write32   |
