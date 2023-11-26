@@ -60,5 +60,5 @@ At the top, there is the `enableLogging` flag. This will output timestamped logs
 
 
 ### Examples
-1. See the [examples page](docs/Examples.md).
+1. See the [examples page](Examples.md).
 1. There is a test console project where you can send keys to mGBA.
