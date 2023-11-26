@@ -17,6 +17,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Add a single key.";
                 o.Description = "Add a single key to the currently active key list. As if the key were held down.";
+                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
                 return o;
             });
 
@@ -27,6 +28,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Add a bitmask of keys.";
                 o.Description = "Add a bitmask of keys to the currently active key list. As if the keys were held down.";
+                o.Parameters[0].Description = "Bitmasking has the keys from the scripting page in that order and each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.";
                 return o;
             });
 
@@ -57,6 +59,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Remove a single key.";
                 o.Description = "Remove a single key from the currently active key list. As if the key were released.";
+                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
                 return o;
             });
 
@@ -67,6 +70,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Remove a bitmask of keys.";
                 o.Description = "Remove a bitmask of keys from the currently active key list. As if the keys were released.";
+                o.Parameters[0].Description = "Bitmasking has the keys from the scripting page in that order and each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.";
                 return o;
             });
 
@@ -127,6 +131,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Get the active state of a given key.";
                 o.Description = "Get the active state of a given key.";
+                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
                 return o;
             });
 
@@ -160,9 +165,9 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/loadstatebuffer", async (SocketService socket, string buffer, string flags) =>
+            group.MapPost("/loadstatebuffer", async (SocketService socket, string buffer, int flags = 29) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.loadStateBuffer", buffer, flags));
+                return await socket.SendMessageAsync(new MessageModel("core.loadStateBuffer", buffer, flags.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Load state from a buffer.";
@@ -170,9 +175,9 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/loadstatefile", async (SocketService socket, string path, string flags) =>
+            group.MapPost("/loadstatefile", async (SocketService socket, string path, int flags = 29) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.loadStateFile", path, flags));
+                return await socket.SendMessageAsync(new MessageModel("core.loadStateFile", path, flags.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Load state from the given path.";
@@ -180,9 +185,9 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/loadstateslot", async (SocketService socket, string slot, string flags) =>
+            group.MapPost("/loadstateslot", async (SocketService socket, string slot, int flags = 29) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.loadStateSlot", slot, flags));
+                return await socket.SendMessageAsync(new MessageModel("core.loadStateSlot", slot, flags.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Load state from the slot number.";
@@ -207,6 +212,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Read a 16-bit value from the given bus address.";
                 o.Description = "Read a 16-bit value from the given bus address.";
+                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
@@ -217,6 +223,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Read a 32-bit value from the given bus address.";
                 o.Description = "Read a 32-bit value from the given bus address.";
+                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
@@ -227,6 +234,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Read an 8-bit value from the given bus address.";
                 o.Description = "Read an 8-bit value from the given bus address.";
+                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
@@ -238,6 +246,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Read byte range from the given offset.";
                 o.Description = "Read byte range from the given offset.";
+                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
@@ -281,9 +290,9 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/savestatebuffer", async (SocketService socket, string flags) =>
+            group.MapPost("/savestatebuffer", async (SocketService socket, int flags = 31) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.saveStateBuffer", flags));
+                return await socket.SendMessageAsync(new MessageModel("core.saveStateBuffer", flags.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Save state and return as a buffer.";
@@ -291,9 +300,9 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/savestatefile", async (SocketService socket, string path, string flags) =>
+            group.MapPost("/savestatefile", async (SocketService socket, string path, int flags = 31) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.saveStateFile", path, flags));
+                return await socket.SendMessageAsync(new MessageModel("core.saveStateFile", path, flags.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Save state to the given path.";
@@ -301,9 +310,9 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/savestateslot", async (SocketService socket, string slot, string flags) =>
+            group.MapPost("/savestateslot", async (SocketService socket, string slot, int flags = 31) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.saveStateSlot", slot, flags));
+                return await socket.SendMessageAsync(new MessageModel("core.saveStateSlot", slot, flags.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Save state to the slot number.";
@@ -317,7 +326,8 @@ namespace mGBAHttpServer.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Save a screenshot.";
-                o.Description = @"Save a screenshot. For example, C:\screenshots\screenshot.png";
+                o.Description = "Save a screenshot.";
+                o.Parameters[0].Description = @"For example, C:\screenshots\screenshot.png";
                 return o;
             });
 
@@ -341,43 +351,47 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/write16", async (SocketService socket, string address, string value) =>
+            group.MapPost("/write16", async (SocketService socket, string address, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.write16", address, value));
+                return await socket.SendMessageAsync(new MessageModel("core.write16", address, value.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write a 16-bit value from the given bus address.";
                 o.Description = "Write a 16-bit value from the given bus address.";
+                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
-            group.MapPost("/write32", async (SocketService socket, string address, string value) =>
+            group.MapPost("/write32", async (SocketService socket, string address, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.write32", address, value));
+                return await socket.SendMessageAsync(new MessageModel("core.write32", address, value.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write a 32-bit value from the given bus address.";
                 o.Description = "Write a 32-bit value from the given bus address.";
+                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
-            group.MapPost("/write8", async (SocketService socket, string address, string value) =>
+            group.MapPost("/write8", async (SocketService socket, string address, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.write8", address, value));
+                return await socket.SendMessageAsync(new MessageModel("core.write8", address, value.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write an 8-bit value from the given bus address.";
                 o.Description = "Write an 8-bit value from the given bus address.";
+                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
-            group.MapPost("/writeregister", async (SocketService socket, string regName, string value) =>
+            group.MapPost("/writeregister", async (SocketService socket, string regName, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.writeRegister", regName, value));
+                return await socket.SendMessageAsync(new MessageModel("core.writeRegister", regName, value.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write the value of the register with the given name.";
                 o.Description = "Write the value of the register with the given name.";
+                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 

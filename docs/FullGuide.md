@@ -4,6 +4,8 @@
 
 ## Usage
 
+Make sure not to load the script twice. This causes issues with recieving data. If you need to reload the script, close and reopen mGBA then load up the script again. Closing and reopening the scripting window is not enough. 
+
 ### Configuration
 
 #### appsettings.json

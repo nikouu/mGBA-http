@@ -17,6 +17,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Sends button presses.";
                 o.Description = "A custom convenience API that implements a key press and release. This is as opposed to the key based core API that sends only either a press or release message.";
+                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
                 return o;
             });
 

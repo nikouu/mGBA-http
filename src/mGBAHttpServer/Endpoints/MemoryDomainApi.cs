@@ -47,6 +47,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Read a 16-bit value from the given offset.";
                 o.Description = "Read a 16-bit value from the given offset.";
+                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
@@ -57,6 +58,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Read a 32-bit value from the given offset.";
                 o.Description = "Read a 32-bit value from the given offset.";
+                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
@@ -67,6 +69,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Read an 8-bit value from the given offset.";
                 o.Description = "Read an 8-bit value from the given offset.";
+                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
@@ -77,6 +80,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Read byte range from the given offset.";
                 o.Description = "Read byte range from the given offset.";
+                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
@@ -90,33 +94,36 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/write16", async (SocketService socket, string memoryDomain, string address, string value) =>
+            group.MapPost("/write16", async (SocketService socket, string memoryDomain, string address, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.write16", memoryDomain.ToString(), address, value));
+                return await socket.SendMessageAsync(new MessageModel("memoryDomain.write16", memoryDomain.ToString(), address, value.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write a 16-bit value from the given offset.";
                 o.Description = "Write a 16-bit value from the given offset.";
+                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
-            group.MapPost("/write32", async (SocketService socket, string memoryDomain, string address, string value) =>
+            group.MapPost("/write32", async (SocketService socket, string memoryDomain, string address, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.write32", memoryDomain.ToString(), address, value));
+                return await socket.SendMessageAsync(new MessageModel("memoryDomain.write32", memoryDomain.ToString(), address, value.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write a 32-bit value from the given offset.";
                 o.Description = "Write a 32-bit value from the given offset.";
+                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
-            group.MapPost("/write8", async (SocketService socket, string memoryDomain, string address, string value) =>
+            group.MapPost("/write8", async (SocketService socket, string memoryDomain, string address, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.write8", memoryDomain.ToString(), address, value));
+                return await socket.SendMessageAsync(new MessageModel("memoryDomain.write8", memoryDomain.ToString(), address, value.ToString()));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write an 8-bit value from the given offset.";
                 o.Description = "Write an 8-bit value from the given offset.";
+                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
 
