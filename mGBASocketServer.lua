@@ -1,6 +1,6 @@
 -- ***********************
 -- mGBA-http
--- Version: 0.1.0
+-- Version: 0.2.0
 -- Lua interface for mGBA-http
 -- https://github.com/nikouu/mGBA-http
 -- ***********************

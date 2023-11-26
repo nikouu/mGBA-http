@@ -23,7 +23,7 @@ foreach ($rid in $rids) {
   dotnet publish src\mGBAHttpServer\mGBAHttpServer.csproj -r $rid --self-contained=false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)"  
   Move-Item -Path ".\releaseStaging\*.*" -Destination ".\release" -Force
 
-  dotnet publish src\mGBAHttpServer\mGBAHttpServer.csproj -r $rid --self-contained=true  -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)-self-contained" -p:TrimMode=partial -p:PublishTrimmed=true -p:IncludeAllContentForSelfExtract=true -p:JsonSerializerIsReflectionEnabledByDefault=true
+  dotnet publish src\mGBAHttpServer\mGBAHttpServer.csproj -r $rid --self-contained=true  -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)-self-contained" -p:TrimMode=partial -p:PublishTrimmed=false -p:IncludeAllContentForSelfExtract=true -p:JsonSerializerIsReflectionEnabledByDefault=true
   Move-Item -Path ".\releaseStaging\*.*" -Destination ".\release" -Force
 }
 
