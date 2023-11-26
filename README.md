@@ -46,7 +46,8 @@ For a more in-depth guide with pictures, see the [Full Guide](docs/FullGuide.md)
 - No frame perfect calls. There is network latency between your application to mGBA-http and again latency between mGBA-http and mGBA. This will not be accurate for frame perfect manipulation and is meant for more general usage such as for "Twitch plays", AI playing bot, or other non frame specific application. For high accuracy manipulation see [Bizhawk](https://tasvideos.org/BizHawk/) which is used for TASBots.
 - Not all scripting calls are implemented. See [ImplementedApis.md](docs/ImplementedApis.md) for the list of what is implemented.
 - When very quickly sending requests, the requests may queue and be actioned on long after the input requests stop. Or in other words, no key inputs are eaten. For example, holding down on the d-pad with original hardware didn't trigger the down action long after d-pad release.
-	- You may want to implement a rate limiter in your code. For instance, only send a request every x milliseconds and ignore input between. 
+	- You may want to implement a rate limiter in your code. For instance, only send a request every x milliseconds and ignore input between.
+- The OSX and Linux binaries are experimental.
 
 ## Why?
 This project came about because I didn't know lua and wanted to use C# control emulated Pokémon games in a cross platform way. I was there for and loved Twitch Plays Pokémon and looking around, most GitHub projects for "X plays" style emulator controllers use the Windows SendKey API (or similar abstraction) regardless of language. 
