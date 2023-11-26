@@ -60,9 +60,7 @@ If you know Lua, GameBoy/Advance, or mGBA specifics, I'd love for help.
 
 ### Development
 
-If you're a .NET developer, the setup simple and familiar opening the [solution file](src/CmGBAHttpServer.sln) using Visual Studio (At least VS 17.9) and .NET 8. 
-
-If you're a .NET developer sans Visual Studio or Windows, you'll also feel the setup is simple and familiar with the [solution file](src/CmGBAHttpServer.sln).
+If you're a .NET developer, the setup simple and familiar opening the [solution file](src/CmGBAHttpServer.sln). I use Visual Studio (At least VS 17.9) and the latest .NET. However, if you choose to develop C# without Visual Studio, that's fine too. 
 
 If you're not a .NET developer, check out the comprehensive [C# learning website](https://dotnet.microsoft.com/en-us/learn/csharp) from Microsoft. You can program in C# on whatever platform whether it's Windows, Mac, or Linux.
 
