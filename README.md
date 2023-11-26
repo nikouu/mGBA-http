@@ -64,6 +64,8 @@ If you're a .NET developer, the setup simple and familiar opening the [solution 
 
 If you're not a .NET developer, check out the comprehensive [C# learning website](https://dotnet.microsoft.com/en-us/learn/csharp) from Microsoft. You can program in C# on whatever platform whether it's Windows, Mac, or Linux.
 
+In terms of the .NET work, the project uses [ASP.NET Core minimal API](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-8.0).
+
 #### Design Document
 
 The rough design philosphy is outlined in the [design document](docs/Design.md). Please understand and follow this when considering a contribution.
