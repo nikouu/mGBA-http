@@ -36,6 +36,7 @@ A quick way to begin to sending commands is heading to the SwaggerUI address and
 
 See below for more examples, and the [mGBA scripting documentation](https://mgba.io/docs/scripting.html).
 
+To see what mGBA scripting APIs are implemented, see the [implemented APIs document](ImplementedApis.md).
 
 ### Configuration
 If needed, there are minimal configuration points
