@@ -28,7 +28,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Add a bitmask of keys.";
                 o.Description = "Add a bitmask of keys to the currently active key list. As if the keys were held down.";
-                o.Parameters[0].Description = "Bitmasking has the keys from the scripting page in that order and each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.";
+                o.Parameters[0].Description = "Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.";
                 return o;
             });
 
@@ -70,7 +70,7 @@ namespace mGBAHttpServer.Endpoints
             {
                 o.Summary = "Remove a bitmask of keys.";
                 o.Description = "Remove a bitmask of keys from the currently active key list. As if the keys were released.";
-                o.Parameters[0].Description = "Bitmasking has the keys from the scripting page in that order and each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.";
+                o.Parameters[0].Description = "Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.";
                 return o;
             });
 
@@ -259,16 +259,6 @@ namespace mGBAHttpServer.Endpoints
                 o.Description = "Read the value of the register with the given name.";
                 return o;
             });
-
-            //group.MapPost("/reset", async (SocketService socket) =>
-            //{
-            //    return await socket.SendMessageAsync(new MessageModel("core.reset"));
-            //}).WithOpenApi(o =>
-            //{
-            //    o.Summary = "Reset the emulation.";
-            //    o.Description = "Reset the emulation. As opposed to CoreAdapter.reset, this does not invoke the reset callback.";
-            //    return o;
-            //});
 
             group.MapGet("/romsize", async (SocketService socket) =>
             {

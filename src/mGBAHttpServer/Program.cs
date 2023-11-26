@@ -1,8 +1,10 @@
 ﻿using mGBAHttpServer.Endpoints;
 using mGBAHttpServer.Services;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
-Console.Title = "mGBA-http";
+var version = Assembly.GetExecutingAssembly().GetName().Version;
+Console.Title = $"mGBA-http {version.Major}.{version.Minor}.{version.Build}";
 
 Console.WriteLine(
 """
