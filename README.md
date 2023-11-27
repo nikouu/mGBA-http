@@ -28,7 +28,7 @@ In the example below, we accept inputs from one program and send them to mGBA:
 
 If you want to see more real examples with videos and explanations, check out the [examples page](docs/Examples.md).
 
-https://github.com/nikouu/mGBA-http/assets/983351/08907201-b437-4930-a769-ee441fbdde0d
+https://github.com/nikouu/mGBA-http/assets/983351/691d5379-ed7d-4f58-9f93-24223e35f275
 
 ## Quick Start Guide
 mGBA-http works with 0.10.2 of mGBA.
