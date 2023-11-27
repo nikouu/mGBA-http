@@ -18,7 +18,7 @@ Using the C# console app mGBAHttpServer.TestClient included in this repository, 
 | -------------------- | -------------- | -------------- | -------- |
 | Moving the character | Pokémon Yellow | C# console app | /button  |
 
-https://github.com/nikouu/mGBA-http/assets/983351/0b49d224-8cbe-4ddd-95bb-fe432785cf0e
+https://github.com/nikouu/mGBA-http/assets/983351/48df2f5f-7f86-4edb-b2ef-e5856ea69912
 
 ### Code
 See [mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient).
