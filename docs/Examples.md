@@ -18,7 +18,7 @@ Using the C# console app mGBAHttpServer.TestClient included in this repository, 
 | -------------------- | -------------- | -------------- | -------- |
 | Moving the character | Pokémon Yellow | C# console app | /button  |
 
-https://github.com/nikouu/mGBA-http/assets/983351/08907201-b437-4930-a769-ee441fbdde0d
+https://github.com/nikouu/mGBA-http/assets/983351/0b49d224-8cbe-4ddd-95bb-fe432785cf0e
 
 ### Code
 See [mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient).
@@ -38,7 +38,7 @@ We can validate this by checking the nature of the Pokémon just caught. In this
 | ------------------------------------------------------- | ---------------- | --------- | ------------ |
 | Reading the memory location for opposing Pokémon nature | Pokémon Sapphire | SwaggerUI | /core/read32 |
 
-https://github.com/nikouu/mGBA-http/assets/983351/1b137a6a-8679-47ca-87e5-3f037bcb29ca
+https://github.com/nikouu/mGBA-http/assets/983351/c02e197a-db6f-4d35-a997-a5706c537fa9
 
 ### Code
 N/A, uses SwaggerUI.
@@ -52,7 +52,7 @@ The bomb count on the top right of the game going from 35 to 50.
 | ------------------------------- | ----------------------------------- | ------- | ------------ |
 | Modifying memory for bomb count | The Legend of Zelda: The Minish Cap | Postman | /core/write8 |
 
-https://github.com/nikouu/mGBA-http/assets/983351/e0781dc1-44af-43c0-8945-800f3a3d4338
+https://github.com/nikouu/mGBA-http/assets/983351/95b9586e-2bb2-4e9d-93e2-dd818c6d3085
 
 ### Code
 N/A, uses Postman.
@@ -64,7 +64,7 @@ Automating loading a savestate is easy. Perhaps your bot needs to reset the game
 | ---------------------------- | -------------------------------------- | ------- | ------------------ |
 | Loading a specific save file | The Legend of Zelda: Oracle of Seasons | Node.js | /core/loadstatefile |
 
-https://github.com/nikouu/mGBA-http/assets/983351/5b085c65-7fed-44e3-9525-6676f9fc2dab
+https://github.com/nikouu/mGBA-http/assets/983351/edd2ca52-2fe1-43d7-a9cb-aab67cc79a20
 
 ### Code
 ```javascript
@@ -98,7 +98,7 @@ Perhaps your AI bot needs a way to see the game world. Maybe your Twitch audienc
 | ------------------- | ---------------------------------------------------------- | ------ | ---------------- |
 | Taking a screenshot | Yu-Gi-Oh! Worldwide Edition: Stairway to the Destined Duel | Python | /core/screenshot |
 
-https://github.com/nikouu/mGBA-http/assets/983351/8353411b-dabd-4167-b4d8-93829be339fd
+https://github.com/nikouu/mGBA-http/assets/983351/f6101b95-99c2-4f77-8ed6-527a61fd3be8
 
 ### Code
 ```python
@@ -119,7 +119,7 @@ A lot of the calls are simple GET requests, meaning we can even use the URL bar 
 | ------------------------------------------- | ------------------------ | ---------------- | ------------------- |
 | Getting number of frames since ROM launched | Golden Sun: The Lost Age | Chrome (browser) | /core/currentframe  |
 
-https://github.com/nikouu/mGBA-http/assets/983351/6b69511c-6944-4598-92fc-6bfa95dd7070
+https://github.com/nikouu/mGBA-http/assets/983351/8ff0a205-a35f-4488-a59c-90c33c79f7e5
 
 ### Code
 ```
@@ -134,7 +134,7 @@ Each retail game has the game title in the header, here we use PowerShell (*???*
 | ------------------------------ | --------------- | ---------- | ------------------ |
 | Get game title from ROM header | Pokémon FireRed | PowerShell | /core/getgametitle |
 
-https://github.com/nikouu/mGBA-http/assets/983351/d810f240-0079-4df1-8644-a9dc5acd3ac0
+https://github.com/nikouu/mGBA-http/assets/983351/d15b6f90-c18e-4550-aa5f-9013e302d715
 
 ### Code
 ```powershell
