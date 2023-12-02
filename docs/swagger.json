@@ -1,0 +1,1736 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "mGBA-http",
+    "description": "An HTTP interface for mGBA scripting.",
+    "contact": {
+      "name": "GitHub Repository",
+      "url": "https://github.com/nikouu/mGBA-http/"
+    }
+  },
+  "paths": {
+    "/mgba-http/button": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Sends button presses.",
+        "description": "A custom convenience API that implements a key press and release. This is as opposed to the key based core API that sends only either a press or release message.",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/console/error": {
+      "post": {
+        "tags": [
+          "Console"
+        ],
+        "summary": "Print an error to the console.",
+        "description": "Presents textual information to the user via a console.",
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/console/log": {
+      "post": {
+        "tags": [
+          "Console"
+        ],
+        "summary": "Print a log to the console.",
+        "description": "Presents textual information to the user via a console.",
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/console/warn": {
+      "post": {
+        "tags": [
+          "Console"
+        ],
+        "summary": "Print a warning to the console.",
+        "description": "Presents textual information to the user via a console.",
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/core/addkey": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Add a single key.",
+        "description": "Add a single key to the currently active key list. As if the key were held down.",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/addkeys": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Add a bitmask of keys.",
+        "description": "Add a bitmask of keys to the currently active key list. As if the keys were held down.",
+        "parameters": [
+          {
+            "name": "keyBitmask",
+            "in": "query",
+            "description": "Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/autoloadsave": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Load save data.",
+        "description": "Load the save data associated with the currently loaded ROM file.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/checksum": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Get the checksum of the loaded ROM.",
+        "description": "Get the checksum of the loaded ROM as base 10.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/clearkey": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Remove a single key.",
+        "description": "Remove a single key from the currently active key list. As if the key were released.",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/clearkeys": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Remove a bitmask of keys.",
+        "description": "Remove a bitmask of keys from the currently active key list. As if the keys were released.",
+        "parameters": [
+          {
+            "name": "keyBitmask",
+            "in": "query",
+            "description": "Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/currentFrame": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Get the number of the current frame.",
+        "description": "Get the number of the current frame.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/framecycles": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Get the number of cycles per frame.",
+        "description": "Get the number of cycles per frame.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/frequency": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Get the number of cycles per second.",
+        "description": "Get the number of cycles per second.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/getgamecode": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Get internal product code for the game.",
+        "description": "Get internal product code for the game from the ROM header, if available.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/getgametitle": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Get internal title of the game.",
+        "description": "Get internal title of the game from the ROM header.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/getkey": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Get the active state of a given key.",
+        "description": "Get the active state of a given key.",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/getkeys": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Get the currently active keys as a bitmask.",
+        "description": "Get the currently active keys as a bitmask.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/loadfile": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Load a ROM file.",
+        "description": "Load a ROM file into the current state of this core.",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/loadsavefile": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Load save data file.",
+        "description": "Load save data from the given path. If the temporary flag is set, the given save data will not be written back to disk.",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "temporary",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/loadstatebuffer": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Load state from a buffer.",
+        "description": "Load state from a buffer.",
+        "parameters": [
+          {
+            "name": "buffer",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "flags",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 29
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/loadstatefile": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Load state from the given path.",
+        "description": "Load state from the given path.",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "flags",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 29
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/loadstateslot": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Load state from the slot number.",
+        "description": "Load state from the slot number.",
+        "parameters": [
+          {
+            "name": "slot",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "flags",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 29
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/platform": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Get which platform is being emulated.",
+        "description": "Get which platform is being emulated.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/read16": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Read a 16-bit value from the given bus address.",
+        "description": "Read a 16-bit value from the given bus address.",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/read32": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Read a 32-bit value from the given bus address.",
+        "description": "Read a 32-bit value from the given bus address.",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/read8": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Read an 8-bit value from the given bus address.",
+        "description": "Read an 8-bit value from the given bus address.",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/readrange": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Read byte range from the given offset.",
+        "description": "Read byte range from the given offset.",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "length",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/readregister": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Read the value of the register with the given name.",
+        "description": "Read the value of the register with the given name.",
+        "parameters": [
+          {
+            "name": "regName",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/romsize": {
+      "get": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Get the size of the loaded ROM.",
+        "description": "Get the size of the loaded ROM.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/runFrame": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Run until the next frame.",
+        "description": "Run until the next frame.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/savestatebuffer": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Save state and return as a buffer.",
+        "description": "Save state and return as a buffer.",
+        "parameters": [
+          {
+            "name": "flags",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 31
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/savestatefile": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Save state to the given path.",
+        "description": "Save state to the given path.",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "flags",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 31
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/savestateslot": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Save state to the slot number.",
+        "description": "Save state to the slot number.",
+        "parameters": [
+          {
+            "name": "slot",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "flags",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 31
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/screenshot": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Save a screenshot.",
+        "description": "Save a screenshot.",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "description": "For example, C:\\screenshots\\screenshot.png",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/setkeys": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Set the currently active key list.",
+        "description": "Set the currently active key list.",
+        "parameters": [
+          {
+            "name": "keys",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/step": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Run a single instruction.",
+        "description": "Run a single instruction.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/write16": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Write a 16-bit value from the given bus address.",
+        "description": "Write a 16-bit value from the given bus address.",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/write32": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Write a 32-bit value from the given bus address.",
+        "description": "Write a 32-bit value from the given bus address.",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/write8": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Write an 8-bit value from the given bus address.",
+        "description": "Write an 8-bit value from the given bus address.",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/core/writeregister": {
+      "post": {
+        "tags": [
+          "Core"
+        ],
+        "summary": "Write the value of the register with the given name.",
+        "description": "Write the value of the register with the given name.",
+        "parameters": [
+          {
+            "name": "regName",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coreadapter/reset": {
+      "post": {
+        "tags": [
+          "CoreAdapter"
+        ],
+        "summary": "Reset the emulation.",
+        "description": "Reset the emulation and calls the reset callback.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/memorydomain/base": {
+      "get": {
+        "tags": [
+          "MemoryDomain"
+        ],
+        "summary": "Get the address of the base of this memory domain.",
+        "description": "Get the address of the base of this memory domain.",
+        "parameters": [
+          {
+            "name": "memoryDomain",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memorydomain/bound": {
+      "get": {
+        "tags": [
+          "MemoryDomain"
+        ],
+        "summary": "Get the address of the end bound of this memory domain.",
+        "description": "Get the address of the end bound of this memory domain. Note that this address is not in the domain itself, and is the address of the first byte past it.",
+        "parameters": [
+          {
+            "name": "memoryDomain",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memorydomain/name": {
+      "get": {
+        "tags": [
+          "MemoryDomain"
+        ],
+        "summary": "Get a short, human-readable name for this memory domain.",
+        "description": "Get a short, human-readable name for this memory domain.",
+        "parameters": [
+          {
+            "name": "memoryDomain",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memorydomain/read16": {
+      "get": {
+        "tags": [
+          "MemoryDomain"
+        ],
+        "summary": "Read a 16-bit value from the given offset.",
+        "description": "Read a 16-bit value from the given offset.",
+        "parameters": [
+          {
+            "name": "memoryDomain",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memorydomain/read32": {
+      "get": {
+        "tags": [
+          "MemoryDomain"
+        ],
+        "summary": "Read a 32-bit value from the given offset.",
+        "description": "Read a 32-bit value from the given offset.",
+        "parameters": [
+          {
+            "name": "memoryDomain",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memorydomain/read8": {
+      "get": {
+        "tags": [
+          "MemoryDomain"
+        ],
+        "summary": "Read an 8-bit value from the given offset.",
+        "description": "Read an 8-bit value from the given offset.",
+        "parameters": [
+          {
+            "name": "memoryDomain",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memorydomain/readrange": {
+      "get": {
+        "tags": [
+          "MemoryDomain"
+        ],
+        "summary": "Read byte range from the given offset.",
+        "description": "Read byte range from the given offset.",
+        "parameters": [
+          {
+            "name": "memoryDomain",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "length",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memorydomain/size": {
+      "get": {
+        "tags": [
+          "MemoryDomain"
+        ],
+        "summary": "Get the size of this memory domain in bytes.",
+        "description": "Get the size of this memory domain in bytes.",
+        "parameters": [
+          {
+            "name": "memoryDomain",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memorydomain/write16": {
+      "post": {
+        "tags": [
+          "MemoryDomain"
+        ],
+        "summary": "Write a 16-bit value from the given offset.",
+        "description": "Write a 16-bit value from the given offset.",
+        "parameters": [
+          {
+            "name": "memoryDomain",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memorydomain/write32": {
+      "post": {
+        "tags": [
+          "MemoryDomain"
+        ],
+        "summary": "Write a 32-bit value from the given offset.",
+        "description": "Write a 32-bit value from the given offset.",
+        "parameters": [
+          {
+            "name": "memoryDomain",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memorydomain/write8": {
+      "post": {
+        "tags": [
+          "MemoryDomain"
+        ],
+        "summary": "Write an 8-bit value from the given offset.",
+        "description": "Write an 8-bit value from the given offset.",
+        "parameters": [
+          {
+            "name": "memoryDomain",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Address in hex, e.g. 0x03000000",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": { }
+}

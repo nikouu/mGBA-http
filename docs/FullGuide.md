@@ -36,7 +36,9 @@ A quick way to begin to sending commands is heading to the SwaggerUI address and
 
 See below for more examples, and the [mGBA scripting documentation](https://mgba.io/docs/scripting.html).
 
-To see what mGBA scripting APIs are implemented, see the [implemented APIs document](ImplementedApis.md).
+- To see what mGBA scripting APIs are implemented, see the [implemented APIs document](ImplementedApis.md).
+- To see an overview of the swagger.json file, see the [API documentation](ApiDocumentation.md).
+- Finally, the full [swagger.json](swagger.json) file.
 
 ### Configuration
 If needed, there are minimal configuration points
