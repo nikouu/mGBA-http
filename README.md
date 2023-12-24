@@ -56,6 +56,8 @@ When investigating how [Ironmon-Tracker](https://github.com/besteon/Ironmon-Trac
 
 mGBA-http builds on the mGBA socket API abstraction and adds an HTTP layer to simplify interaction and development - which is exactly what I want for future projects.
 
+Future projects such as the proof of concept: [CPU Plays Pokemon](https://github.com/nikouu/CPU-Plays-Pokemon)
+
 ## Contributing
 If you know Lua, GameBoy/Advance, or mGBA specifics, I'd love for help. 
 
