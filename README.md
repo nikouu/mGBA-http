@@ -31,7 +31,7 @@ If you want to see more real examples with videos and explanations, check out th
 https://github.com/nikouu/mGBA-http/assets/983351/691d5379-ed7d-4f58-9f93-24223e35f275
 
 ## Quick Start Guide
-mGBA-http works with 0.10.2 of mGBA.
+mGBA-http works with 0.10.2 of mGBA (and probably later version too).
 
 1. Ensure you have [mGBA](https://mgba.io/downloads.html)
 1. Download mGBA-http and mGBASocketServer.lua from the [Releases](https://github.com/nikouu/mGBA-http/releases/latest) section 
