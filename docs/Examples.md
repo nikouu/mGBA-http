@@ -20,6 +20,8 @@ Using the C# console app mGBAHttpServer.TestClient included in this repository, 
 
 https://github.com/nikouu/mGBA-http/assets/983351/691d5379-ed7d-4f58-9f93-24223e35f275
 
+*API has been updated since this video, but the functionality is the same.*
+
 ### Code
 See [mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient).
 

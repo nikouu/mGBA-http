@@ -63,6 +63,8 @@ Similarly to *Cross Platform* above if a developer wants to clone/fork the code 
 
 It should be easy to develop against mGBA-http. Unless there is a compelling reason, just GET and POST calls should be used. Swagger is included in this project both as the `swagger.json` file and the interactive SwaggerUI to help and ease protyping.
 
+Keeping most logic complexity in the Lua file further enables others who want to create their own wrappers as the key logic is there for them already to hook into. Where this wouldn't be the case if it were mostly in the C# code of mGBA-http.
+
 ## Languages
 
 While mGBA-http is talked about as a singular piece, it's made up of both the C# server and the Lua script that loads into mGBA. 
@@ -78,5 +80,3 @@ There are accepted limitations to mGBA-http.
 - It takes time for an HTTP request from origin to mGBA-http then time again from mGBA-http to mGBA. 
 	- This makes mGBA-http unsuitable for frame sensitive inputs.
 - Not all mGBA API calls are simple and may return complex objects. Unless there is a complelling reason, these will not be implemented.
-- Many quickly sent requests may queue.
-	- For inputs this may mean the key inputs happen long after the user has stopped them.

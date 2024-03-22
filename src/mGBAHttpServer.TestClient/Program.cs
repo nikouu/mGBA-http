@@ -34,7 +34,7 @@ while (Console.ReadKey(true) is ConsoleKeyInfo consoleKeyInfo)
 
 async Task SendKey(string key)
 {
-    var request = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:5000/button?key={key}");
+    var request = new HttpRequestMessage(HttpMethod.Post, $"http://localhost:5000/mgba-http/button/tap?key={key}");
     var response = await client.SendAsync(request);
     response.EnsureSuccessStatusCode();
 }

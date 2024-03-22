@@ -45,8 +45,6 @@ For a more in-depth guide with pictures, see the [Full Guide](docs/FullGuide.md)
 ## Limitations
 - No frame perfect calls. There is network latency between your application to mGBA-http and again latency between mGBA-http and mGBA. This will not be accurate for frame perfect manipulation and is meant for more general usage such as for "Twitch plays", AI playing bot, or other non frame specific application. For high accuracy manipulation see [Bizhawk](https://tasvideos.org/BizHawk/) which is used for TASBots.
 - Not all scripting calls are implemented. See [ImplementedApis.md](docs/ImplementedApis.md) for the list of what is implemented.
-- When very quickly sending requests, the requests may queue and be actioned on long after the input requests stop. Or in other words, no key inputs are eaten. For example, holding down on the d-pad with original hardware didn't trigger the down action long after d-pad release.
-	- You may want to implement a rate limiter in your code. For instance, only send a request every x milliseconds and ignore input between.
 - The OSX and Linux binaries are experimental.
 
 ## Why?
@@ -62,7 +60,6 @@ Future projects such as the proof of concept: [CPU Plays Pokemon](https://github
 If you know Lua, GameBoy/Advance, or mGBA specifics, I'd love for help. 
 
 ### Development
-
 If you're a .NET developer, the setup simple and familiar opening the [solution file](src/CmGBAHttpServer.sln). I use Visual Studio (At least VS 17.9) and the latest .NET. However, if you choose to develop C# without Visual Studio, that's fine too. 
 
 If you're not a .NET developer, check out the comprehensive [C# learning website](https://dotnet.microsoft.com/en-us/learn/csharp) from Microsoft. You can program in C# on whatever platform whether it's Windows, Mac, or Linux.
@@ -70,27 +67,22 @@ If you're not a .NET developer, check out the comprehensive [C# learning website
 In terms of the .NET work, the project uses [ASP.NET Core minimal API](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-8.0).
 
 #### Design Document
-
 The rough design philosphy is outlined in the [design document](docs/Design.md). Please understand and follow this when considering a contribution.
 
 ### Build
-
 The PowerShell release script [ReleaseBuild.ps1](ReleaseBuild.ps1) creates the final binaries. PowerShell is cross platform and can be downloaded via the [PowerShell download documentation](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.3).
 
 The script generates binaries closely aligned with the operating systems and architectures that [mGBA provides downloads](https://mgba.io/downloads.html) for.
 
 #### Cross Platform
-
 To reduce the barrier of entry, mGBA-http also has [self-contained](https://learn.microsoft.com/en-us/dotnet/core/deploying/#publish-self-contained) builds. These are the larger binaries with "self-contained" in the filename and bring the entirity of .NET needed to run the executable - meaning the user does not need to download the [.NET runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) to use mGBA-http.
 
 ## Contact
 If there's a problem feel free to start an issue, otherwise see [my about page](https://www.nikouusitalo.com/about/#contact) on how to contact me. 
 
-
-
 ## Acknowledgments
 - The mGBA GitHub team for having socket examples
-- [Zachary Handley](https://zachhandley.com/) for paving the way with [button press code](https://discord.com/channels/453962671499509772/979634439237816360/1124075643143995522)
+- [Zachary Handley](https://zachhandley.com/) for paving the way with the initial [button press code](https://discord.com/channels/453962671499509772/979634439237816360/1124075643143995522)
 - [heroldev/AGB-buttontest](https://github.com/heroldev/AGB-buttontest) for a simple button testing ROM
 
 [References.md](docs/References.md) has useful links during development.

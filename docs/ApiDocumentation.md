@@ -6,7 +6,7 @@ The following is generated from the [swagger.json](swagger.json) file via https:
 GitHub Repository  
 https://github.com/nikouu/mGBA-http/  
 
-### /mgba-http/button
+### /mgba-http/button/tap
 
 #### POST
 ##### Summary:
@@ -22,6 +22,77 @@ A custom convenience API that implements a key press and release. This is as opp
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | string |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | OK |
+
+### /mgba-http/button/tapmany
+
+#### POST
+##### Summary:
+
+Sends multiple button presses simultaneously.
+
+##### Description:
+
+A custom convenience API that implements multiple simultaneously keys being pressed and released. This is as opposed to the key based core API that sends only either a press or release message.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| keys | query | Key array containing any of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ [KeysEnum](#KeysEnum) ] |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | OK |
+
+### /mgba-http/button/hold
+
+#### POST
+##### Summary:
+
+Sends a held down button with a given duration in frames.
+
+##### Description:
+
+A custom convenience API that implements a held down button for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | string |
+| duration | query |  | Yes | integer |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | OK |
+
+### /mgba-http/button/holdmany
+
+#### POST
+##### Summary:
+
+Sends multiple button presses simultaneously.
+
+##### Description:
+
+A custom convenience API that implements multiple simultaneously keys being pressed and released for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| keys | query | Key array containing any of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ [KeysEnum](#KeysEnum) ] |
+| duration | query |  | Yes | integer |
 
 ##### Responses
 

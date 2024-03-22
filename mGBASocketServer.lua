@@ -128,7 +128,10 @@ function messageRouter(rawMessage)
 
 	formattedLog("messageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
 
-	if messageType == "mgba-http.button" then pressKey(messageValue1)
+	if messageType == "mgba-http.button.tap" then manageButton(messageValue1)
+	elseif messageType == "mgba-http.button.tapmany" then manageButtons(messageValue1)
+	elseif messageType == "mgba-http.button.hold" then manageButton(messageValue1, messageValue2)
+	elseif messageType == "mgba-http.button.holdmany" then manageButtons(messageValue1, messageValue2)
 	elseif messageType == "core.addKey" then addKey(messageValue1)
 	elseif messageType == "core.addKeys" then emu:addKeys(tonumber(messageValue1))
 	elseif messageType == "core.autoloadSave" then returnValue = emu:autoloadSave()
@@ -205,51 +208,59 @@ function clearKey(keyLetter)
 	emu:clearKey(key)
 end
 
--- code via ZachHandley
--- https://discord.com/channels/453962671499509772/979634439237816360/1124075643143995522
-local keyQueue = {}
-local head = 1
-local tail = 1
-local totalDuration = 0
+local keyEventQueue = {}
 
--- Function to update key presses
-function updateKeys()
-    -- Check if the queue is empty
-    if head ~= tail then
-        -- Get the key press at the head of the queue
-        local keyPress = keyQueue[head]
-        --formattedLog("currentFrame: " .. emu:currentFrame() .. "startFrame: " .. keyPress.startFrame .. " endFrame: " .. keyPress.endFrame .. " key: " .. keyPress.key)
-        -- Check if the current frame is within the key press duration
-        if emu:currentFrame() >= keyPress.startFrame and emu:currentFrame() <= keyPress.endFrame and not keyPress.keyPressed then
-            -- If the current frame is within the key press duration, press the key
-            emu:addKey(keyPress.key)
-            keyPress.keyPressed = true
-            formattedLog("Pressed: " .. keyPress.key)
-        elseif emu:currentFrame() > keyPress.endFrame then
-            -- If the key press duration has ended, release the key and remove it from the queue
-            emu:clearKey(keyPress.key)
-            head = head + 1
-            -- If the queue is now empty, reset the total duration
-            if head == tail then
-                totalDuration = 0
-            end
-        end
-    end
+function manageButton(keyLetter, duration)
+	duration = duration or 15
+	local key = keyValues[keyLetter]
+	local bitmask = toBitmask({key})
+	enqueueButtons(bitmask, duration)
 end
 
--- Function to add a key press
-function pressKey(keyLetter, duration)
+function manageButtons(keyLetters, duration)
 	duration = duration or 15
-	local key = keyValues[keyLetter];
-    -- Calculate the start and end frames for this key press
-    local startFrame = emu:currentFrame() + totalDuration
-    local endFrame = startFrame + duration + 1
-    formattedLog("pressKey: " .. startFrame .. " - " .. endFrame .. " CF: " .. emu:currentFrame())
-    -- Add the key, start frame, and end frame to the queue
-    keyQueue[tail] = {key = key, startFrame = startFrame, endFrame = endFrame, keyPressed = false}
-    tail = tail + 1
-    -- Update the total duration
-    totalDuration = totalDuration + duration
+	local keyLettersArray = splitStringToTable(keyLetters, ";")	
+	local keys = {}
+	for i, keyLetter in ipairs(keyLettersArray) do
+		formattedLog("lmao 5 " ..keyLetter )
+		keys[i] = keyValues[keyLetter]
+	end
+	local bitmask = toBitmask(keys);
+	enqueueButtons(bitmask, duration);
+end
+
+function enqueueButtons(keyMask, duration)
+	local startFrame = emu:currentFrame()
+	local endFrame = startFrame + duration + 1
+
+	table.insert(keyEventQueue, 
+	{
+		keyMask = keyMask,
+		startFrame = startFrame, 
+		endFrame = endFrame,
+		pressed = false
+	});
+
+	formattedLog(keyMask)
+end
+
+function updateKeys()
+	local indexesToRemove = {}
+
+	for index, keyEvent in ipairs(keyEventQueue) do
+
+		if emu:currentFrame() >= keyEvent.startFrame and emu:currentFrame() <= keyEvent.endFrame and not keyEvent.pressed then
+			emu:addKeys(keyEvent.keyMask)
+			keyEvent.pressed = true
+		elseif emu:currentFrame() > keyEvent.endFrame then
+			emu:clearKeys(keyEvent.keyMask)
+			table.insert(indexesToRemove, index)
+		end
+	end
+
+	for _, i in ipairs(indexesToRemove) do
+		table.remove(keyEventQueue, i)
+	end
 end
 
 callbacks:add("frame", updateKeys)
@@ -294,6 +305,14 @@ function computeChecksum()
 		checksum = checksum * 256 + v
 	end
 	return checksum
+end
+
+function toBitmask(keys)
+    local mask = 0
+    for _, key in ipairs(keys) do	
+        mask = mask | (1 << tonumber(key))
+    end
+    return mask
 end
 
 -- ***********************

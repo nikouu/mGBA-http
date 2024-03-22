@@ -87,6 +87,9 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 
 ## Button - Custom API
 
-| mGBA call | lua endpoint key | mGBA-http endpoint |
-| :-------: | ---------------- | ------------------ |
-|     -     | mgba-http.button | /mgba-http/button  |
+| mGBA call | lua endpoint key          | mGBA-http endpoint         |
+| :-------: | ------------------------- | -------------------------- |
+|     -     | mgba-http.button.tap      | /mgba-http/button/tap      |
+|     -     | mgba-http.button.tapmany  | /mgba-http/button/tapmany  |
+|     -     | mgba-http.button.hold     | /mgba-http/button/hold     |
+|     -     | mgba-http.button.holdmany | /mgba-http/button/holdmany |
