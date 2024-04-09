@@ -28,7 +28,7 @@ In the example below, we accept inputs from one program and send them to mGBA:
 
 If you want to see more real examples with videos, code, and explanations, check out the [examples page](docs/Examples.md).
 
-There are also [C# examples](examples) I use for testing.
+There are also C# examples I use for testing in the [testing](testing) folder.
 
 https://github.com/nikouu/mGBA-http/assets/983351/691d5379-ed7d-4f58-9f93-24223e35f275
 
