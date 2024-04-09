@@ -1,4 +1,5 @@
 ﻿using mGBAHttpServer.Endpoints;
+using mGBAHttpServer.Models;
 using mGBAHttpServer.Services;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -36,7 +37,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.Configure<SocketOptions>(builder.Configuration.GetSection(SocketOptions.Section));
 builder.Services.AddSingleton<SocketService>();
+
 var loggingSection = builder.Configuration.GetSection("logging");
 
 // Allow log filtering if the configs aren't present with prod exe
@@ -86,6 +89,5 @@ app.MapConsoleEndpoints();
 app.MapCoreAdapterEndpoints();
 app.MapMemoryDomainEndpoints();
 app.MapButtonEndpoints();
-
 
 app.Run();

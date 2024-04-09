@@ -1,4 +1,5 @@
 ﻿using mGBAHttpServer.Models;
+using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -12,10 +13,10 @@ namespace mGBAHttpServer.Services
         private readonly Socket _tcpSocket;
         private const int _maxRetries = 3;
 
-        public SocketService()
+        public SocketService(IOptions<SocketOptions> socketOptions)
         {
-            var ipAddress = IPAddress.Parse("127.0.0.1");
-            _tcpEndPoint = new(ipAddress, 8888);
+            var ipAddress = IPAddress.Parse(socketOptions.Value.IpAddress);
+            _tcpEndPoint = new(ipAddress, socketOptions.Value.Port);
             _tcpSocket = new(_tcpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         }
 
