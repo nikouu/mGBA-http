@@ -222,7 +222,6 @@ function manageButtons(keyLetters, duration)
 	local keyLettersArray = splitStringToTable(keyLetters, ";")	
 	local keys = {}
 	for i, keyLetter in ipairs(keyLettersArray) do
-		formattedLog("lmao 5 " ..keyLetter )
 		keys[i] = keyValues[keyLetter]
 	end
 	local bitmask = toBitmask(keys);
