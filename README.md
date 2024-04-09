@@ -4,6 +4,8 @@ An HTTP interface for mGBA scripting. As long as you make HTTP requests, you'll 
 
 ![](docs/Images/FlowDiagram.jpg)
 
+⭐ I've written about this on [my blog](https://www.nikouusitalo.com/blog/use-any-language-to-control-mgba/)! 📝
+
 ## Features
 - Interact with mGBA with any language that supports HTTP
 - Full Swagger API documentation (swagger.json and SwaggerUI) for fast prototyping and integration
