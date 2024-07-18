@@ -5,7 +5,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 
 var version = Assembly.GetExecutingAssembly().GetName().Version;
-Console.Title = $"mGBA-http {version.Major}.{version.Minor}.{version.Build}";
+Console.Title = $"mGBA-http {version?.Major}.{version?.Minor}.{version?.Build}";
 
 Console.WriteLine(
 """
@@ -41,36 +41,6 @@ builder.Services.Configure<SocketOptions>(builder.Configuration.GetSection(Socke
 builder.Services.AddSingleton<SocketService>();
 
 var loggingSection = builder.Configuration.GetSection("logging");
-
-// Allow log filtering if the configs aren't present with prod exe
-if (!builder.Environment.IsDevelopment() && !loggingSection.Exists())
-{
-    builder.Logging.AddFilter((provider, category, logLevel) =>
-    {
-        if (category.Contains("Microsoft.AspNetCore.Hosting.Diagnostics") && logLevel <= LogLevel.Error)
-        {
-            return false;
-        }
-        else if (category.Contains("Microsoft.AspNetCore.Mvc.Infrastructure.DefaultActionDescriptorCollectionProvider")
-            && logLevel <= LogLevel.Error)
-        {
-            return false;
-        }
-        else if (category.Contains("Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware")
-            && logLevel <= LogLevel.Error)
-        {
-            return false;
-        }
-        else if (logLevel >= LogLevel.Information)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    });
-}
 
 var app = builder.Build();
 
