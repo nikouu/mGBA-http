@@ -9,7 +9,7 @@
     }
   },
   "paths": {
-    "/mgba-http/button": {
+    "/mgba-http/button/tap": {
       "post": {
         "tags": [
           "Button"
@@ -22,9 +22,109 @@
             "in": "query",
             "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/mgba-http/button/tapmany": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Sends multiple button presses simultaneously.",
+        "description": "A custom convenience API that implements multiple simultaneously keys being pressed and released. This is as opposed to the key based core API that sends only either a press or release message.",
+        "parameters": [
+          {
+            "name": "keys",
+            "in": "query",
+            "description": "A key array.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/KeysEnum"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/mgba-http/button/hold": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Sends a held down button for a given duration in frames.",
+        "description": "A custom convenience API that implements a held down button for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "description": "Duration in frames.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/mgba-http/button/holdmany": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Sends multiple button presses simultaneously for a given duration in frames.",
+        "description": "A custom convenience API that implements multiple simultaneously keys being pressed and released for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.",
+        "parameters": [
+          {
+            "name": "keys",
+            "in": "query",
+            "description": "A key array.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/KeysEnum"
+              }
+            }
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "description": "Duration in frames.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -47,7 +147,6 @@
             "name": "message",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -72,7 +171,6 @@
             "name": "message",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -97,7 +195,6 @@
             "name": "message",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -123,7 +220,6 @@
             "in": "query",
             "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -156,7 +252,6 @@
             "in": "query",
             "description": "Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -232,7 +327,6 @@
             "in": "query",
             "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -265,7 +359,6 @@
             "in": "query",
             "description": "Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -404,7 +497,6 @@
             "in": "query",
             "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -457,7 +549,6 @@
             "name": "path",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -489,7 +580,6 @@
             "name": "path",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -498,7 +588,6 @@
             "name": "temporary",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "boolean"
             }
@@ -530,7 +619,6 @@
             "name": "buffer",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -538,7 +626,6 @@
           {
             "name": "flags",
             "in": "query",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -572,7 +659,6 @@
             "name": "path",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -580,7 +666,6 @@
           {
             "name": "flags",
             "in": "query",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -614,7 +699,6 @@
             "name": "slot",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -622,7 +706,6 @@
           {
             "name": "flags",
             "in": "query",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -678,7 +761,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -711,7 +793,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -744,7 +825,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -777,7 +857,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -786,7 +865,6 @@
             "name": "length",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -818,7 +896,6 @@
             "name": "regName",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -891,7 +968,6 @@
           {
             "name": "flags",
             "in": "query",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -925,7 +1001,6 @@
             "name": "path",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -933,7 +1008,6 @@
           {
             "name": "flags",
             "in": "query",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -967,7 +1041,6 @@
             "name": "slot",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -975,7 +1048,6 @@
           {
             "name": "flags",
             "in": "query",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -1010,7 +1082,6 @@
             "in": "query",
             "description": "For example, C:\\screenshots\\screenshot.png",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1042,7 +1113,6 @@
             "name": "keys",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1097,7 +1167,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1106,7 +1175,6 @@
             "name": "value",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1140,7 +1208,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1149,7 +1216,6 @@
             "name": "value",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1183,7 +1249,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1192,7 +1257,6 @@
             "name": "value",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1226,7 +1290,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1235,7 +1298,6 @@
             "name": "value",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1282,7 +1344,6 @@
             "name": "memoryDomain",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1314,7 +1375,6 @@
             "name": "memoryDomain",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1346,7 +1406,6 @@
             "name": "memoryDomain",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1378,7 +1437,6 @@
             "name": "memoryDomain",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1388,7 +1446,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1420,7 +1477,6 @@
             "name": "memoryDomain",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1430,7 +1486,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1462,7 +1517,6 @@
             "name": "memoryDomain",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1472,7 +1526,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1504,7 +1557,6 @@
             "name": "memoryDomain",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1514,7 +1566,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1523,7 +1574,6 @@
             "name": "length",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1555,7 +1605,6 @@
             "name": "memoryDomain",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1587,7 +1636,6 @@
             "name": "memoryDomain",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1597,7 +1645,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1606,7 +1653,6 @@
             "name": "value",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1639,7 +1685,6 @@
             "name": "memoryDomain",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1649,7 +1694,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1658,7 +1702,6 @@
             "name": "value",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1691,7 +1734,6 @@
             "name": "memoryDomain",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1701,7 +1743,6 @@
             "in": "query",
             "description": "Address in hex, e.g. 0x03000000",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -1710,7 +1751,6 @@
             "name": "value",
             "in": "query",
             "required": true,
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1732,5 +1772,23 @@
       }
     }
   },
-  "components": { }
+  "components": {
+    "schemas": {
+      "KeysEnum": {
+        "enum": [
+          "A",
+          "B",
+          "Select",
+          "Start",
+          "Right",
+          "Left",
+          "Up",
+          "Down",
+          "R",
+          "L"
+        ],
+        "type": "string"
+      }
+    }
+  }
 }
