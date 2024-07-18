@@ -12,12 +12,17 @@ namespace mGBAHttpServer.Services
         private readonly IPEndPoint _tcpEndPoint;
         private readonly Socket _tcpSocket;
         private const int _maxRetries = 3;
+        private readonly TimeSpan _initialRetryDelay = TimeSpan.FromSeconds(1);
 
         public SocketService(IOptions<SocketOptions> socketOptions)
         {
             var ipAddress = IPAddress.Parse(socketOptions.Value.IpAddress);
             _tcpEndPoint = new(ipAddress, socketOptions.Value.Port);
-            _tcpSocket = new(_tcpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            _tcpSocket = new(_tcpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
+            {
+                SendTimeout = socketOptions.Value.WriteTimeout,
+                ReceiveTimeout = socketOptions.Value.ReadTimeout
+            };
         }
 
         public async Task<string> SendMessageAsync(MessageModel message)
@@ -43,10 +48,11 @@ namespace mGBAHttpServer.Services
                 }
                 catch (SocketException ex) when (ex.NativeErrorCode.Equals(10053))
                 {
-                    // Maybe mGBA closes the socket but doesn't inform the other side?
-                    // Like how client.Shutdown(SocketShutdown.Both) in C# would
-                    _tcpSocket.Disconnect(true);
+                    // fixes problem if the other size has been uncleanly terminated
+                    _tcpSocket.Disconnect(reuseSocket: true);
                     _isConnected = false;
+                    var retryDelay = _initialRetryDelay * (i + 1);
+                    await Task.Delay(retryDelay);
                 }
                 catch (Exception)
                 {
@@ -59,6 +65,10 @@ namespace mGBAHttpServer.Services
 
         public void Dispose()
         {
+            if (_tcpSocket.Connected)
+            {
+                _tcpSocket.Shutdown(SocketShutdown.Both);
+            }
             _tcpSocket?.Dispose();
             GC.SuppressFinalize(this);
         }
