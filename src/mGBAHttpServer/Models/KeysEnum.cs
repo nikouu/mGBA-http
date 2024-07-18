@@ -1,5 +1,8 @@
-﻿namespace mGBAHttpServer.Models
+﻿using System.Text.Json.Serialization;
+
+namespace mGBAHttpServer.Models
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum KeysEnum
     {
         A,

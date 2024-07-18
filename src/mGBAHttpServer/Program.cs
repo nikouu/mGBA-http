@@ -1,5 +1,6 @@
 ﻿using mGBAHttpServer.Endpoints;
 using mGBAHttpServer.Models;
+using mGBAHttpServer.SchemaFilter;
 using mGBAHttpServer.Services;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -35,6 +36,9 @@ builder.Services.AddSwaggerGen(options =>
             Url = new Uri("https://github.com/nikouu/mGBA-http/")
         }
     });
+
+    // allows enums to be displayed and used as strings
+    options.SchemaFilter<EnumSchemaFilter>();
 });
 
 builder.Services.Configure<SocketOptions>(builder.Configuration.GetSection(SocketOptions.Section));
