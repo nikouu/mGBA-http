@@ -48,7 +48,7 @@ namespace mGBAHttpServer.Services
                 }
                 catch (SocketException ex) when (ex.NativeErrorCode.Equals(10053))
                 {
-                    // fixes problem if the other size has been uncleanly terminated
+                    // fixes problem if the other side has been uncleanly terminated
                     _tcpSocket.Disconnect(reuseSocket: true);
                     _isConnected = false;
                     var retryDelay = _initialRetryDelay * (i + 1);

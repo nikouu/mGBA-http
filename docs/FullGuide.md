@@ -48,7 +48,7 @@ This file is **not** required for running mGBA-http normally.
 
 However, if you need to configure ports or logging, download this file from the releases page and put it in the same directory as mGBA-http. mGBA-http will pick up on these settings when run. See the [ASP.NET Core logging documentation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-8.0#configure-logging) for more.
 
-See below how the HTTP port has changed from the `5000` to `6969` and there is now an HTTPS endpoint as well at `6970`. Harder to picture is the log levels are now mostly set to warning, from the in-build defaults of error.
+See below how the HTTP port has changed from the `5000` to `6969` and there is now an HTTPS endpoint as well at `6970`. Harder to picture is the log levels are now mostly set to warning, from the in-built defaults of error.
 
 ![](Images/PortChange.jpg)
 

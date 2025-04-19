@@ -33,7 +33,7 @@ function beginSocket()
 				server:close()
 				console:error(formatMessage("Listen", error, true))
 			else
-				console:log("Socket Server: Listening on port " .. port)
+				console:log("mGBA script server ready: Listening on port " .. port)
 				server:add("received", socketAccept)
 			end
 		end
