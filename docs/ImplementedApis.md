@@ -30,7 +30,7 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 | read16()          | core.read16          | /core/read16                       |
 | read32()          | core.read32          | /core/read32                       |
 | read8()           | core.read8           | /core/read8                        |
-| readRange()       | core.readRange       | /core/readrange (_Unstable_)       |
+| readRange()       | core.readRange       | /core/readrange                    |
 | readRegister()    | core.readRegister    | /core/readregister                 |
 | reset()           | -                    | -                                  |
 | romSize()         | core.romSize         | /core/romsize                      |
@@ -60,27 +60,27 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 
 ## CoreAdapter
 
-| mGBA call | lua endpoint key  | mGBA-http endpoint |
-| --------- | ----------------- | ------------------ |
-| reset()   | coreAdapter.reset | /coreadapter/reset |
-| memory    | -                 | -                  |
+| mGBA call | lua endpoint key   | mGBA-http endpoint  |
+| --------- | ------------------ | ------------------- |
+| reset()   | coreAdapter.reset  | /coreadapter/reset  |
+| memory    | coreAdapter.memory | /coreadapter/memory |
 
 
 ## MemoryDomain
 
-| mGBA call   | lua endpoint key       | mGBA-http endpoint                   |
-| ----------- | ---------------------- | ------------------------------------ |
-| base()      | memoryDomain.base      | /memorydomain/base                   |
-| bound()     | memoryDomain.bound     | /memorydomain/bound                  |
-| name()      | memoryDomain.name      | /memorydomain/name                   |
-| read16()    | memoryDomain.read16    | /memorydomain/read16                 |
-| read32()    | memoryDomain.read32    | /memorydomain/read32                 |
-| read8()     | memoryDomain.read8     | /memorydomain/read8                  |
-| readRange() | memoryDomain.readRange | /memorydomain/readrange (_Unstable_) |
-| size()      | memoryDomain.size      | /memorydomain/size                   |
-| write16()   | memoryDomain.write16   | /memorydomain/write16                |
-| write32()   | memoryDomain.write32   | /memorydomain/write32                |
-| write8()    | memoryDomain.write8    | /memorydomain/write8                 |
+| mGBA call   | lua endpoint key       | mGBA-http endpoint      |
+| ----------- | ---------------------- | ----------------------- |
+| base()      | memoryDomain.base      | /memorydomain/base      |
+| bound()     | memoryDomain.bound     | /memorydomain/bound     |
+| name()      | memoryDomain.name      | /memorydomain/name      |
+| read16()    | memoryDomain.read16    | /memorydomain/read16    |
+| read32()    | memoryDomain.read32    | /memorydomain/read32    |
+| read8()     | memoryDomain.read8     | /memorydomain/read8     |
+| readRange() | memoryDomain.readRange | /memorydomain/readrange |
+| size()      | memoryDomain.size      | /memorydomain/size      |
+| write16()   | memoryDomain.write16   | /memorydomain/write16   |
+| write32()   | memoryDomain.write32   | /memorydomain/write32   |
+| write8()    | memoryDomain.write8    | /memorydomain/write8    |
 
 ## TextBuffer
 `TextBuffer` is not implemented in mGBA-http. 

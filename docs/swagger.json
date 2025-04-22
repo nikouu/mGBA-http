@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.4",
   "info": {
     "title": "mGBA-http",
     "description": "An HTTP interface for mGBA scripting.",
@@ -23,13 +23,20 @@
             "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/KeysEnum"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Void"
+                }
+              }
+            }
           }
         }
       }
@@ -57,7 +64,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Void"
+                }
+              }
+            }
           }
         }
       }
@@ -76,7 +90,7 @@
             "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/KeysEnum"
             }
           },
           {
@@ -92,7 +106,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Void"
+                }
+              }
+            }
           }
         }
       }
@@ -130,7 +151,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Void"
+                }
+              }
+            }
           }
         }
       }
@@ -154,7 +182,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Void"
+                }
+              }
+            }
           }
         }
       }
@@ -178,7 +213,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Void"
+                }
+              }
+            }
           }
         }
       }
@@ -202,7 +244,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Void"
+                }
+              }
+            }
           }
         }
       }
@@ -221,7 +270,7 @@
             "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/KeysEnum"
             }
           }
         ],
@@ -328,7 +377,7 @@
             "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/KeysEnum"
             }
           }
         ],
@@ -498,7 +547,7 @@
             "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/KeysEnum"
             }
           }
         ],
@@ -850,7 +899,7 @@
           "Core"
         ],
         "summary": "Read byte range from the given offset.",
-        "description": "Read byte range from the given offset.",
+        "description": "Read byte range from the given offset and returns an array of unsigned integers",
         "parameters": [
           {
             "name": "address",
@@ -874,9 +923,13 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
                 }
               }
             }
@@ -905,9 +958,10 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "type": "integer",
+                  "format": "int32"
                 }
               }
             }
@@ -963,7 +1017,7 @@
           "Core"
         ],
         "summary": "Save state and return as a buffer.",
-        "description": "Save state and return as a buffer.",
+        "description": "Save state and returns an array of unsigned integers",
         "parameters": [
           {
             "name": "flags",
@@ -979,9 +1033,13 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
                 }
               }
             }
@@ -1327,7 +1385,38 @@
         "description": "Reset the emulation and calls the reset callback.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coreadapter/memory": {
+      "get": {
+        "tags": [
+          "CoreAdapter"
+        ],
+        "summary": "Get the platform specific set of MemoryDomains.",
+        "description": "Gets the platform specific set of memory domains as an array of strings.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1551,7 +1640,7 @@
           "MemoryDomain"
         ],
         "summary": "Read byte range from the given offset.",
-        "description": "Read byte range from the given offset.",
+        "description": "Read byte range from the given offset and returns an array of unsigned integers",
         "parameters": [
           {
             "name": "memoryDomain",
@@ -1583,9 +1672,13 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
                 }
               }
             }
@@ -1788,6 +1881,10 @@
           "L"
         ],
         "type": "string"
+      },
+      "Void": {
+        "type": "object",
+        "additionalProperties": false
       }
     }
   }
