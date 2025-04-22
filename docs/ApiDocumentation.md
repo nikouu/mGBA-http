@@ -1,7 +1,6 @@
 # API Documentation
 
 The following is generated from the [swagger.json](swagger.json) file via https://swagger-markdown-ui.netlify.app/ 
-
 # mGBA-http
 An HTTP interface for mGBA scripting.
 
@@ -24,7 +23,7 @@ A custom convenience API that implements a key press and release. This is as opp
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | string |
+| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [KeysEnum](#KeysEnum) |
 
 ##### Responses
 
@@ -70,7 +69,7 @@ A custom convenience API that implements a held down button for a given duration
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | string |
+| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [KeysEnum](#KeysEnum) |
 | duration | query | Duration in frames. | Yes | integer |
 
 ##### Responses
@@ -187,7 +186,7 @@ Add a single key to the currently active key list. As if the key were held down.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | string |
+| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [KeysEnum](#KeysEnum) |
 
 ##### Responses
 
@@ -267,7 +266,7 @@ Remove a single key from the currently active key list. As if the key were relea
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | string |
+| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [KeysEnum](#KeysEnum) |
 
 ##### Responses
 
@@ -398,7 +397,7 @@ Get the active state of a given key.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | string |
+| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [KeysEnum](#KeysEnum) |
 
 ##### Responses
 
@@ -637,7 +636,7 @@ Read byte range from the given offset.
 
 ##### Description:
 
-Read byte range from the given offset.
+Read byte range from the given offset and returns an array of unsigned integers
 
 ##### Parameters
 
@@ -718,7 +717,7 @@ Save state and return as a buffer.
 
 ##### Description:
 
-Save state and return as a buffer.
+Save state and returns an array of unsigned integers
 
 ##### Parameters
 
@@ -956,6 +955,23 @@ Reset the emulation and calls the reset callback.
 | ---- | ----------- |
 | 200 | OK |
 
+### /coreadapter/memory
+
+#### GET
+##### Summary:
+
+Get the platform specific set of MemoryDomains.
+
+##### Description:
+
+Gets the platform specific set of memory domains as an array of strings.
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | OK |
+
 ### /memorydomain/base
 
 #### GET
@@ -1106,7 +1122,7 @@ Read byte range from the given offset.
 
 ##### Description:
 
-Read byte range from the given offset.
+Read byte range from the given offset and returns an array of unsigned integers
 
 ##### Parameters
 
