@@ -21,7 +21,8 @@ namespace mGBAHttpServer.Services
             _tcpSocket = new(_tcpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
             {
                 SendTimeout = socketOptions.Value.WriteTimeout,
-                ReceiveTimeout = socketOptions.Value.ReadTimeout
+                ReceiveTimeout = socketOptions.Value.ReadTimeout,
+                NoDelay = true
             };
         }
 

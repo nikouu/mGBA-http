@@ -67,7 +67,6 @@ function socketReceived(id)
 		elseif error then
 			-- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
 			if error ~= socket.ERRORS.AGAIN then
-				formattedLog("socketReceived 4")
 				console:error(formatMessage(id, error, true))
 				socketStop(id)
 			end
@@ -154,11 +153,11 @@ function messageRouter(rawMessage)
 	elseif messageType == "core.read16" then returnValue = emu:read16(tonumber(messageValue1))
 	elseif messageType == "core.read32" then returnValue = emu:read32(tonumber(messageValue1))
 	elseif messageType == "core.read8" then returnValue = emu:read8(tonumber(messageValue1))
-	elseif messageType == "core.readRange" then returnValue = emu:readRange(tonumber(messageValue1), tonumber(messageValue2))
-	elseif messageType == "core.readRegister" then returnValue = emu:readRegister(messageValue1)
+	elseif messageType == "core.readRange" then returnValue = formatByteString(emu:readRange(tonumber(messageValue1), tonumber(messageValue2)))
+	elseif messageType == "core.readRegister" then returnValue = formatByteString(emu:readRegister(messageValue1))
 	elseif messageType == "core.romSize" then returnValue = emu:romSize()
 	elseif messageType == "core.runFrame" then emu:runFrame()
-	elseif messageType == "core.saveStateBuffer" then emu:saveStateBuffer(tonumber(messageValue1))
+	elseif messageType == "core.saveStateBuffer" then formatByteString(emu:saveStateBuffer(tonumber(messageValue1)))
 	elseif messageType == "core.saveStateFile" then returnValue = emu:saveStateFile(messageValue1, tonumber(messageValue2))
 	elseif messageType == "core.saveStateSlot" then returnValue = emu:saveStateSlot(tonumber(messageValue1), tonumber(messageValue2))
 	elseif messageType == "core.screenshot" then emu:screenshot(messageValue1)
@@ -172,13 +171,14 @@ function messageRouter(rawMessage)
 	elseif messageType == "console.log" then console:log(messageValue1)
 	elseif messageType == "console.warn" then console:warn(messageValue1)
 	elseif messageType == "coreAdapter.reset" then emu:reset()
+	elseif messageType == "coreAdapter.memory" then returnValue = formatMemoryDomains(emu.memory)
 	elseif messageType == "memoryDomain.base" then returnValue = emu.memory[messageValue1]:base()
 	elseif messageType == "memoryDomain.bound" then returnValue = emu.memory[messageValue1]:bound()
 	elseif messageType == "memoryDomain.name" then returnValue = emu.memory[messageValue1]:name()
 	elseif messageType == "memoryDomain.read16" then returnValue = emu.memory[messageValue1]:read16(tonumber(messageValue2))
 	elseif messageType == "memoryDomain.read32" then returnValue = emu.memory[messageValue1]:read32(tonumber(messageValue2))
 	elseif messageType == "memoryDomain.read8" then returnValue = emu.memory[messageValue1]:read8(tonumber(messageValue2))
-	elseif messageType == "memoryDomain.readRange" then returnValue = emu.memory[messageValue1]:readRange(tonumber(messageValue2), tonumber(messageValue3))
+	elseif messageType == "memoryDomain.readRange" then returnValue = formatByteString(emu.memory[messageValue1]:readRange(tonumber(messageValue2), tonumber(messageValue3)))
 	elseif messageType == "memoryDomain.size" then returnValue = emu.memory[messageValue1]:size()
 	elseif messageType == "memoryDomain.write16" then returnValue = emu.memory[messageValue1]:write16(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write32" then returnValue = emu.memory[messageValue1]:write32(tonumber(messageValue2), tonumber(messageValue3))
@@ -312,6 +312,23 @@ function toBitmask(keys)
         mask = mask | (1 << tonumber(key))
     end
     return mask
+end
+
+function formatByteString(byteString)
+	local formattedString = ""
+	for i = 1, #byteString do
+		local byte = byteString:byte(i)
+		formattedString = formattedString .. string.format("%02X", byte)
+	end
+	return formattedString
+end
+
+function formatMemoryDomains(domains)
+    local names = {}
+    for name, _ in pairs(domains) do
+        table.insert(names, name)
+    end
+    return table.concat(names, ", ")
 end
 
 -- ***********************
