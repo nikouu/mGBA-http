@@ -20,14 +20,14 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/memory", async (SocketService socket) =>
+            group.MapGet("/memory", async (SocketService socket) =>
             {
                 var memoryDomains = await socket.SendMessageAsync(new MessageModel("coreAdapter.memory"));
                 return memoryDomains.Split(',', StringSplitOptions.TrimEntries);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the platform specific set of MemoryDomains.";
-                o.Description = "Get the platform specific set of MemoryDomains as an array of strings.";
+                o.Description = "Gets the platform specific set of memory domains as an array of strings.";
                 return o;
             });
 

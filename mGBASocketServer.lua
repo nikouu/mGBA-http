@@ -187,13 +187,7 @@ function messageRouter(rawMessage)
 	elseif (rawMessage ~= nil or rawMessage ~= '') then formattedLog("Unable to route raw message: " .. rawMessage)
 	else formattedLog(messageType)	
 	end
-
-	console:log("number is: " .. tonumber(emu:readRegister("sp")))
-	console:log("number is: " .. emu:readRegister("r13"))
-
-	console:log("number is: " .. tonumber(emu:readRegister("pc")))
-	console:log("number is: " .. emu:readRegister("cpsr"))
-
+	
 	returnValue = tostring(returnValue or defaultReturnValue);
 
 	formattedLog("Returning: " .. returnValue)
