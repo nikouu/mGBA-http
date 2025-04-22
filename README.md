@@ -91,7 +91,7 @@ If there's a problem feel free to start an issue, otherwise see [my about page](
 
 [References.md](docs/References.md) has useful links during development.
 
-This project is not associated to the development or development team of mGBA. I'm just a fan ✌
+This project is not associated with the development or development team of mGBA. I'm just a fan ✌
 
 ## Links
 - [mGBA Website](https://mgba.io/)
