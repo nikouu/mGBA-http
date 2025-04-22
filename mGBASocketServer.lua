@@ -314,13 +314,12 @@ function toBitmask(keys)
     return mask
 end
 
-function formatByteString(byteString)
-	local formattedString = ""
-	for i = 1, #byteString do
-		local byte = byteString:byte(i)
-		formattedString = formattedString .. string.format("%02X", byte)
-	end
-	return formattedString
+function formatByteString(byteStr)
+    local bytes = {}
+    for i = 1, #byteStr do
+        table.insert(bytes, tostring(byteStr:byte(i)))
+    end
+    return table.concat(bytes, ",")
 end
 
 function formatMemoryDomains(domains)

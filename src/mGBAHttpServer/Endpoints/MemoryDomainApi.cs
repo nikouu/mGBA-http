@@ -75,11 +75,12 @@ namespace mGBAHttpServer.Endpoints
 
             group.MapGet("/readrange", async (SocketService socket, string memoryDomain, string address, string length) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.readRange", memoryDomain.ToString(), address, length));
+                var result = await socket.SendMessageAsync(new MessageModel("memoryDomain.readRange", memoryDomain.ToString(), address, length));
+                return result.Split(',', StringSplitOptions.TrimEntries).Select(x => int.Parse(x));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read byte range from the given offset.";
-                o.Description = "Read byte range from the given offset.";
+                o.Description = "Read byte range from the given offset and returns an array of unsigned integers";
                 o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });

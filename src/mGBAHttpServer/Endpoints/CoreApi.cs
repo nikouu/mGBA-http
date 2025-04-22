@@ -241,11 +241,12 @@ namespace mGBAHttpServer.Endpoints
             // TODO: come back to these input datatypes for all the u32 and s32 types in the mGBA api documentation
             group.MapGet("/readrange", async (SocketService socket, string address, string length) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.readRange", address, length));
+                var result = await socket.SendMessageAsync(new MessageModel("core.readRange", address, length));
+                return result.Split(',', StringSplitOptions.TrimEntries).Select(x => int.Parse(x));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read byte range from the given offset.";
-                o.Description = "Read byte range from the given offset.";
+                o.Description = "Read byte range from the given offset and returns an array of unsigned integers";
                 o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
                 return o;
             });
@@ -282,11 +283,12 @@ namespace mGBAHttpServer.Endpoints
 
             group.MapPost("/savestatebuffer", async (SocketService socket, int flags = 31) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.saveStateBuffer", flags.ToString()));
+                var result = await socket.SendMessageAsync(new MessageModel("core.saveStateBuffer", flags.ToString()));
+                return result.Split(',', StringSplitOptions.TrimEntries).Select(x => int.Parse(x));
             }).WithOpenApi(o =>
             {
                 o.Summary = "Save state and return as a buffer.";
-                o.Description = "Save state and return as a buffer.";
+                o.Description = "Save state and returns an array of unsigned integers";
                 return o;
             });
 
