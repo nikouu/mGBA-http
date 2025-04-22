@@ -154,7 +154,7 @@ function messageRouter(rawMessage)
 	elseif messageType == "core.read32" then returnValue = emu:read32(tonumber(messageValue1))
 	elseif messageType == "core.read8" then returnValue = emu:read8(tonumber(messageValue1))
 	elseif messageType == "core.readRange" then returnValue = formatByteString(emu:readRange(tonumber(messageValue1), tonumber(messageValue2)))
-	elseif messageType == "core.readRegister" then returnValue = formatByteString(emu:readRegister(messageValue1))
+	elseif messageType == "core.readRegister" then returnValue = tonumber(emu:readRegister(messageValue1))
 	elseif messageType == "core.romSize" then returnValue = emu:romSize()
 	elseif messageType == "core.runFrame" then emu:runFrame()
 	elseif messageType == "core.saveStateBuffer" then formatByteString(emu:saveStateBuffer(tonumber(messageValue1)))
@@ -187,6 +187,12 @@ function messageRouter(rawMessage)
 	elseif (rawMessage ~= nil or rawMessage ~= '') then formattedLog("Unable to route raw message: " .. rawMessage)
 	else formattedLog(messageType)	
 	end
+
+	console:log("number is: " .. tonumber(emu:readRegister("sp")))
+	console:log("number is: " .. emu:readRegister("r13"))
+
+	console:log("number is: " .. tonumber(emu:readRegister("pc")))
+	console:log("number is: " .. emu:readRegister("cpsr"))
 
 	returnValue = tostring(returnValue or defaultReturnValue);
 

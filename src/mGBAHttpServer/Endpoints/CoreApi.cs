@@ -253,7 +253,8 @@ namespace mGBAHttpServer.Endpoints
 
             group.MapGet("/readregister", async (SocketService socket, string regName) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.readRegister", regName));
+                var result = await socket.SendMessageAsync(new MessageModel("core.readRegister", regName));
+                return int.Parse(result);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read the value of the register with the given name.";
