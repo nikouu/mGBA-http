@@ -61,7 +61,7 @@ namespace mGBAHttpServer.Services
                         }
                     } while (bytesRead > 0 && _tcpSocket.Available > 0);
 
-                    response = Encoding.UTF8.GetString(memoryStream.ToArray(), 0, totalBytesRead);
+                    response = Encoding.UTF8.GetString(memoryStream.GetReadOnlySequence());
                     
                     break;
                 }
