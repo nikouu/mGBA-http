@@ -1,5 +1,8 @@
 ﻿using mGBAHttpServer.Models;
 using Microsoft.Extensions.Options;
+using Microsoft.IO;
+using System.Buffers;
+using System.Drawing;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -13,6 +16,7 @@ namespace mGBAHttpServer.Services
         private readonly Socket _tcpSocket;
         private const int _maxRetries = 3;
         private readonly TimeSpan _initialRetryDelay = TimeSpan.FromSeconds(1);
+        private static readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager = new();
 
         public SocketService(IOptions<SocketOptions> socketOptions)
         {
@@ -31,6 +35,7 @@ namespace mGBAHttpServer.Services
             var response = "";
             for (int i = 0; i < _maxRetries; i++)
             {
+                var buffer = ArrayPool<byte>.Shared.Rent(1024);
                 try
                 {
                     if (!_isConnected)
@@ -40,10 +45,9 @@ namespace mGBAHttpServer.Services
                     }
 
                     var messageBytes = Encoding.UTF8.GetBytes(message.ToString());
-                    _ = await _tcpSocket.SendAsync(messageBytes, SocketFlags.None);
+                    await _tcpSocket.SendAsync(messageBytes, SocketFlags.None);
 
-                    using var memoryStream = new MemoryStream();
-                    var buffer = new byte[1024];
+                    using var memoryStream = _recyclableMemoryStreamManager.GetStream();                    
                     int totalBytesRead = 0;
                     int bytesRead;
 
@@ -58,6 +62,7 @@ namespace mGBAHttpServer.Services
                     } while (bytesRead > 0 && _tcpSocket.Available > 0);
 
                     response = Encoding.UTF8.GetString(memoryStream.ToArray(), 0, totalBytesRead);
+                    
                     break;
                 }
                 catch (SocketException ex) when (ex.NativeErrorCode.Equals(10053))
@@ -71,6 +76,10 @@ namespace mGBAHttpServer.Services
                 catch (Exception)
                 {
                     throw;
+                }
+                finally
+                {
+                    ArrayPool<byte>.Shared.Return(buffer);
                 }
             }
 
