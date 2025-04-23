@@ -42,9 +42,22 @@ namespace mGBAHttpServer.Services
                     var messageBytes = Encoding.UTF8.GetBytes(message.ToString());
                     _ = await _tcpSocket.SendAsync(messageBytes, SocketFlags.None);
 
-                    var buffer = new byte[1_024];
-                    var received = await _tcpSocket.ReceiveAsync(buffer, SocketFlags.None);
-                    response = Encoding.UTF8.GetString(buffer, 0, received);
+                    using var memoryStream = new MemoryStream();
+                    var buffer = new byte[1024];
+                    int totalBytesRead = 0;
+                    int bytesRead;
+
+                    do
+                    {
+                        bytesRead = await _tcpSocket.ReceiveAsync(buffer, SocketFlags.None);
+                        if (bytesRead > 0)
+                        {
+                            await memoryStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+                            totalBytesRead += bytesRead;
+                        }
+                    } while (bytesRead > 0 && _tcpSocket.Available > 0);
+
+                    response = Encoding.UTF8.GetString(memoryStream.ToArray(), 0, totalBytesRead);
                     break;
                 }
                 catch (SocketException ex) when (ex.NativeErrorCode.Equals(10053))

@@ -3,6 +3,9 @@
 Ensure the following are done, if needed, before each release.
 
 - Version incremented
+	- csproj
+	- Lua header
+	- Lua console log
 - Readme updated
 - API documentation page updated (swagger.json to docs)
 - Implemented API doc updated
