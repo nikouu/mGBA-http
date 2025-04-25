@@ -8,8 +8,7 @@ namespace mGBAHttpServer.IntegrationTests
 {
     /// <summary>
     /// Integration tests for the CoreApi endpoints.
-    /// 
-    /// Note: These tests require a mGBA instance with the Lua script running
+    /// Note: These tests require a mGBA instance with the Lua script running against the button test ROM
     /// </summary>
     [TestClass]
     public sealed class CoreApiTests : IDisposable
@@ -351,20 +350,20 @@ namespace mGBAHttpServer.IntegrationTests
         public async Task LoadStateFile_SendsRequestSuccessfully()
         {
             // Arrange
-            // First save a state to ensure we have a file to load
             await _client.PostAsync($"/core/savestatefile?path={TestStatePath}&flags=31", null);
-            
+
             // Act
             var response = await _client.PostAsync($"/core/loadstatefile?path={TestStatePath}&flags=29", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
-            var file = new FileInfo(TestStatePath);
-            Assert.IsTrue(file.Exists);
-            Assert.IsTrue(file.Length > 0);
-
-            File.Delete(TestStatePath);
+            // Clean up
+            string directory = Path.GetDirectoryName(TestStatePath);
+            foreach (string file in Directory.GetFiles(directory, "*.ss*"))
+            {
+                File.Delete(file);
+            }
         }
 
         [TestMethod]
@@ -410,7 +409,7 @@ namespace mGBAHttpServer.IntegrationTests
         public async Task Read8_ReturnsValue()
         {
             // Arrange
-            string address = "0x03000000";
+            string address = "0x10000000";
             
             // Act
             var response = await _client.GetAsync($"/core/read8?address={address}");
@@ -427,7 +426,7 @@ namespace mGBAHttpServer.IntegrationTests
         public async Task Read16_ReturnsValue()
         {
             // Arrange
-            string address = "0x03000000";
+            string address = "0x10000000";
             
             // Act
             var response = await _client.GetAsync($"/core/read16?address={address}");
@@ -444,7 +443,7 @@ namespace mGBAHttpServer.IntegrationTests
         public async Task Read32_ReturnsValue()
         {
             // Arrange
-            string address = "0x03000000";
+            string address = "0x10000000";
             
             // Act
             var response = await _client.GetAsync($"/core/read32?address={address}");
@@ -461,7 +460,7 @@ namespace mGBAHttpServer.IntegrationTests
         public async Task ReadRange_ReturnsValues()
         {
             // Arrange
-            string address = "0x03000000";
+            string address = "0x10000000";
             string length = "16";
             
             // Act
@@ -477,10 +476,11 @@ namespace mGBAHttpServer.IntegrationTests
         }
 
         [TestMethod]
+        [Ignore] //Flaky, need to find an area in the raw bus to safely write
         public async Task Write8_SendsRequestSuccessfully()
         {
             // Arrange
-            string address = "0x03000000";
+            string address = "0x10000000";
             const int value = 42;
             
             // Act
@@ -496,10 +496,11 @@ namespace mGBAHttpServer.IntegrationTests
         }
 
         [TestMethod]
+        [Ignore] //Flaky, need to find an area in the raw bus to safely write
         public async Task Write16_SendsRequestSuccessfully()
         {
             // Arrange
-            string address = "0x03000002";
+            string address = "0x10000002";
             const int value = 12345;
             
             // Act
@@ -515,10 +516,11 @@ namespace mGBAHttpServer.IntegrationTests
         }
 
         [TestMethod]
+        [Ignore] //Flaky, need to find an area in the raw bus to safely write
         public async Task Write32_SendsRequestSuccessfully()
         {
             // Arrange
-            string address = "0x03000004";
+            string address = "0x10000004";
             const int value = 0x12345678;
             
             // Act

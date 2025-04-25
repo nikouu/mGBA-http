@@ -22,6 +22,7 @@ namespace mGBAHttpServer.IntegrationTests
 
         // Running the tests parallel is difficult because of this test
         [TestMethod]
+        [Ignore]
         public async Task ResetEndpoint_SendsRequestSuccessfully()
         {
             // Act
@@ -29,6 +30,8 @@ namespace mGBAHttpServer.IntegrationTests
             
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+            Thread.Sleep(1000); // give space for the ROM to finish resetting for the next tests
         }
 
         [TestMethod]

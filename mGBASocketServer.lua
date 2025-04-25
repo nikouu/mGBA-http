@@ -6,7 +6,7 @@
 -- ***********************
 
 local enableLogging = true
-local enableDebugLogging = false
+local enableDebugLogging = true
 
 -- ***********************
 -- Sockets
@@ -59,13 +59,18 @@ function socketReceived(id)
 	local sock = socketList[id]
 	if not sock then return end
 	while true do
-		local message, error = sock:receive(512)
+		local message, error = sock:receive(2048)
 		if message then
-			-- it seems that the value must be non-empty in order to actually send back?
-			-- thus the ACK message default
-			local returnValue = messageRouter(message:match("^(.-)%s*$"))
-			sock:send(returnValue)
-		elseif error then
+            local trimmed = message:match("^(.-)%s*$")
+            --[[ if trimmed == "<|ACK|>" then
+                sock:send("<|ERR|>")
+                return
+            end ]]
+            -- it seems that the value must be non-empty in order to actually send back?
+            -- thus the ACK message default
+            local returnValue = messageRouter(trimmed)
+            sock:send(returnValue)
+        elseif error then
 			-- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
 			if error ~= socket.ERRORS.AGAIN then
 				if error == "disconnected" then
@@ -129,7 +134,7 @@ function messageRouter(rawMessage)
 	local messageValue2 = parsedInput[3]
 	local messageValue3 = parsedInput[4]
 
-	local defaultReturnValue <const> = "<|ACK|>";
+	local defaultReturnValue <const> = "<|SUCCESS|>";
 
 	local returnValue = defaultReturnValue;
 
@@ -191,7 +196,7 @@ function messageRouter(rawMessage)
 	elseif messageType == "memoryDomain.write16" then returnValue = emu.memory[messageValue1]:write16(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write32" then returnValue = emu.memory[messageValue1]:write32(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write8" then returnValue = emu.memory[messageValue1]:write8(tonumber(messageValue2), tonumber(messageValue3))
-	elseif (rawMessage == "<|ACK|>") then formattedLog("Connecting.")	
+	elseif (rawMessage == "<|ACK|>") then formattedLog("Connecting.")
 	elseif (rawMessage ~= nil or rawMessage ~= '') then formattedLog("Unable to route raw message: " .. rawMessage)
 	else formattedLog(messageType)	
 	end

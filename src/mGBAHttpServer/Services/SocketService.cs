@@ -66,7 +66,7 @@ namespace mGBAHttpServer.Services
 
                     response = Encoding.UTF8.GetString(memoryStream.GetReadOnlySequence());
 
-                    return response.Replace("<|ACK|>", "");
+                    return response.Replace("<|SUCCESS|>", "");
                 }
                 catch (Exception ex) when (
                     (ex is SocketException socketEx &&
