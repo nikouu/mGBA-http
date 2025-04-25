@@ -25,8 +25,7 @@ namespace mGBAHttpServer.Services
             _tcpSocket = new(_tcpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
             {
                 SendTimeout = socketOptions.Value.WriteTimeout,
-                ReceiveTimeout = socketOptions.Value.ReadTimeout,
-                NoDelay = true
+                ReceiveTimeout = socketOptions.Value.ReadTimeout
             };
             _logger = logger;
         }
@@ -41,8 +40,14 @@ namespace mGBAHttpServer.Services
                 var buffer = ArrayPool<byte>.Shared.Rent(1024);
                 try
                 {
-                    if (!_isConnected)
+                    if (!_isConnected || !_tcpSocket.Connected)
                     {
+                        Console.WriteLine($"doing reconnect: _isConnected:{_isConnected} _tcpSocket.Connected:{_tcpSocket.Connected}");
+                        if (_tcpSocket.Connected)
+                        {
+                            _tcpSocket.Disconnect(reuseSocket: true);
+                        }
+                        _isConnected = false;
                         await _tcpSocket.ConnectAsync(_tcpEndPoint);
                         _isConnected = true;
                     }
@@ -65,20 +70,29 @@ namespace mGBAHttpServer.Services
                     } while (bytesRead > 0 && _tcpSocket.Available > 0);
 
                     response = Encoding.UTF8.GetString(memoryStream.GetReadOnlySequence());
-
+                    Console.WriteLine(response);
                     return response.Replace("<|SUCCESS|>", "");
                 }
                 catch (Exception ex) when (
-                    (ex is SocketException socketEx &&
-                        (socketEx.NativeErrorCode.Equals(10053) || socketEx.NativeErrorCode.Equals(10054))))
+                    ex is SocketException socketEx &&
+                    (socketEx.NativeErrorCode.Equals(10022) ||
+                     socketEx.NativeErrorCode.Equals(10053) ||
+                     socketEx.NativeErrorCode.Equals(10054) ||
+                     socketEx.NativeErrorCode.Equals(10061)))
                 {
                     lastException = ex;
 
                     if (attempt < _maxRetries - 1)
                     {
                         _logger.LogWarning($"Failed to connect to mGBA with attempt: {attempt} with message: [{message}]. Retrying... If this message doesn't appear again, the message succeeded.");
-                        // Reset connection state
-                        _tcpSocket.Disconnect(reuseSocket: true);
+                        try
+                        {
+                            _tcpSocket.Disconnect(reuseSocket: true);
+                        }
+                        catch
+                        {
+                            // Ignore any errors during disconnect
+                        }
                         _isConnected = false;
                         var retryDelay = _initialRetryDelay * (attempt + 1);
                         await Task.Delay(retryDelay);
