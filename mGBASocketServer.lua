@@ -93,7 +93,7 @@ function formatMessage(id, msg, isError)
 	else
 		prefix = prefix .. " Received: "
 	end
-	return prefix .. msg
+	return prefix .. (msg and tostring(msg) or "<nil>")
 end
 
 -- ***********************

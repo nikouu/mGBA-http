@@ -90,7 +90,8 @@ namespace mGBAHttpServer.Services
         {
             if (_tcpSocket.Connected)
             {
-                _tcpSocket.Shutdown(SocketShutdown.Both);
+                _tcpSocket.Close();
+                //_tcpSocket.Shutdown(SocketShutdown.Both);
             }
             _tcpSocket?.Dispose();
             GC.SuppressFinalize(this);

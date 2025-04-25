@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mGBAHttpServer", "mGBAHttpServer\mGBAHttpServer.csproj", "{D3B97D91-5605-41E5-854C-B8B4AA21CB55}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mGBAHttpServer.IntegrationTests", "mGBAHttpServer.IntegrationTests\mGBAHttpServer.IntegrationTests.csproj", "{BB638CE6-1160-4C86-B7E4-3089C421C7B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D3B97D91-5605-41E5-854C-B8B4AA21CB55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3B97D91-5605-41E5-854C-B8B4AA21CB55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3B97D91-5605-41E5-854C-B8B4AA21CB55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB638CE6-1160-4C86-B7E4-3089C421C7B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB638CE6-1160-4C86-B7E4-3089C421C7B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB638CE6-1160-4C86-B7E4-3089C421C7B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB638CE6-1160-4C86-B7E4-3089C421C7B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
