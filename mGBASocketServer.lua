@@ -67,7 +67,14 @@ function socketReceived(id)
 		elseif error then
 			-- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
 			if error ~= socket.ERRORS.AGAIN then
-				console:error(formatMessage(id, error, true))
+				if error == "disconnected" then
+					console:log(formatMessage(id, error, false))
+				elseif error == socket.ERRORS.UNKNOWN_ERROR then
+					-- for some reason this error sometimes comes happens instead of disconnected
+					console:log(formatMessage(id, "disconnected*", false))
+				else
+					console:error(formatMessage(id, error, true))
+				end
 				socketStop(id)
 			end
 			return
