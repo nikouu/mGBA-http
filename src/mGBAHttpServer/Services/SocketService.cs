@@ -30,18 +30,25 @@ namespace mGBAHttpServer.Services
 
         private Socket CreateSocket()
         {
-            return new Socket(_tcpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
+            var socket = new Socket(_tcpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
             {
                 SendTimeout = _socketOptions.WriteTimeout,
-                ReceiveTimeout = _socketOptions.ReadTimeout
+                ReceiveTimeout = _socketOptions.ReadTimeout,
+                NoDelay = true // Disable Nagle's algorithm
             };
+
+            // Enable keep-alive to detect broken connections
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, 5);  // 5 seconds before first keepalive
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, 1); // 1 second between keepalives
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 3); // 3 retry attempts
+
+            return socket;
         }
 
         public async Task<string> SendMessageAsync(MessageModel message)
         {
             var startTime = Stopwatch.GetTimestamp();
-
-            string response = string.Empty;
             Exception lastException = null;
 
             for (int attempt = 0; attempt < _maxRetries; attempt++)
@@ -73,41 +80,91 @@ namespace mGBAHttpServer.Services
                         _tcpSocket = CreateSocket();
                         
                         await _tcpSocket.ConnectAsync(_tcpEndPoint);
+                        _logger.LogDebug("Socket connected successfully");
                     }
 
+                    // Use CancellationToken to prevent hanging
+                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)); // 5 second timeout
+
                     var messageBytes = Encoding.UTF8.GetBytes(message.ToString());
-                    await _tcpSocket.SendAsync(messageBytes, SocketFlags.None);
+                    var bytesSent = await _tcpSocket.SendAsync(messageBytes, SocketFlags.None);
+                    _logger.LogDebug("Sent {BytesSent} bytes for message: {Message}", bytesSent, message);
 
                     using var memoryStream = _recyclableMemoryStreamManager.GetStream();
                     int totalBytesRead = 0;
                     int bytesRead;
+                    bool receivedAnyData = false;
 
-                    do
+                    try
                     {
-                        bytesRead = await _tcpSocket.ReceiveAsync(buffer, SocketFlags.None);
-                        if (bytesRead > 0)
+                        do
                         {
-                            await memoryStream.WriteAsync(buffer.AsMemory(0, bytesRead));
-                            totalBytesRead += bytesRead;
-                        }
-                    } while (bytesRead > 0 && _tcpSocket.Available > 0);
+                            bytesRead = await _tcpSocket.ReceiveAsync(buffer, SocketFlags.None)
+                                .WaitAsync(cts.Token); // Add timeout to receive operation
+                            
+                            _logger.LogDebug("Received {BytesRead} bytes", bytesRead);
+                            
+                            if (bytesRead > 0)
+                            {
+                                receivedAnyData = true;
+                                await memoryStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+                                totalBytesRead += bytesRead;
+                            }
+                            else if (bytesRead == 0 && !receivedAnyData)
+                            {
+                                _logger.LogWarning("Server closed connection before sending response for message: {Message}", message);
+                                throw new SocketException((int)SocketError.ConnectionReset);
+                            }
+                        } while (bytesRead > 0 && _tcpSocket.Available > 0);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        _logger.LogWarning("Receive operation timed out after 5 seconds for message: {Message}", message);
+                        throw new SocketException((int)SocketError.TimedOut);
+                    }
 
-                    response = Encoding.UTF8.GetString(memoryStream.GetReadOnlySequence());
-                    Console.WriteLine(response);
+                    var response = Encoding.UTF8.GetString(memoryStream.GetReadOnlySequence());
+                    
+                    if (string.IsNullOrEmpty(response))
+                    {
+                        _logger.LogInformation(
+                            "Empty response received for message {MessageType}. Bytes read: {TotalBytes}", 
+                            message.Type, 
+                            totalBytesRead
+                        );
+                    }
+                    else
+                    {
+                        _logger.LogDebug("Response received: {Response}", response);
+                    }
+
+                    var diff = Stopwatch.GetElapsedTime(startTime);
+                    _logger.LogDebug("Request took: {Duration}", diff);
+
                     return response.Replace("<|SUCCESS|>", "");
                 }
                 catch (Exception ex) when (
                     ex is SocketException socketEx &&
-                    (socketEx.NativeErrorCode.Equals(10022) ||
-                     socketEx.NativeErrorCode.Equals(10053) ||
-                     socketEx.NativeErrorCode.Equals(10054) ||
-                     socketEx.NativeErrorCode.Equals(10061)))
+                    (socketEx.NativeErrorCode.Equals(10022) || // Invalid argument
+                     socketEx.NativeErrorCode.Equals(10053) || // Connection aborted
+                     socketEx.NativeErrorCode.Equals(10054) || // Connection reset
+                     socketEx.NativeErrorCode.Equals(10060) || // Connection timed out
+                     socketEx.NativeErrorCode.Equals(10061)))  // Connection refused
                 {
                     lastException = ex;
 
                     if (attempt < _maxRetries - 1)
                     {
-                        _logger.LogWarning($"Failed to connect to mGBA with attempt: {attempt} with message: [{message}]. Retrying... If this message doesn't appear again, the message succeeded.");
+                        _logger.LogWarning(
+                            "Socket error {ErrorCode} on attempt {Attempt} for message type {MessageType}. Retrying...", 
+                            ((SocketException)ex).NativeErrorCode,
+                            attempt + 1,
+                            message.Type
+                        );
+
+                        // Force socket cleanup on connection errors
+                        _tcpSocket.Dispose();
+                        _tcpSocket = CreateSocket();
 
                         var retryDelay = _initialRetryDelay * (attempt + 1);
                         await Task.Delay(retryDelay);
@@ -115,14 +172,13 @@ namespace mGBAHttpServer.Services
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Unhandled error for message type {MessageType}", message.Type);
                     lastException = ex;
                     throw;
                 }
                 finally
                 {
                     ArrayPool<byte>.Shared.Return(buffer);
-                    var diff = Stopwatch.GetElapsedTime(startTime);
-                    Console.WriteLine(diff);
                 }
             }
             

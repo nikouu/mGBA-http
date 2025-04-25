@@ -81,7 +81,7 @@ namespace mGBAHttpServerExamples
             stopwatch.Stop();
             
             Console.WriteLine($"Load test completed: {totalRequests} total requests, {successfulRequests} successful");
-            Console.WriteLine($"Actual rate: {totalRequests / stopwatch.Elapsed.TotalSeconds:F2} requests/second");
+            Console.WriteLine($"Actual rate: {totalRequests / stopwatch.Elapsed.TotalSeconds:F2} requests/second (test took {stopwatch.Elapsed.TotalSeconds:F2} seconds.)");
         }
         
         private async Task<bool> GetKeyRequest(KeysEnum key)
