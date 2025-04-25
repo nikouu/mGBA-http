@@ -86,15 +86,16 @@ namespace mGBAHttpServerExamples
         
         private async Task<bool> GetKeyRequest(KeysEnum key)
         {
+            var startTime = Stopwatch.GetTimestamp();
             try
             {
                 var response = await _client.GetAsync($"/core/getkey?key={key}");
-                
+
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     return false;
                 }
-                
+
                 var content = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(content);
                 return content == "0";
@@ -102,6 +103,11 @@ namespace mGBAHttpServerExamples
             catch
             {
                 return false;
+            }
+            finally
+            {
+                var diff = Stopwatch.GetElapsedTime(startTime);
+                Console.WriteLine(diff);
             }
         }
     }

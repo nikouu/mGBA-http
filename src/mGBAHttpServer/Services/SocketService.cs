@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IO;
 using System.Buffers;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -10,28 +11,36 @@ namespace mGBAHttpServer.Services
 {
     public class SocketService : IDisposable
     {
-        private bool _isConnected = false;
         private readonly IPEndPoint _tcpEndPoint;
-        private readonly Socket _tcpSocket;
+        private Socket _tcpSocket;
         private const int _maxRetries = 3;
         private readonly TimeSpan _initialRetryDelay = TimeSpan.FromMilliseconds(500);
         private static readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager = new();
         private readonly ILogger<SocketService> _logger;
+        private readonly SocketOptions _socketOptions;
 
         public SocketService(IOptions<SocketOptions> socketOptions, ILogger<SocketService> logger)
         {
-            var ipAddress = IPAddress.Parse(socketOptions.Value.IpAddress);
-            _tcpEndPoint = new(ipAddress, socketOptions.Value.Port);
-            _tcpSocket = new(_tcpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
-            {
-                SendTimeout = socketOptions.Value.WriteTimeout,
-                ReceiveTimeout = socketOptions.Value.ReadTimeout
-            };
+            _socketOptions = socketOptions.Value;
+            var ipAddress = IPAddress.Parse(_socketOptions.IpAddress);
+            _tcpEndPoint = new(ipAddress, _socketOptions.Port);
+            _tcpSocket = CreateSocket();
             _logger = logger;
+        }
+
+        private Socket CreateSocket()
+        {
+            return new Socket(_tcpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
+            {
+                SendTimeout = _socketOptions.WriteTimeout,
+                ReceiveTimeout = _socketOptions.ReadTimeout
+            };
         }
 
         public async Task<string> SendMessageAsync(MessageModel message)
         {
+            var startTime = Stopwatch.GetTimestamp();
+
             string response = string.Empty;
             Exception lastException = null;
 
@@ -40,16 +49,30 @@ namespace mGBAHttpServer.Services
                 var buffer = ArrayPool<byte>.Shared.Rent(1024);
                 try
                 {
-                    if (!_isConnected || !_tcpSocket.Connected)
-                    {
-                        Console.WriteLine($"doing reconnect: _isConnected:{_isConnected} _tcpSocket.Connected:{_tcpSocket.Connected}");
-                        if (_tcpSocket.Connected)
+                    if (!_tcpSocket.Connected)
+                    {                        
+                        // Cleanup old socket
+                        if (_tcpSocket != null)
                         {
-                            _tcpSocket.Disconnect(reuseSocket: true);
+                            try
+                            {
+                                if (_tcpSocket.Connected)
+                                {
+                                    _tcpSocket.Shutdown(SocketShutdown.Both);
+                                    _tcpSocket.Close();
+                                }
+                                _tcpSocket.Dispose();
+                            }
+                            catch
+                            {
+                                // Ignore cleanup errors
+                            }
                         }
-                        _isConnected = false;
+
+                        // Create fresh socket
+                        _tcpSocket = CreateSocket();
+                        
                         await _tcpSocket.ConnectAsync(_tcpEndPoint);
-                        _isConnected = true;
                     }
 
                     var messageBytes = Encoding.UTF8.GetBytes(message.ToString());
@@ -85,15 +108,7 @@ namespace mGBAHttpServer.Services
                     if (attempt < _maxRetries - 1)
                     {
                         _logger.LogWarning($"Failed to connect to mGBA with attempt: {attempt} with message: [{message}]. Retrying... If this message doesn't appear again, the message succeeded.");
-                        try
-                        {
-                            _tcpSocket.Disconnect(reuseSocket: true);
-                        }
-                        catch
-                        {
-                            // Ignore any errors during disconnect
-                        }
-                        _isConnected = false;
+
                         var retryDelay = _initialRetryDelay * (attempt + 1);
                         await Task.Delay(retryDelay);
                     }
@@ -106,20 +121,35 @@ namespace mGBAHttpServer.Services
                 finally
                 {
                     ArrayPool<byte>.Shared.Return(buffer);
+                    var diff = Stopwatch.GetElapsedTime(startTime);
+                    Console.WriteLine(diff);
                 }
             }
-
+            
             throw lastException ?? new TimeoutException($"Failed to send message after {_maxRetries} attempts: {message}");
         }
 
         public void Dispose()
         {
-            if (_tcpSocket.Connected)
+            if (_tcpSocket != null)
             {
-                _tcpSocket.Close();
-                //_tcpSocket.Shutdown(SocketShutdown.Both);
+                try
+                {
+                    if (_tcpSocket.Connected)
+                    {
+                        _tcpSocket.Shutdown(SocketShutdown.Both);
+                        _tcpSocket.Close();
+                    }
+                }
+                catch
+                {
+                    // Ignore disposal errors
+                }
+                finally
+                {
+                    _tcpSocket.Dispose();
+                }
             }
-            _tcpSocket?.Dispose();
             GC.SuppressFinalize(this);
         }
     }
