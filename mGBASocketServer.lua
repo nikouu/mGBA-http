@@ -125,7 +125,7 @@ function messageRouter(rawMessage)
 
 	local returnValue = defaultReturnValue;
 
-	formattedLog("messageRouter: \n\tRaw message:" .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
+	formattedLog("messageRouter: \n\tRaw message: " .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
 
 	if messageType == "mgba-http.button.tap" then manageButton(messageValue1)
 	elseif messageType == "mgba-http.button.tapmany" then manageButtons(messageValue1)
