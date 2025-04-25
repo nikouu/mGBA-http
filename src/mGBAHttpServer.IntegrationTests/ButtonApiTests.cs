@@ -5,9 +5,8 @@ using System.Net;
 namespace mGBAHttpServer.IntegrationTests
 {
     /// <summary>
-    /// Integration tests for the ButtonApi endpoints.
-    /// 
-    /// Note: These tests require a mGBA instance with the Lua script running
+    /// Integration tests for the ButtonApi endpoints. 
+    /// Note: These tests require a mGBA instance with the Lua script running against the button test ROM
     /// </summary>
     [TestClass]
     public sealed class ButtonApiTests : IDisposable
@@ -18,7 +17,6 @@ namespace mGBAHttpServer.IntegrationTests
         public ButtonApiTests()
         {
             _factory = new WebApplicationFactory<Program>();
-
             _client = _factory.CreateClient();
         }
 
@@ -36,9 +34,7 @@ namespace mGBAHttpServer.IntegrationTests
         public async Task TapEndpoint_SendsRequestSuccessfully(KeysEnum key)
         {            
             // Act
-            var response = await _client.PostAsync($"/mgba-http/button/tap?key={key}", null);
-
-            Thread.Sleep(100);
+            var response = await _client.PostAsync($"/mgba-http/button/tap?key={key}", null);            
             
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -55,44 +51,38 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var queryString = string.Join("&", keys.Select(k => $"keys={k}"));
-            var response = await _client.PostAsync($"/mgba-http/button/tapmany?{queryString}", null);
-
-            Thread.Sleep(100);
+            var response = await _client.PostAsync($"/mgba-http/button/tapmany?{queryString}", null);            
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [DataTestMethod]
-        [DataRow(KeysEnum.A, 5, DisplayName = "Key A - 5 frames")]
+        [DataRow(KeysEnum.A, 50, DisplayName = "Key A - 50 frames")]
         [DataRow(KeysEnum.B, 10, DisplayName = "Key B - 10 frames")]
         [DataRow(KeysEnum.Select, 15, DisplayName = "Key Select - 15 frames")]
         [DataRow(KeysEnum.Start, 20, DisplayName = "Key Start - 20 frames")]
-        [DataRow(KeysEnum.Right, 5, DisplayName = "Key Right - 5 frames")]
+        [DataRow(KeysEnum.Right, 50, DisplayName = "Key Right - 50 frames")]
         public async Task HoldEndpoint_SendsRequestSuccessfully(KeysEnum key, int duration)
         {
             // Act
-            var response = await _client.PostAsync($"/mgba-http/button/hold?key={key}&duration={duration}", null);
-
-            Thread.Sleep(100);
+            var response = await _client.PostAsync($"/mgba-http/button/hold?key={key}&duration={duration}", null);            
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [DataTestMethod]
-        [DataRow(new[] { KeysEnum.A }, 50, DisplayName = "Key A - 5 frames")]
+        [DataRow(new[] { KeysEnum.A }, 50, DisplayName = "Key A - 50 frames")]
         [DataRow(new[] { KeysEnum.A, KeysEnum.B }, 10, DisplayName = "Keys A+B - 10 frames")]
         [DataRow(new[] { KeysEnum.Up, KeysEnum.B }, 15, DisplayName = "Keys Up+B - 15 frames")]
-        [DataRow(new[] { KeysEnum.Left, KeysEnum.Right }, 50, DisplayName = "Keys Left+Right - 5 frames")]
+        [DataRow(new[] { KeysEnum.Left, KeysEnum.Right }, 50, DisplayName = "Keys Left+Right - 50 frames")]
         [DataRow(new[] { KeysEnum.L, KeysEnum.Down, KeysEnum.A }, 10, DisplayName = "Keys Up+Down+A - 10 frames")]
         public async Task HoldManyEndpoint_SendsRequestSuccessfully(KeysEnum[] keys, int duration)
         {
             // Act
             var queryString = string.Join("&", keys.Select(k => $"keys={k}")) + $"&duration={duration}";
-            var response = await _client.PostAsync($"/mgba-http/button/holdmany?{queryString}", null);
-
-            Thread.Sleep(100);
+            var response = await _client.PostAsync($"/mgba-http/button/holdmany?{queryString}", null);            
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);

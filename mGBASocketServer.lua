@@ -6,6 +6,7 @@
 -- ***********************
 
 local enableLogging = true
+local enableDebugLogging = false
 
 -- ***********************
 -- Sockets
@@ -51,14 +52,14 @@ function socketAccept()
 	socketList[id] = sock
 	sock:add("received", function() socketReceived(id) end)
 	sock:add("error", function() socketError(id) end)
-	formattedLog(formatMessage(id, "Connected"))
+	formattedDebugLog(formatMessage(id, "Connected"))
 end
 
 function socketReceived(id)
 	local sock = socketList[id]
 	if not sock then return end
 	while true do
-		local message, error = sock:receive(1024)
+		local message, error = sock:receive(512)
 		if message then
 			-- it seems that the value must be non-empty in order to actually send back?
 			-- thus the ACK message default
@@ -68,10 +69,10 @@ function socketReceived(id)
 			-- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
 			if error ~= socket.ERRORS.AGAIN then
 				if error == "disconnected" then
-					console:log(formatMessage(id, error, false))
+					formattedDebugLog(formatMessage(id, error, false))
 				elseif error == socket.ERRORS.UNKNOWN_ERROR then
 					-- for some reason this error sometimes comes happens instead of disconnected
-					console:log(formatMessage(id, "disconnected*", false))
+					formattedDebugLog(formatMessage(id, "disconnected*", false))
 				else
 					console:error(formatMessage(id, error, true))
 				end
@@ -246,8 +247,6 @@ function enqueueButtons(keyMask, duration)
 		endFrame = endFrame,
 		pressed = false
 	});
-
-	formattedLog(keyMask)
 end
 
 function updateKeys()
@@ -302,6 +301,12 @@ function formattedLog(string)
 	if enableLogging then
 		local timestamp = "[" .. os.date("%X", os.time()) .. "] "
 		console:log(timestamp .. string)
+	end
+end
+
+function formattedDebugLog(string)
+	if enableDebugLogging then
+		formattedLog(string)
 	end
 end
 

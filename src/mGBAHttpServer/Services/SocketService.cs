@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IO;
 using System.Buffers;
-using System.Drawing;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -15,10 +14,11 @@ namespace mGBAHttpServer.Services
         private readonly IPEndPoint _tcpEndPoint;
         private readonly Socket _tcpSocket;
         private const int _maxRetries = 3;
-        private readonly TimeSpan _initialRetryDelay = TimeSpan.FromSeconds(1);
+        private readonly TimeSpan _initialRetryDelay = TimeSpan.FromMilliseconds(500);
         private static readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager = new();
+        private readonly ILogger<SocketService> _logger;
 
-        public SocketService(IOptions<SocketOptions> socketOptions)
+        public SocketService(IOptions<SocketOptions> socketOptions, ILogger<SocketService> logger)
         {
             var ipAddress = IPAddress.Parse(socketOptions.Value.IpAddress);
             _tcpEndPoint = new(ipAddress, socketOptions.Value.Port);
@@ -28,12 +28,15 @@ namespace mGBAHttpServer.Services
                 ReceiveTimeout = socketOptions.Value.ReadTimeout,
                 NoDelay = true
             };
+            _logger = logger;
         }
 
         public async Task<string> SendMessageAsync(MessageModel message)
         {
-            var response = "";
-            for (int i = 0; i < _maxRetries; i++)
+            string response = string.Empty;
+            Exception lastException = null;
+
+            for (int attempt = 0; attempt < _maxRetries; attempt++)
             {
                 var buffer = ArrayPool<byte>.Shared.Rent(1024);
                 try
@@ -47,7 +50,7 @@ namespace mGBAHttpServer.Services
                     var messageBytes = Encoding.UTF8.GetBytes(message.ToString());
                     await _tcpSocket.SendAsync(messageBytes, SocketFlags.None);
 
-                    using var memoryStream = _recyclableMemoryStreamManager.GetStream();                    
+                    using var memoryStream = _recyclableMemoryStreamManager.GetStream();
                     int totalBytesRead = 0;
                     int bytesRead;
 
@@ -62,19 +65,28 @@ namespace mGBAHttpServer.Services
                     } while (bytesRead > 0 && _tcpSocket.Available > 0);
 
                     response = Encoding.UTF8.GetString(memoryStream.GetReadOnlySequence());
-                    
-                    break;
+
+                    return response.Replace("<|ACK|>", "");
                 }
-                catch (SocketException ex) when (ex.NativeErrorCode.Equals(10053))
+                catch (Exception ex) when (
+                    (ex is SocketException socketEx &&
+                        (socketEx.NativeErrorCode.Equals(10053) || socketEx.NativeErrorCode.Equals(10054))))
                 {
-                    // fixes problem if the other side has been uncleanly terminated
-                    _tcpSocket.Disconnect(reuseSocket: true);
-                    _isConnected = false;
-                    var retryDelay = _initialRetryDelay * (i + 1);
-                    await Task.Delay(retryDelay);
+                    lastException = ex;
+
+                    if (attempt < _maxRetries - 1)
+                    {
+                        _logger.LogWarning($"Failed to connect to mGBA with attempt: {attempt} with message: [{message}]. Retrying... If this message doesn't appear again, the message succeeded.");
+                        // Reset connection state
+                        _tcpSocket.Disconnect(reuseSocket: true);
+                        _isConnected = false;
+                        var retryDelay = _initialRetryDelay * (attempt + 1);
+                        await Task.Delay(retryDelay);
+                    }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    lastException = ex;
                     throw;
                 }
                 finally
@@ -83,7 +95,7 @@ namespace mGBAHttpServer.Services
                 }
             }
 
-            return response.Replace("<|ACK|>", "");
+            throw lastException ?? new TimeoutException($"Failed to send message after {_maxRetries} attempts: {message}");
         }
 
         public void Dispose()
