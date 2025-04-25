@@ -405,3 +405,5 @@ FodyWeavers.xsd
 # Release 
 ./release
 ./releaseStaging
+screenshot.png
+*.ss*
