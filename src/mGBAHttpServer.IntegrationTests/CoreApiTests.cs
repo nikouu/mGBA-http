@@ -475,6 +475,25 @@ namespace mGBAHttpServer.IntegrationTests
         }
 
         [TestMethod]
+        public async Task ReadRange_Large_ReturnsValues()
+        {
+            // Arrange
+            string address = "0x10000000";
+            int length = 16000;
+
+            // Act
+            var response = await _client.GetAsync($"/core/readrange?address={address}&length={length}");
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadAsStringAsync();
+            var values = JsonSerializer.Deserialize<int[]>(content);
+            Assert.IsNotNull(values);
+            Assert.AreEqual(length, values.Length);
+        }
+
+        [TestMethod]
         [Ignore] //Flaky, need to find an area in the raw bus to safely write
         public async Task Write8_SendsRequestSuccessfully()
         {

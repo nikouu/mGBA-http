@@ -136,6 +136,24 @@ namespace mGBAHttpServer.IntegrationTests
         }
 
         [TestMethod]
+        public async Task ReadRangeEndpoint_ReadRange_Large()
+        {
+            // Arrange
+            const int length = 16384;
+
+            // Act
+            var response = await _client.GetAsync($"/memorydomain/readrange?memoryDomain={BiosDomain}&address={0x0}&length={length}");
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadAsStringAsync();
+            var values = JsonSerializer.Deserialize<int[]>(content);
+
+            Assert.AreEqual(length, values.Length);
+        }
+
+        [TestMethod]
         public async Task Write8Endpoint_Write8()
         {
             // Arrange
