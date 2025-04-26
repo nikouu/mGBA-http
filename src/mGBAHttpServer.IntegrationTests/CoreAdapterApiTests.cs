@@ -27,7 +27,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync("/coreadapter/reset", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
@@ -39,13 +39,13 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/coreadapter/memory");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             var memoryDomains = JsonSerializer.Deserialize<string[]>(content);
-            
+
             Assert.IsNotNull(memoryDomains);
             Assert.AreEqual(10, memoryDomains.Length);
         }

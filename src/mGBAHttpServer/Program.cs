@@ -45,7 +45,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.Configure<SocketOptions>(builder.Configuration.GetSection(SocketOptions.Section));
-builder.Services.AddScoped<SocketService>();
+builder.Services.AddTransient<SocketService>();
 
 var loggingSection = builder.Configuration.GetSection("logging");
 

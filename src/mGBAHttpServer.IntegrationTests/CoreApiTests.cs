@@ -1,5 +1,4 @@
 using mGBAHttpServer.Models;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Text.Json;
@@ -33,7 +32,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/core/loadfile?path={TestRomPath}", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -64,7 +63,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Arrange - 12 is Start (8) and Select (4)
             const int keyBitmask = 12;
-            
+
             // Act
             var response = await _client.PostAsync($"/core/addkeys?keyBitmask={keyBitmask}", null);
             await _client.PostAsync($"/core/clearkeys?keyBitmask={keyBitmask}", null);
@@ -91,7 +90,7 @@ namespace mGBAHttpServer.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/core/clearkey?key={key}", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -123,7 +122,7 @@ namespace mGBAHttpServer.IntegrationTests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             Assert.AreEqual(keyBitmask, int.Parse(content));
         }
@@ -135,10 +134,10 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync($"/core/getkey?key={key}");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             Assert.AreEqual(0, int.Parse(content));
         }
@@ -172,7 +171,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync("/core/runFrame", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -182,7 +181,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync("/core/step", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -192,10 +191,10 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/currentFrame");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             Assert.IsTrue(int.Parse(content) >= 0);
         }
@@ -205,10 +204,10 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/framecycles");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             Assert.IsTrue(int.Parse(content) > 0);
         }
@@ -218,10 +217,10 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/frequency");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             Assert.IsTrue(int.Parse(content) > 0);
         }
@@ -232,10 +231,10 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/getgamecode");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             Assert.IsFalse(string.IsNullOrEmpty(content));
         }
@@ -245,10 +244,10 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/getgametitle");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             Assert.AreEqual("(BIOS)", content);
         }
@@ -258,10 +257,10 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/platform");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             Assert.AreEqual(0, int.Parse(content));
         }
@@ -271,10 +270,10 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/checksum");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             long checksum = long.Parse(content);
             Assert.IsTrue(checksum >= 0);
@@ -286,10 +285,10 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/romsize");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             int size = int.Parse(content);
             Assert.IsTrue(size > 0);
@@ -300,7 +299,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync("/core/autoloadsave", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -310,7 +309,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/core/loadsavefile?path={TestSavePath}&temporary=true", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -320,7 +319,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/core/screenshot?path={TestScreenshotPath}", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var file = new FileInfo(TestScreenshotPath);
@@ -335,7 +334,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/core/savestatefile?path={TestStatePath}&flags=31", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
@@ -371,7 +370,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync("/core/savestateslot?slot=1&flags=31", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -381,10 +380,10 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Arrange
             await _client.PostAsync("/core/savestateslot?slot=1&flags=31", null);
-            
+
             // Act
             var response = await _client.PostAsync("/core/loadstateslot?slot=1&flags=29", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -395,10 +394,10 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync("/core/savestatebuffer?flags=31", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             var stateData = JsonSerializer.Deserialize<int[]>(content);
             Assert.IsNotNull(stateData);
@@ -410,13 +409,13 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Arrange
             string address = "0x10000000";
-            
+
             // Act
             var response = await _client.GetAsync($"/core/read8?address={address}");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             int value = int.Parse(content);
             Assert.IsNotNull(value);
@@ -427,13 +426,13 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Arrange
             string address = "0x10000000";
-            
+
             // Act
             var response = await _client.GetAsync($"/core/read16?address={address}");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             int value = int.Parse(content);
             Assert.IsNotNull(value);
@@ -444,13 +443,13 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Arrange
             string address = "0x10000000";
-            
+
             // Act
             var response = await _client.GetAsync($"/core/read32?address={address}");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             long value = long.Parse(content);
             Assert.IsNotNull(value);
@@ -462,13 +461,13 @@ namespace mGBAHttpServer.IntegrationTests
             // Arrange
             string address = "0x10000000";
             string length = "16";
-            
+
             // Act
             var response = await _client.GetAsync($"/core/readrange?address={address}&length={length}");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             var values = JsonSerializer.Deserialize<int[]>(content);
             Assert.IsNotNull(values);
@@ -482,13 +481,13 @@ namespace mGBAHttpServer.IntegrationTests
             // Arrange
             string address = "0x10000000";
             const int value = 42;
-            
+
             // Act
             var response = await _client.PostAsync($"/core/write8?address={address}&value={value}", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             // Verify write
             var readResponse = await _client.GetAsync($"/core/read8?address={address}");
             var content = await readResponse.Content.ReadAsStringAsync();
@@ -502,13 +501,13 @@ namespace mGBAHttpServer.IntegrationTests
             // Arrange
             string address = "0x10000002";
             const int value = 12345;
-            
+
             // Act
             var response = await _client.PostAsync($"/core/write16?address={address}&value={value}", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             // Verify write
             var readResponse = await _client.GetAsync($"/core/read16?address={address}");
             var content = await readResponse.Content.ReadAsStringAsync();
@@ -522,13 +521,13 @@ namespace mGBAHttpServer.IntegrationTests
             // Arrange
             string address = "0x10000004";
             const int value = 0x12345678;
-            
+
             // Act
             var response = await _client.PostAsync($"/core/write32?address={address}&value={value}", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             // Verify write
             var readResponse = await _client.GetAsync($"/core/read32?address={address}");
             var content = await readResponse.Content.ReadAsStringAsync();
@@ -540,13 +539,13 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Arrange
             const string regName = "r0";
-            
+
             // Act
             var response = await _client.GetAsync($"/core/readregister?regName={regName}");
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var content = await response.Content.ReadAsStringAsync();
             int value = int.Parse(content);
             Assert.IsNotNull(value);
@@ -559,13 +558,13 @@ namespace mGBAHttpServer.IntegrationTests
             // Arrange
             const string regName = "r1";
             const int value = 0x1234;
-            
+
             // Act
             var response = await _client.PostAsync($"/core/writeregister?regName={regName}&value={value}", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             // Verify write
             var readResponse = await _client.GetAsync($"/core/readregister?regName={regName}");
             var content = await readResponse.Content.ReadAsStringAsync();

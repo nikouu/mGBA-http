@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Mvc.Testing;
 using mGBAHttpServer.Models;
+using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 
 namespace mGBAHttpServer.IntegrationTests
@@ -32,10 +32,10 @@ namespace mGBAHttpServer.IntegrationTests
         [DataRow(KeysEnum.R, DisplayName = "Key R")]
         [DataRow(KeysEnum.L, DisplayName = "Key L")]
         public async Task TapEndpoint_SendsRequestSuccessfully(KeysEnum key)
-        {            
+        {
             // Act
-            var response = await _client.PostAsync($"/mgba-http/button/tap?key={key}", null);            
-            
+            var response = await _client.PostAsync($"/mgba-http/button/tap?key={key}", null);
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -51,7 +51,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var queryString = string.Join("&", keys.Select(k => $"keys={k}"));
-            var response = await _client.PostAsync($"/mgba-http/button/tapmany?{queryString}", null);            
+            var response = await _client.PostAsync($"/mgba-http/button/tapmany?{queryString}", null);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -66,7 +66,7 @@ namespace mGBAHttpServer.IntegrationTests
         public async Task HoldEndpoint_SendsRequestSuccessfully(KeysEnum key, int duration)
         {
             // Act
-            var response = await _client.PostAsync($"/mgba-http/button/hold?key={key}&duration={duration}", null);            
+            var response = await _client.PostAsync($"/mgba-http/button/hold?key={key}&duration={duration}", null);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -82,7 +82,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var queryString = string.Join("&", keys.Select(k => $"keys={k}")) + $"&duration={duration}";
-            var response = await _client.PostAsync($"/mgba-http/button/holdmany?{queryString}", null);            
+            var response = await _client.PostAsync($"/mgba-http/button/holdmany?{queryString}", null);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);

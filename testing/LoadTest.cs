@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace mGBAHttpServerExamples
@@ -27,87 +29,142 @@ namespace mGBAHttpServerExamples
     {
         private readonly HttpClient _client;
         private readonly int _requestsPerSecond;
-        
+        private readonly ConcurrentQueue<(DateTime RequestTime, TimeSpan Duration, bool Success)> _metrics;
+        private readonly ConcurrentBag<Task> _pendingRequests;
+
         public LoadTest(HttpClient client, int requestsPerSecond = 10)
         {
             _client = client ?? new HttpClient();
             _requestsPerSecond = requestsPerSecond;
+            _metrics = new ConcurrentQueue<(DateTime, TimeSpan, bool)>();
+            _pendingRequests = new ConcurrentBag<Task>();
         }
-        
+
         public async Task RunLoadTest(KeysEnum key, TimeSpan duration)
         {
-            Console.WriteLine($"Starting load test: {_requestsPerSecond} requests/second for {duration.TotalSeconds} seconds");
-            
-            var stopwatch = Stopwatch.StartNew();
-            int totalRequests = 0;
-            int successfulRequests = 0;
-            
-            // Create a PeriodicTimer that ticks every second
+            Console.WriteLine($"Starting load test: target {_requestsPerSecond} requests/second for {duration.TotalSeconds} seconds");
+
+            using var cts = new CancellationTokenSource(duration);
             using var secondTimer = new PeriodicTimer(TimeSpan.FromSeconds(1));
-            
-            while (await secondTimer.WaitForNextTickAsync())
+
+            // Start a background task to periodically report metrics
+            var reportingTask = ReportMetricsAsync(duration, cts.Token);
+
+            try
             {
-                if (stopwatch.Elapsed >= duration)
-                    break;
-                    
-                var tasks = new List<Task>();
-                
-                // Create batch of requests for this second
-                for (int i = 0; i < _requestsPerSecond; i++)
+                while (await secondTimer.WaitForNextTickAsync(cts.Token))
                 {
-                    tasks.Add(Task.Run(async () =>
+                    // Launch requests and keep track of them
+                    for (int i = 0; i < _requestsPerSecond; i++)
                     {
-                        try
-                        {
-                            var result = await GetKeyRequest(key);
-                            if (result)
-                            {
-                                Interlocked.Increment(ref successfulRequests);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Request error: {ex.Message}");
-                        }
-                        
-                        Interlocked.Increment(ref totalRequests);
-                    }));
+                        var task = SendRequestAndRecordMetricsAsync(key);
+                        _pendingRequests.Add(task);
+                    }
                 }
-                
-                // Wait for all requests in this batch to complete
-                await Task.WhenAll(tasks);
             }
-            
-            stopwatch.Stop();
-            
-            Console.WriteLine($"Load test completed: {totalRequests} total requests, {successfulRequests} successful");
-            Console.WriteLine($"Actual rate: {totalRequests / stopwatch.Elapsed.TotalSeconds:F2} requests/second (test took {stopwatch.Elapsed.TotalSeconds:F2} seconds.)");
+            catch (OperationCanceledException)
+            {
+                // Normal termination when duration expires
+                Console.WriteLine("\nTest duration completed. Waiting for pending requests...");
+            }
+
+            try
+            {
+                // Wait for all pending requests to complete
+                await Task.WhenAll(_pendingRequests);
+                
+                // Cancel and wait for the reporting task
+                cts.Cancel();
+                try { await reportingTask; } catch (OperationCanceledException) { }
+            }
+            finally
+            {
+                // Final report after all requests have completed
+                AnalyzeAndReportFinalMetrics();
+            }
         }
-        
+
+        private async Task SendRequestAndRecordMetricsAsync(KeysEnum key)
+        {
+            var requestTime = DateTime.UtcNow;
+            var startTime = Stopwatch.GetTimestamp();
+
+            try
+            {
+                var success = await GetKeyRequest(key);
+                var duration = Stopwatch.GetElapsedTime(startTime);
+                _metrics.Enqueue((requestTime, duration, success));
+            }
+            catch
+            {
+                var duration = Stopwatch.GetElapsedTime(startTime);
+                _metrics.Enqueue((requestTime, duration, false));
+            }
+        }
+
+        private async Task ReportMetricsAsync(TimeSpan testDuration, CancellationToken ct)
+        {
+            var reportInterval = TimeSpan.FromSeconds(5); // Report every 5 seconds
+
+            try
+            {
+                while (!ct.IsCancellationRequested)
+                {
+                    await Task.Delay(reportInterval, ct);
+                    var now = DateTime.UtcNow;
+                    var recentMetrics = _metrics
+                        .Where(m => m.RequestTime >= now.AddSeconds(-5))
+                        .ToList();
+
+                    if (recentMetrics.Any())
+                    {
+                        var pendingCount = _pendingRequests.Count(t => !t.IsCompleted);
+                        var requestRate = recentMetrics.Count / 5.0; // 5-second window
+                        var avgLatency = recentMetrics.Average(m => m.Duration.TotalMilliseconds);
+                        var successRate = recentMetrics.Count(m => m.Success) / (double)recentMetrics.Count * 100;
+
+                        Console.WriteLine($"Last 5s - Rate: {requestRate:F1} req/s, Avg Latency: {avgLatency:F1}ms, Success: {successRate:F1}%, Pending: {pendingCount}");
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected when the test duration expires
+                Console.WriteLine("Metrics reporting completed.");
+            }
+        }
+
+        private void AnalyzeAndReportFinalMetrics()
+        {
+            var allMetrics = _metrics.ToList();
+            if (!allMetrics.Any()) return;
+
+            var totalTime = (allMetrics.Max(m => m.RequestTime) - allMetrics.Min(m => m.RequestTime)).TotalSeconds;
+            var actualRate = allMetrics.Count / totalTime;
+            var avgLatency = allMetrics.Average(m => m.Duration.TotalMilliseconds);
+            var successRate = allMetrics.Count(m => m.Success) / (double)allMetrics.Count * 100;
+
+            Console.WriteLine("\nFinal Results:");
+            Console.WriteLine($"Total Requests: {allMetrics.Count}");
+            Console.WriteLine($"Actual Rate: {actualRate:F1} requests/second");
+            Console.WriteLine($"Average Latency: {avgLatency:F1}ms");
+            Console.WriteLine($"Success Rate: {successRate:F1}%");
+        }
+
         private async Task<bool> GetKeyRequest(KeysEnum key)
         {
-            var startTime = Stopwatch.GetTimestamp();
             try
             {
                 var response = await _client.GetAsync($"/core/getkey?key={key}");
-
                 if (response.StatusCode != HttpStatusCode.OK)
-                {
                     return false;
-                }
 
                 var content = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(content);
                 return content == "0";
             }
             catch
             {
                 return false;
-            }
-            finally
-            {
-                var diff = Stopwatch.GetElapsedTime(startTime);
-                Console.WriteLine(diff);
             }
         }
     }

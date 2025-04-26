@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc.Testing;
-using mGBAHttpServer.Models;
 using System.Net;
 
 namespace mGBAHttpServer.IntegrationTests
@@ -27,7 +26,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/console/error?message={Uri.EscapeDataString(message)}", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -39,7 +38,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/console/log?message={Uri.EscapeDataString(message)}", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -51,7 +50,7 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/console/warn?message={Uri.EscapeDataString(message)}", null);
-            
+
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }

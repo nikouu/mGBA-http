@@ -33,15 +33,14 @@ namespace mGBAHttpServer.Services
             var socket = new Socket(_tcpEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
             {
                 SendTimeout = _socketOptions.WriteTimeout,
-                ReceiveTimeout = _socketOptions.ReadTimeout,
-                NoDelay = true // Disable Nagle's algorithm
+                ReceiveTimeout = _socketOptions.ReadTimeout
             };
 
             // Enable keep-alive to detect broken connections
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, 5);  // 5 seconds before first keepalive
-            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, 1); // 1 second between keepalives
-            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 3); // 3 retry attempts
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, 5);
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, 1);
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 3);
 
             return socket;
         }
@@ -57,7 +56,7 @@ namespace mGBAHttpServer.Services
                 try
                 {
                     if (!_tcpSocket.Connected)
-                    {                        
+                    {
                         // Cleanup old socket
                         if (_tcpSocket != null)
                         {
@@ -78,7 +77,7 @@ namespace mGBAHttpServer.Services
 
                         // Create fresh socket
                         _tcpSocket = CreateSocket();
-                        
+
                         await _tcpSocket.ConnectAsync(_tcpEndPoint);
                         _logger.LogDebug("Socket connected successfully");
                     }
@@ -101,9 +100,9 @@ namespace mGBAHttpServer.Services
                         {
                             bytesRead = await _tcpSocket.ReceiveAsync(buffer, SocketFlags.None)
                                 .WaitAsync(cts.Token); // Add timeout to receive operation
-                            
+
                             _logger.LogDebug("Received {BytesRead} bytes", bytesRead);
-                            
+
                             if (bytesRead > 0)
                             {
                                 receivedAnyData = true;
@@ -124,12 +123,12 @@ namespace mGBAHttpServer.Services
                     }
 
                     var response = Encoding.UTF8.GetString(memoryStream.GetReadOnlySequence());
-                    
+
                     if (string.IsNullOrEmpty(response))
                     {
                         _logger.LogInformation(
-                            "Empty response received for message {MessageType}. Bytes read: {TotalBytes}", 
-                            message.Type, 
+                            "Empty response received for message {MessageType}. Bytes read: {TotalBytes}",
+                            message.Type,
                             totalBytesRead
                         );
                     }
@@ -144,19 +143,15 @@ namespace mGBAHttpServer.Services
                     return response.Replace("<|SUCCESS|>", "");
                 }
                 catch (Exception ex) when (
-                    ex is SocketException socketEx &&
-                    (socketEx.NativeErrorCode.Equals(10022) || // Invalid argument
-                     socketEx.NativeErrorCode.Equals(10053) || // Connection aborted
-                     socketEx.NativeErrorCode.Equals(10054) || // Connection reset
-                     socketEx.NativeErrorCode.Equals(10060) || // Connection timed out
-                     socketEx.NativeErrorCode.Equals(10061)))  // Connection refused
+                ex is SocketException socketEx &&
+                    (socketEx.NativeErrorCode is 10022 or 10053 or 10054 or 10060 or 10061))
                 {
                     lastException = ex;
 
                     if (attempt < _maxRetries - 1)
                     {
                         _logger.LogWarning(
-                            "Socket error {ErrorCode} on attempt {Attempt} for message type {MessageType}. Retrying...", 
+                            "Socket error {ErrorCode} on attempt {Attempt} for message type {MessageType}. Retrying...",
                             ((SocketException)ex).NativeErrorCode,
                             attempt + 1,
                             message.Type
@@ -181,7 +176,7 @@ namespace mGBAHttpServer.Services
                     ArrayPool<byte>.Shared.Return(buffer);
                 }
             }
-            
+
             throw lastException ?? new TimeoutException($"Failed to send message after {_maxRetries} attempts: {message}");
         }
 
