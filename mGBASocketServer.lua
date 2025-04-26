@@ -6,7 +6,7 @@
 -- ***********************
 
 local enableLogging = true
-local enableDebugLogging = true
+local enableDebugLogging = false
 
 -- ***********************
 -- Sockets
