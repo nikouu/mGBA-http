@@ -76,7 +76,7 @@ The rough design philosphy is outlined in the [design document](docs/Design.md).
 ### Build
 The PowerShell release script [ReleaseBuild.ps1](ReleaseBuild.ps1) creates the final binaries. PowerShell is cross platform and can be downloaded via the [PowerShell download documentation](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.3).
 
-The script generates binaries closely aligned with the operating systems and architectures that [mGBA provides downloads](https://mgba.io/downloads.html) for.
+The script generates binaries closely aligned with the desktop operating systems and architectures that [mGBA provides downloads](https://mgba.io/downloads.html) for.
 
 #### Cross Platform
 To reduce the barrier of entry, mGBA-http also has [self-contained](https://learn.microsoft.com/en-us/dotnet/core/deploying/#publish-self-contained) builds. These are the larger binaries with "self-contained" in the filename and bring the entirity of .NET needed to run the executable - meaning the user does not need to download the [.NET runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) to use mGBA-http.
