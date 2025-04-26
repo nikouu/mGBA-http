@@ -6,6 +6,7 @@ Ensure the following are done, if needed, before each release.
 	- csproj
 	- Lua header
 	- Lua console log
+- Correct logging is setup in the Lua file 
 - Readme updated
 - API documentation page updated (swagger.json to docs)
 - Implemented API doc updated
