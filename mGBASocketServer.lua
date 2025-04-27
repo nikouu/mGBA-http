@@ -1,6 +1,6 @@
 -- ***********************
 -- mGBA-http
--- Version: 0.5.0
+-- Version: 0.6.0
 -- Lua interface for mGBA-http
 -- https://github.com/nikouu/mGBA-http
 -- ***********************
@@ -34,7 +34,7 @@ function beginSocket()
 				server:close()
 				console:error(formatMessage("Listen", error, true))
 			else
-				console:log("mGBA script server 0.5.0 ready. Listening on port " .. port)
+				console:log("mGBA script server 0.6.0 ready. Listening on port " .. port)
 				server:add("received", socketAccept)
 			end
 		end
