@@ -1,5 +1,6 @@
-﻿using mGBAHttpServer.Models;
-using mGBAHttpServer.Services;
+﻿using mGBAHttpServer.Domain;
+using mGBAHttpServer.Models;
+using Microsoft.Extensions.ObjectPool;
 
 namespace mGBAHttpServer.Endpoints
 {
@@ -10,9 +11,10 @@ namespace mGBAHttpServer.Endpoints
             var group = routes.MapGroup("/console");
             group.WithTags("Console");
 
-            group.MapPost("/error", async (SocketService socket, string message) =>
+            group.MapPost("/error", async (ObjectPool<ReusableSocket> socketPool, string message) =>
             {
-                await socket.SendMessageAsync(new MessageModel("console.error", message));
+                var messageModel = new MessageModel("console.error", message).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Print an error to the console.";
@@ -20,9 +22,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/log", async (SocketService socket, string message) =>
+            group.MapPost("/log", async (ObjectPool<ReusableSocket> socketPool, string message) =>
             {
-                await socket.SendMessageAsync(new MessageModel("console.log", message));
+                var messageModel = new MessageModel("console.log", message).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Print a log to the console.";
@@ -30,9 +33,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/warn", async (SocketService socket, string message) =>
+            group.MapPost("/warn", async (ObjectPool<ReusableSocket> socketPool, string message) =>
             {
-                await socket.SendMessageAsync(new MessageModel("console.warn", message));
+                var messageModel = new MessageModel("console.warn", message).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Print a warning to the console.";

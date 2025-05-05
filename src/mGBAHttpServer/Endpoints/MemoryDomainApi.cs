@@ -1,5 +1,6 @@
-﻿using mGBAHttpServer.Models;
-using mGBAHttpServer.Services;
+﻿using mGBAHttpServer.Domain;
+using mGBAHttpServer.Models;
+using Microsoft.Extensions.ObjectPool;
 
 namespace mGBAHttpServer.Endpoints
 {
@@ -10,9 +11,10 @@ namespace mGBAHttpServer.Endpoints
             var group = routes.MapGroup("/memorydomain");
             group.WithTags("MemoryDomain");
 
-            group.MapGet("/base", async (SocketService socket, string memoryDomain) =>
+            group.MapGet("/base", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.base", memoryDomain.ToString()));
+                var messageModel = new MessageModel("memoryDomain.base", memoryDomain.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the address of the base of this memory domain.";
@@ -20,9 +22,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/bound", async (SocketService socket, string memoryDomain) =>
+            group.MapGet("/bound", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.bound", memoryDomain.ToString()));
+                var messageModel = new MessageModel("memoryDomain.bound", memoryDomain.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the address of the end bound of this memory domain.";
@@ -30,9 +33,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/name", async (SocketService socket, string memoryDomain) =>
+            group.MapGet("/name", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.name", memoryDomain.ToString()));
+                var messageModel = new MessageModel("memoryDomain.name", memoryDomain.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get a short, human-readable name for this memory domain.";
@@ -40,9 +44,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/read16", async (SocketService socket, string memoryDomain, string address) =>
+            group.MapGet("/read16", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain, string address) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.read16", memoryDomain.ToString(), address));
+                var messageModel = new MessageModel("memoryDomain.read16", memoryDomain.ToString(), address).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read a 16-bit value from the given offset.";
@@ -51,9 +56,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/read32", async (SocketService socket, string memoryDomain, string address) =>
+            group.MapGet("/read32", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain, string address) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.read32", memoryDomain.ToString(), address));
+                var messageModel = new MessageModel("memoryDomain.read32", memoryDomain.ToString(), address).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read a 32-bit value from the given offset.";
@@ -62,9 +68,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/read8", async (SocketService socket, string memoryDomain, string address) =>
+            group.MapGet("/read8", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain, string address) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.read8", memoryDomain.ToString(), address));
+                var messageModel = new MessageModel("memoryDomain.read8", memoryDomain.ToString(), address).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read an 8-bit value from the given offset.";
@@ -73,9 +80,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/readrange", async (SocketService socket, string memoryDomain, string address, string length) =>
+            group.MapGet("/readrange", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain, string address, string length) =>
             {
-                var result = await socket.SendMessageAsync(new MessageModel("memoryDomain.readRange", memoryDomain.ToString(), address, length));
+                var messageModel = new MessageModel("memoryDomain.readRange", memoryDomain.ToString(), address, length).ToString();
+                var result = await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
                 return result.Split(',', StringSplitOptions.TrimEntries).Select(x => int.Parse(x));
             }).WithOpenApi(o =>
             {
@@ -85,9 +93,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/size", async (SocketService socket, string memoryDomain) =>
+            group.MapGet("/size", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.size", memoryDomain.ToString()));
+                var messageModel = new MessageModel("memoryDomain.size", memoryDomain.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the size of this memory domain in bytes.";
@@ -95,9 +104,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/write16", async (SocketService socket, string memoryDomain, string address, int value) =>
+            group.MapPost("/write16", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain, string address, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.write16", memoryDomain.ToString(), address, value.ToString()));
+                var messageModel = new MessageModel("memoryDomain.write16", memoryDomain.ToString(), address, value.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write a 16-bit value from the given offset.";
@@ -106,9 +116,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/write32", async (SocketService socket, string memoryDomain, string address, int value) =>
+            group.MapPost("/write32", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain, string address, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.write32", memoryDomain.ToString(), address, value.ToString()));
+                var messageModel = new MessageModel("memoryDomain.write32", memoryDomain.ToString(), address, value.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write a 32-bit value from the given offset.";
@@ -117,9 +128,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/write8", async (SocketService socket, string memoryDomain, string address, int value) =>
+            group.MapPost("/write8", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain, string address, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("memoryDomain.write8", memoryDomain.ToString(), address, value.ToString()));
+                var messageModel = new MessageModel("memoryDomain.write8", memoryDomain.ToString(), address, value.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write an 8-bit value from the given offset.";
@@ -132,3 +144,4 @@ namespace mGBAHttpServer.Endpoints
         }
     }
 }
+

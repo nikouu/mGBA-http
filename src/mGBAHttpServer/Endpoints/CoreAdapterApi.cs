@@ -1,5 +1,6 @@
-﻿using mGBAHttpServer.Models;
-using mGBAHttpServer.Services;
+﻿using mGBAHttpServer.Domain;
+using mGBAHttpServer.Models;
+using Microsoft.Extensions.ObjectPool;
 
 namespace mGBAHttpServer.Endpoints
 {
@@ -10,9 +11,10 @@ namespace mGBAHttpServer.Endpoints
             var group = routes.MapGroup("/coreadapter");
             group.WithTags("CoreAdapter");
 
-            group.MapPost("/reset", async (SocketService socket) =>
+            group.MapPost("/reset", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                await socket.SendMessageAsync(new MessageModel("coreAdapter.reset"));
+                var messageModel = new MessageModel("coreAdapter.reset").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Reset the emulation.";
@@ -20,10 +22,11 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/memory", async (SocketService socket) =>
+            group.MapGet("/memory", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                var memoryDomains = await socket.SendMessageAsync(new MessageModel("coreAdapter.memory"));
-                return memoryDomains.Split(',', StringSplitOptions.TrimEntries);
+                var messageModel = new MessageModel("coreAdapter.memory").ToString();
+                var result = await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
+                return result.Split(',', StringSplitOptions.TrimEntries);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the platform specific set of MemoryDomains.";

@@ -1,6 +1,7 @@
-﻿using mGBAHttpServer.Models;
-using mGBAHttpServer.Services;
+﻿using mGBAHttpServer.Domain;
+using mGBAHttpServer.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.ObjectPool;
 
 namespace mGBAHttpServer.Endpoints
 {
@@ -11,9 +12,10 @@ namespace mGBAHttpServer.Endpoints
             var group = routes.MapGroup("/mgba-http/button");
             group.WithTags("Button");
 
-            group.MapPost("/tap", async (SocketService socket, KeysEnum key) =>
+            group.MapPost("/tap", async (ObjectPool<ReusableSocket> socketPool, KeysEnum key) =>
             {
-                await socket.SendMessageAsync(new MessageModel("mgba-http.button.tap", key.ToString()));
+                var messageModel = new MessageModel("mgba-http.button.tap", key.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Sends button presses.";
@@ -22,9 +24,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/tapmany", async (SocketService socket, [FromQuery] KeysEnum[] keys) =>
+            group.MapPost("/tapmany", async (ObjectPool<ReusableSocket> socketPool, [FromQuery] KeysEnum[] keys) =>
             {
-                await socket.SendMessageAsync(new MessageModel("mgba-http.button.tapmany", string.Join(";", keys)));
+                var messageModel = new MessageModel("mgba-http.button.tapmany", string.Join(";", keys)).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Sends multiple button presses simultaneously.";
@@ -33,9 +36,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/hold", async (SocketService socket, KeysEnum key, int duration) =>
+            group.MapPost("/hold", async (ObjectPool<ReusableSocket> socketPool, KeysEnum key, int duration) =>
             {
-                await socket.SendMessageAsync(new MessageModel("mgba-http.button.hold", key.ToString(), duration.ToString()));
+                var messageModel = new MessageModel("mgba-http.button.hold", key.ToString(), duration.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Sends a held down button for a given duration in frames.";
@@ -45,9 +49,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/holdmany", async (SocketService socket, [FromQuery] KeysEnum[] keys, int duration) =>
+            group.MapPost("/holdmany", async (ObjectPool<ReusableSocket> socketPool, [FromQuery] KeysEnum[] keys, int duration) =>
             {
-                await socket.SendMessageAsync(new MessageModel("mgba-http.button.holdmany", string.Join(";", keys), duration.ToString()));
+                var messageModel = new MessageModel("mgba-http.button.holdmany", string.Join(";", keys), duration.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Sends multiple button presses simultaneously for a given duration in frames.";

@@ -7,6 +7,7 @@
 
 local enableLogging = true
 local enableDebugLogging = false
+local TERMINATION_MARKER = "<|END|>"
 
 -- ***********************
 -- Sockets
@@ -56,36 +57,39 @@ function socketAccept()
 end
 
 function socketReceived(id)
-	local sock = socketList[id]
-	if not sock then return end
-	while true do
-		local message, error = sock:receive(2048)
-		if message then
-            local trimmed = message:match("^(.-)%s*$")
-            --[[ if trimmed == "<|ACK|>" then
-                sock:send("<|ERR|>")
-                return
-            end ]]
-            -- it seems that the value must be non-empty in order to actually send back?
-            -- thus the ACK message default
-            local returnValue = messageRouter(trimmed)
-            sock:send(returnValue)
+    local sock = socketList[id]
+    if not sock then return end
+    sock._buffer = sock._buffer or ""
+    while true do
+        local chunk, error = sock:receive(1024)
+        if chunk then
+            sock._buffer = sock._buffer .. chunk
+            while true do
+                local marker_start, marker_end = sock._buffer:find(TERMINATION_MARKER, 1, true)
+                if not marker_start then break end
+                local message = sock._buffer:sub(1, marker_start - 1)
+                sock._buffer = sock._buffer:sub(marker_end + 1)
+                formattedDebugLog(formatMessage(id, message:match("^(.-)%s*$")))
+                -- Route the message and send back the response with the marker
+                local returnValue = messageRouter(message:match("^(.-)%s*$"))
+                sock:send(returnValue .. TERMINATION_MARKER)
+            end
         elseif error then
-			-- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
-			if error ~= socket.ERRORS.AGAIN then
-				if error == "disconnected" then
-					formattedDebugLog(formatMessage(id, error, false))
-				elseif error == socket.ERRORS.UNKNOWN_ERROR then
-					-- for some reason this error sometimes comes happens instead of disconnected
-					formattedDebugLog(formatMessage(id, "disconnected*", false))
-				else
-					console:error(formatMessage(id, error, true))
-				end
-				socketStop(id)
-			end
-			return
-		end
-	end
+            -- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
+            if error ~= socket.ERRORS.AGAIN then
+                if error == "disconnected" then
+                    formattedDebugLog(formatMessage(id, error, false))
+                elseif error == socket.ERRORS.UNKNOWN_ERROR then
+                    -- for some reason this error sometimes comes happens instead of disconnected
+                    formattedDebugLog(formatMessage(id, "disconnected*", false))
+                else
+                    console:error(formatMessage(id, error, true))
+                end
+                socketStop(id)
+            end
+            return
+        end
+    end
 end
 
 function socketStop(id)

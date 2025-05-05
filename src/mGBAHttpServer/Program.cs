@@ -1,7 +1,10 @@
-﻿using mGBAHttpServer.Endpoints;
+﻿using mGBAHttpServer.Domain;
+using mGBAHttpServer.Endpoints;
 using mGBAHttpServer.Models;
 using mGBAHttpServer.SchemaFilter;
-using mGBAHttpServer.Services;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.ObjectPool;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -45,9 +48,17 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.Configure<SocketOptions>(builder.Configuration.GetSection(SocketOptions.Section));
-builder.Services.AddTransient<SocketService>();
+builder.Services.TryAddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
 
-var loggingSection = builder.Configuration.GetSection("logging");
+builder.Services.TryAddSingleton(serviceProvider =>
+{
+    var provider = serviceProvider.GetRequiredService<ObjectPoolProvider>();
+    var socketOptions = serviceProvider.GetRequiredService<IOptions<SocketOptions>>();
+    var policy = new ReusableSocketPooledObjectPolicy(socketOptions.Value.IpAddress, socketOptions.Value.Port);
+    return provider.Create(policy);
+});
+
+//var loggingSection = builder.Configuration.GetSection("logging");
 
 var app = builder.Build();
 

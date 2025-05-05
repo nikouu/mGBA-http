@@ -1,5 +1,6 @@
-﻿using mGBAHttpServer.Models;
-using mGBAHttpServer.Services;
+﻿using mGBAHttpServer.Domain;
+using mGBAHttpServer.Models;
+using Microsoft.Extensions.ObjectPool;
 
 namespace mGBAHttpServer.Endpoints
 {
@@ -10,9 +11,10 @@ namespace mGBAHttpServer.Endpoints
             var group = routes.MapGroup("/core");
             group.WithTags("Core");
 
-            group.MapPost("/addkey", async (SocketService socket, KeysEnum key) =>
+            group.MapPost("/addkey", async (ObjectPool<ReusableSocket> socketPool, KeysEnum key) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.addKey", key.ToString()));
+                var messageModel = new MessageModel("core.addKey", key.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Add a single key.";
@@ -21,9 +23,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/addkeys", async (SocketService socket, int keyBitmask) =>
+            group.MapPost("/addkeys", async (ObjectPool<ReusableSocket> socketPool, int keyBitmask) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.addKeys", keyBitmask.ToString()));
+                var messageModel = new MessageModel("core.addKeys", keyBitmask.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Add a bitmask of keys.";
@@ -32,9 +35,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/autoloadsave", async (SocketService socket) =>
+            group.MapPost("/autoloadsave", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.autoloadSave"));
+                var messageModel = new MessageModel("core.autoloadSave").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Load save data.";
@@ -42,9 +46,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/checksum", async (SocketService socket) =>
+            group.MapGet("/checksum", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.checksum"));
+                var messageModel = new MessageModel("core.checksum").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the checksum of the loaded ROM.";
@@ -52,9 +57,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/clearkey", async (SocketService socket, KeysEnum key) =>
+            group.MapPost("/clearkey", async (ObjectPool<ReusableSocket> socketPool, KeysEnum key) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.clearKey", key.ToString()));
+                var messageModel = new MessageModel("core.clearKey", key.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Remove a single key.";
@@ -63,9 +69,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/clearkeys", async (SocketService socket, int keyBitmask) =>
+            group.MapPost("/clearkeys", async (ObjectPool<ReusableSocket> socketPool, int keyBitmask) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.clearKeys", keyBitmask.ToString()));
+                var messageModel = new MessageModel("core.clearKeys", keyBitmask.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Remove a bitmask of keys.";
@@ -74,9 +81,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/currentFrame", async (SocketService socket) =>
+            group.MapGet("/currentFrame", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.currentFrame"));
+                var messageModel = new MessageModel("core.currentFrame").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the number of the current frame.";
@@ -84,9 +92,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/framecycles", async (SocketService socket) =>
+            group.MapGet("/framecycles", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.frameCycles"));
+                var messageModel = new MessageModel("core.frameCycles").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the number of cycles per frame.";
@@ -94,9 +103,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/frequency", async (SocketService socket) =>
+            group.MapGet("/frequency", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.frequency"));
+                var messageModel = new MessageModel("core.frequency").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the number of cycles per second.";
@@ -104,9 +114,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/getgamecode", async (SocketService socket) =>
+            group.MapGet("/getgamecode", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.getGameCode"));
+                var messageModel = new MessageModel("core.getGameCode").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get internal product code for the game.";
@@ -114,9 +125,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/getgametitle", async (SocketService socket) =>
+            group.MapGet("/getgametitle", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.getGameTitle"));
+                var messageModel = new MessageModel("core.getGameTitle").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get internal title of the game.";
@@ -124,9 +136,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/getkey", async (SocketService socket, KeysEnum key) =>
+            group.MapGet("/getkey", async (ObjectPool<ReusableSocket> socketPool, KeysEnum key) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.getKey", key.ToString()));
+                var messageModel = new MessageModel("core.getKey", key.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the active state of a given key.";
@@ -135,9 +148,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/getkeys", async (SocketService socket) =>
+            group.MapGet("/getkeys", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.getKeys"));
+                var messageModel = new MessageModel("core.getKeys").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the currently active keys as a bitmask.";
@@ -145,9 +159,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/loadfile", async (SocketService socket, string path) =>
+            group.MapPost("/loadfile", async (ObjectPool<ReusableSocket> socketPool, string path) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.loadFile", path));
+                var messageModel = new MessageModel("core.loadFile", path).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Load a ROM file.";
@@ -155,9 +170,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/loadsavefile", async (SocketService socket, string path, bool temporary) =>
+            group.MapPost("/loadsavefile", async (ObjectPool<ReusableSocket> socketPool, string path, bool temporary) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.loadSaveFile", path, temporary.ToString()));
+                var messageModel = new MessageModel("core.loadSaveFile", path, temporary.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Load save data file.";
@@ -165,9 +181,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/loadstatebuffer", async (SocketService socket, string buffer, int flags = 29) =>
+            group.MapPost("/loadstatebuffer", async (ObjectPool<ReusableSocket> socketPool, string buffer, int flags = 29) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.loadStateBuffer", buffer, flags.ToString()));
+                var messageModel = new MessageModel("core.loadStateBuffer", buffer, flags.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Load state from a buffer.";
@@ -175,9 +192,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/loadstatefile", async (SocketService socket, string path, int flags = 29) =>
+            group.MapPost("/loadstatefile", async (ObjectPool<ReusableSocket> socketPool, string path, int flags = 29) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.loadStateFile", path, flags.ToString()));
+                var messageModel = new MessageModel("core.loadStateFile", path, flags.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Load state from the given path.";
@@ -185,9 +203,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/loadstateslot", async (SocketService socket, string slot, int flags = 29) =>
+            group.MapPost("/loadstateslot", async (ObjectPool<ReusableSocket> socketPool, string slot, int flags = 29) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.loadStateSlot", slot, flags.ToString()));
+                var messageModel = new MessageModel("core.loadStateSlot", slot, flags.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Load state from the slot number.";
@@ -195,9 +214,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/platform", async (SocketService socket) =>
+            group.MapGet("/platform", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.platform"));
+                var messageModel = new MessageModel("core.platform").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get which platform is being emulated.";
@@ -205,9 +225,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/read16", async (SocketService socket, string address) =>
+            group.MapGet("/read16", async (ObjectPool<ReusableSocket> socketPool, string address) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.read16", address));
+                var messageModel = new MessageModel("core.read16", address).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read a 16-bit value from the given bus address.";
@@ -216,9 +237,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/read32", async (SocketService socket, string address) =>
+            group.MapGet("/read32", async (ObjectPool<ReusableSocket> socketPool, string address) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.read32", address));
+                var messageModel = new MessageModel("core.read32", address).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read a 32-bit value from the given bus address.";
@@ -227,9 +249,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/read8", async (SocketService socket, string address) =>
+            group.MapGet("/read8", async (ObjectPool<ReusableSocket> socketPool, string address) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.read8", address));
+                var messageModel = new MessageModel("core.read8", address).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read an 8-bit value from the given bus address.";
@@ -239,9 +262,10 @@ namespace mGBAHttpServer.Endpoints
             });
 
             // TODO: come back to these input datatypes for all the u32 and s32 types in the mGBA api documentation
-            group.MapGet("/readrange", async (SocketService socket, string address, string length) =>
+            group.MapGet("/readrange", async (ObjectPool<ReusableSocket> socketPool, string address, string length) =>
             {
-                var result = await socket.SendMessageAsync(new MessageModel("core.readRange", address, length));
+                var messageModel = new MessageModel("core.readRange", address, length).ToString();
+                var result = await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
                 return result.Split(',', StringSplitOptions.TrimEntries).Select(x => int.Parse(x));
             }).WithOpenApi(o =>
             {
@@ -251,9 +275,11 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/readregister", async (SocketService socket, string regName) =>
+            // todo: why is this int.parse and the /romsize request isnt?
+            group.MapGet("/readregister", async (ObjectPool<ReusableSocket> socketPool, string regName) =>
             {
-                var result = await socket.SendMessageAsync(new MessageModel("core.readRegister", regName));
+                var messageModel = new MessageModel("core.readRegister", regName).ToString();
+                var result = await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
                 return int.Parse(result);
             }).WithOpenApi(o =>
             {
@@ -262,9 +288,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapGet("/romsize", async (SocketService socket) =>
+            group.MapGet("/romsize", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.romSize"));
+                var messageModel = new MessageModel("core.romSize").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the size of the loaded ROM.";
@@ -272,9 +299,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/runFrame", async (SocketService socket) =>
+            group.MapPost("/runFrame", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.runFrame"));
+                var messageModel = new MessageModel("core.runFrame").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Run until the next frame.";
@@ -282,9 +310,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/savestatebuffer", async (SocketService socket, int flags = 31) =>
+            group.MapPost("/savestatebuffer", async (ObjectPool<ReusableSocket> socketPool, int flags = 31) =>
             {
-                var result = await socket.SendMessageAsync(new MessageModel("core.saveStateBuffer", flags.ToString()));
+                var messageModel = new MessageModel("core.saveStateBuffer", flags.ToString()).ToString();
+                var result = await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
                 return result.Split(',', StringSplitOptions.TrimEntries).Select(x => int.Parse(x));
             }).WithOpenApi(o =>
             {
@@ -293,9 +322,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/savestatefile", async (SocketService socket, string path, int flags = 31) =>
+            group.MapPost("/savestatefile", async (ObjectPool<ReusableSocket> socketPool, string path, int flags = 31) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.saveStateFile", path, flags.ToString()));
+                var messageModel = new MessageModel("core.saveStateFile", path, flags.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Save state to the given path.";
@@ -303,9 +333,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/savestateslot", async (SocketService socket, string slot, int flags = 31) =>
+            group.MapPost("/savestateslot", async (ObjectPool<ReusableSocket> socketPool, string slot, int flags = 31) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.saveStateSlot", slot, flags.ToString()));
+                var messageModel = new MessageModel("core.saveStateSlot", slot, flags.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Save state to the slot number.";
@@ -313,9 +344,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/screenshot", async (SocketService socket, string path) =>
+            group.MapPost("/screenshot", async (ObjectPool<ReusableSocket> socketPool, string path) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.screenshot", path));
+                var messageModel = new MessageModel("core.screenshot", path).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Save a screenshot.";
@@ -324,9 +356,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/setkeys", async (SocketService socket, int keys) =>
+            group.MapPost("/setkeys", async (ObjectPool<ReusableSocket> socketPool, int keys) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.setKeys", keys.ToString()));
+                var messageModel = new MessageModel("core.setKeys", keys.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Set the currently active key list.";
@@ -334,9 +367,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/step", async (SocketService socket) =>
+            group.MapPost("/step", async (ObjectPool<ReusableSocket> socketPool) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.step"));
+                var messageModel = new MessageModel("core.step").ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Run a single instruction.";
@@ -344,9 +378,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/write16", async (SocketService socket, string address, int value) =>
+            group.MapPost("/write16", async (ObjectPool<ReusableSocket> socketPool, string address, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.write16", address, value.ToString()));
+                var messageModel = new MessageModel("core.write16", address, value.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write a 16-bit value from the given bus address.";
@@ -355,9 +390,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/write32", async (SocketService socket, string address, int value) =>
+            group.MapPost("/write32", async (ObjectPool<ReusableSocket> socketPool, string address, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.write32", address, value.ToString()));
+                var messageModel = new MessageModel("core.write32", address, value.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write a 32-bit value from the given bus address.";
@@ -366,9 +402,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/write8", async (SocketService socket, string address, int value) =>
+            group.MapPost("/write8", async (ObjectPool<ReusableSocket> socketPool, string address, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.write8", address, value.ToString()));
+                var messageModel = new MessageModel("core.write8", address, value.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write an 8-bit value from the given bus address.";
@@ -377,9 +414,10 @@ namespace mGBAHttpServer.Endpoints
                 return o;
             });
 
-            group.MapPost("/writeregister", async (SocketService socket, string regName, int value) =>
+            group.MapPost("/writeregister", async (ObjectPool<ReusableSocket> socketPool, string regName, int value) =>
             {
-                return await socket.SendMessageAsync(new MessageModel("core.writeRegister", regName, value.ToString()));
+                var messageModel = new MessageModel("core.writeRegister", regName, value.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Write the value of the register with the given name.";
