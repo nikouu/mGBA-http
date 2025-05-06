@@ -6,7 +6,7 @@ namespace mGBAHttpServer.Domain
     {
         private readonly string _ipAddress;
         private readonly int _port;
-        private int _socketCount = 0;
+
         public ReusableSocketPooledObjectPolicy(string ipAddress, int port)
         {
             _ipAddress = ipAddress;
@@ -16,8 +16,6 @@ namespace mGBAHttpServer.Domain
         public ReusableSocket Create()
         {
             // stampeding cache problem here too?
-            Interlocked.Increment(ref _socketCount);
-            Console.WriteLine($"new socket ID: {Interlocked.Read(_socketCount)}");
             var socket = new ReusableSocket(_ipAddress, _port);
             socket.Connect();
             return socket;

@@ -12,6 +12,7 @@ namespace mGBAHttpServer.IntegrationTests
     {
         private readonly WebApplicationFactory<Program> _factory;
         private readonly HttpClient _client;
+        private static readonly string _longMessage = new string('a', 5000);
 
         public ConsoleApiTests()
         {
@@ -31,6 +32,16 @@ namespace mGBAHttpServer.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
+        [TestMethod]
+        public async Task ErrorEndpoint_SendsLongRequestSuccessfully()
+        {
+            // Act
+            var response = await _client.PostAsync($"/console/error?message={Uri.EscapeDataString(_longMessage)}", null);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
         [DataTestMethod]
         [DataRow("Test log message", DisplayName = "Log message")]
         [DataRow("Log with special chars: !@#$%^", DisplayName = "Log with special characters")]
@@ -43,6 +54,16 @@ namespace mGBAHttpServer.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
+        [TestMethod]
+        public async Task LogEndpoint_SendsLongRequestSuccessfully()
+        {
+            // Act
+            var response = await _client.PostAsync($"/console/log?message={Uri.EscapeDataString(_longMessage)}", null);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
         [DataTestMethod]
         [DataRow("Test warning message", DisplayName = "Warning message")]
         [DataRow("Warning with special chars: !@#$%^", DisplayName = "Warning with special characters")]
@@ -50,6 +71,16 @@ namespace mGBAHttpServer.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/console/warn?message={Uri.EscapeDataString(message)}", null);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task WarnEndpoint_SendsLongRequestSuccessfully()
+        {
+            // Act
+            var response = await _client.PostAsync($"/console/warn?message={Uri.EscapeDataString(_longMessage)}", null);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);

@@ -49,7 +49,6 @@ namespace mGBAHttpServer.Domain
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[{attempts}][-]{ex.Message}");
                     if (attempts >= _maxRetries)
                     {
                         throw;

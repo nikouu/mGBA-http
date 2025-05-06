@@ -110,7 +110,7 @@ function formatMessage(id, msg, isError)
 	else
 		prefix = prefix .. " Received: "
 	end
-	return prefix .. (msg and tostring(msg) or "<nil>")
+	return prefix .. (msg and tostring(msg) or "Probably exceeding limit")
 end
 
 -- ***********************

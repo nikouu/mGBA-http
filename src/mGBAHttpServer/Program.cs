@@ -1,5 +1,6 @@
 ﻿using mGBAHttpServer.Domain;
 using mGBAHttpServer.Endpoints;
+using mGBAHttpServer.Logging;
 using mGBAHttpServer.Models;
 using mGBAHttpServer.SchemaFilter;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -15,14 +16,16 @@ var swaggerVersionString = $"v{version?.Major}.{version?.Minor}";
 Console.Title = $"mGBA-http {programVersionString}";
 
 Console.WriteLine(
-"""
+$"\x1B[1m\x1B[35m{"""
                 ____ ____    _         _     _   _         
      _ __ ___  / ___| __ )  / \       | |__ | |_| |_ _ __  
     | '_ ` _ \| |  _|  _ \ / _ \ _____| '_ \| __| __| '_ \ 
     | | | | | | |_| | |_) / ___ \_____| | | | |_| |_| |_) |
     |_| |_| |_|\____|____/_/   \_\    |_| |_|\__|\__| .__/ 
                                                     |_|                                                       
-                                                      
+"""}\x1B[0m");
+
+Console.WriteLine("""
     https://github.com/nikouu/mGBA-http
 
 """);
@@ -58,9 +61,19 @@ builder.Services.TryAddSingleton(serviceProvider =>
     return provider.Create(policy);
 });
 
-//var loggingSection = builder.Configuration.GetSection("logging");
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole(options =>
+{
+    options.FormatterName = "CustomFormat";
+}).AddConsoleFormatter<CustomConsoleFormatter, mGBAHttpConsoleFormatterOptions>(options =>
+{
+    // This will read from configuration if present, otherwise use defaults
+    builder.Configuration.GetSection("Logging:Console:FormatterOptions").Bind(options);
+});
 
 var app = builder.Build();
+
+app.UseRequestResponseLogging();
 
 app.UseSwagger();
 app.UseSwaggerUI(options =>
