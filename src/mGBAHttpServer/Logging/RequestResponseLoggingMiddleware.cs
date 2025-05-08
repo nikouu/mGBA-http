@@ -35,9 +35,11 @@ public class RequestResponseLoggingMiddleware
         }
 
         // Get or create correlation ID
-        var correlationId = context.Request.Headers[CorrelationIdHeaderName].FirstOrDefault()
-            ?? Activity.Current?.Id
-            ?? Guid.NewGuid().ToString();
+        var correlationId = context.Request.Headers.Keys
+            .FirstOrDefault(k => k.Equals(CorrelationIdHeaderName, StringComparison.OrdinalIgnoreCase))
+            is string headerKey
+                ? context.Request.Headers[headerKey].FirstOrDefault()
+                : Activity.Current?.Id ?? Guid.NewGuid().ToString();
 
         // Add correlation ID to response headers
         context.Response.Headers[CorrelationIdHeaderName] = correlationId;
@@ -55,18 +57,25 @@ public class RequestResponseLoggingMiddleware
             context.Request.Method,
             context.Request.Path + context.Request.QueryString);
 
-        // Capture the response using recyclable stream
+        // Response streams in ASP.NET Core are write-once forward-only, so we need to capture the response
+        // in a temporary stream to read it for logging before sending it to the client
+
+        // Save the original stream that would go to the client
         var originalBodyStream = context.Response.Body;
+
+        // Create a temporary memory stream to capture the response
         using var memoryStream = _streamManager.GetStream();
         context.Response.Body = memoryStream;
 
         try
         {
-            await _next(context);
+            await _next(context); // Response gets written to our memory stream
 
-            // Log outgoing response
+            // Read the response for logging (requires rewinding the stream)
             memoryStream.Position = 0;
             var responseBody = await new StreamReader(memoryStream).ReadToEndAsync();
+
+            // Reset position and copy to original stream for client
             memoryStream.Position = 0;
             await memoryStream.CopyToAsync(originalBodyStream);
 

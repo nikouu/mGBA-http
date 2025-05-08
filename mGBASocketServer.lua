@@ -5,8 +5,13 @@
 -- https://github.com/nikouu/mGBA-http
 -- ***********************
 
-local enableLogging = true
-local enableDebugLogging = false
+-- logLevel values
+-- 1 = Debug
+-- 2 = Information
+-- 3 = Warning
+-- 4 = Error
+-- 5 = None
+local logLevel = 2
 local TERMINATION_MARKER = "<|END|>"
 
 -- ***********************
@@ -25,7 +30,7 @@ function beginSocket()
 			if error == socket.ERRORS.ADDRESS_IN_USE then
 				port = port + 1
 			else
-				console:error(formatMessage("Bind", error, true))
+				logError(formatSocketMessage("Bind", error, true))
 				break
 			end
 		else
@@ -33,9 +38,9 @@ function beginSocket()
 			ok, error = server:listen()
 			if error then
 				server:close()
-				console:error(formatMessage("Listen", error, true))
+				logError(formatSocketMessage("Listen", error, true))
 			else
-				console:log("mGBA script server 0.6.0 ready. Listening on port " .. port)
+				logInformation("mGBA script server 0.6.0 ready. Listening on port " .. port)
 				server:add("received", socketAccept)
 			end
 		end
@@ -45,7 +50,7 @@ end
 function socketAccept()
 	local sock, error = server:accept()
 	if error then
-		console:error(formatMessage("Accept", error, true))
+		logError(formatSocketMessage("Accept", error, true))
 		return
 	end
 	local id = nextID
@@ -53,7 +58,7 @@ function socketAccept()
 	socketList[id] = sock
 	sock:add("received", function() socketReceived(id) end)
 	sock:add("error", function() socketError(id) end)
-	formattedDebugLog(formatMessage(id, "Connected"))
+	logDebug(formatSocketMessage(id, "Connected"))
 end
 
 function socketReceived(id)
@@ -69,7 +74,7 @@ function socketReceived(id)
                 if not marker_start then break end
                 local message = sock._buffer:sub(1, marker_start - 1)
                 sock._buffer = sock._buffer:sub(marker_end + 1)
-                formattedDebugLog(formatMessage(id, message:match("^(.-)%s*$")))
+                logDebug(formatSocketMessage(id, message:match("^(.-)%s*$")))
                 -- Route the message and send back the response with the marker
                 local returnValue = messageRouter(message:match("^(.-)%s*$"))
                 sock:send(returnValue .. TERMINATION_MARKER)
@@ -78,12 +83,12 @@ function socketReceived(id)
             -- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
             if error ~= socket.ERRORS.AGAIN then
                 if error == "disconnected" then
-                    formattedDebugLog(formatMessage(id, error, false))
+                    logDebug(formatSocketMessage(id, error, false))
                 elseif error == socket.ERRORS.UNKNOWN_ERROR then
                     -- for some reason this error sometimes comes happens instead of disconnected
-                    formattedDebugLog(formatMessage(id, "disconnected*", false))
+                    logDebug(formatSocketMessage(id, "disconnected*", false))
                 else
-                    console:error(formatMessage(id, error, true))
+                    logError(formatSocketMessage(id, error, true))
                 end
                 socketStop(id)
             end
@@ -99,11 +104,11 @@ function socketStop(id)
 end
 
 function socketError(id, error)
-	console:error(formatMessage(id, error, true))
+	logError(formatSocketMessage(id, error, true))
 	socketStop(id)
 end
 
-function formatMessage(id, msg, isError)
+function formatSocketMessage(id, msg, isError)
 	local prefix = "Socket " .. id
 	if isError then
 		prefix = prefix .. " Error: "
@@ -142,7 +147,7 @@ function messageRouter(rawMessage)
 
 	local returnValue = defaultReturnValue;
 
-	formattedLog("messageRouter: \n\tRaw message: " .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
+	logInformation("messageRouter: \n\tRaw message: " .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
 
 	if messageType == "mgba-http.button.tap" then manageButton(messageValue1)
 	elseif messageType == "mgba-http.button.tapmany" then manageButtons(messageValue1)
@@ -200,14 +205,14 @@ function messageRouter(rawMessage)
 	elseif messageType == "memoryDomain.write16" then returnValue = emu.memory[messageValue1]:write16(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write32" then returnValue = emu.memory[messageValue1]:write32(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write8" then returnValue = emu.memory[messageValue1]:write8(tonumber(messageValue2), tonumber(messageValue3))
-	elseif (rawMessage == "<|ACK|>") then formattedLog("Connecting.")
-	elseif (rawMessage ~= nil or rawMessage ~= '') then formattedLog("Unable to route raw message: " .. rawMessage)
-	else formattedLog(messageType)	
+	elseif (rawMessage == "<|ACK|>") then logInformation("Connecting.")
+	elseif (rawMessage ~= nil or rawMessage ~= '') then logInformation("Unable to route raw message: " .. rawMessage)
+	else logInformation(messageType)	
 	end
 	
 	returnValue = tostring(returnValue or defaultReturnValue);
 
-	formattedLog("Returning: " .. returnValue)
+	logInformation("Returning: " .. returnValue)
 	return returnValue;
 end
 
@@ -306,19 +311,6 @@ function toBoolean(str)
     return bool
 end
 
-function formattedLog(string)
-	if enableLogging then
-		local timestamp = "[" .. os.date("%X", os.time()) .. "] "
-		console:log(timestamp .. string)
-	end
-end
-
-function formattedDebugLog(string)
-	if enableDebugLogging then
-		formattedLog(string)
-	end
-end
-
 function computeChecksum()
 	local checksum = 0
 	for i, v in ipairs({emu:checksum(C.CHECKSUM.CRC32):byte(1, 4)}) do
@@ -349,6 +341,38 @@ function formatMemoryDomains(domains)
         table.insert(names, name)
     end
     return table.concat(names, ", ")
+end
+
+-- ***********************
+-- Logging
+-- ***********************
+
+function logDebug(message)
+    if logLevel <= 1 then
+        local timestamp = "[" .. os.date("%X", os.time()) .. "] "
+        console:log(timestamp .. message)
+    end
+end
+
+function logInformation(message)
+    if logLevel <= 2 then
+        local timestamp = "[" .. os.date("%X", os.time()) .. "] "
+        console:log(timestamp .. message)
+    end
+end
+
+function logWarning(message)
+    if logLevel <= 3 then
+        local timestamp = "[" .. os.date("%X", os.time()) .. "] "
+        console:warn(timestamp .. message)
+    end
+end
+
+function logError(message)
+    if logLevel <= 4 then
+        local timestamp = "[" .. os.date("%X", os.time()) .. "] "
+        console:error(timestamp .. message)
+    end
 end
 
 -- ***********************
