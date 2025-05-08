@@ -80,8 +80,7 @@ public class RequestResponseLoggingMiddleware
             await memoryStream.CopyToAsync(originalBodyStream);
 
             logger.LogInformation("Outgoing response from {Path}: {Response}",
-                context.Request.Path,
-                responseBody.Length > 500 ? responseBody[..500] + "..." : responseBody);
+                context.Request.Path, responseBody);
         }
         finally
         {

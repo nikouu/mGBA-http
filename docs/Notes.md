@@ -11,3 +11,4 @@ These are notes that might be useful to share from development.
 ```
 ffmpeg -i in.mp4 -pix_fmt yuv420p -c:a copy -movflags +faststart out.mp4
 ```
+- [Full list of socket errors](https://learn.microsoft.com/en-us/dotnet/api/system.net.sockets.socketerror?view=net-9.0)
