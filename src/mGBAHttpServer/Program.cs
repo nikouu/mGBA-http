@@ -8,10 +8,15 @@ using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Runtime.InteropServices;
+
+
 
 var version = Assembly.GetExecutingAssembly().GetName().Version;
 var programVersionString = $"v{version?.Major}.{version?.Minor}.{version?.Build}";
 var swaggerVersionString = $"v{version?.Major}.{version?.Minor}";
+
+SetupConsoleAnsiSupport();
 
 Console.Title = $"mGBA-http {programVersionString}";
 
@@ -92,6 +97,25 @@ app.MapMemoryDomainEndpoints();
 app.MapButtonEndpoints();
 
 app.Run();
+
+static void SetupConsoleAnsiSupport()
+{
+    if (OperatingSystem.IsWindows())
+    {
+        var handle = GetStdHandle(-11);
+        GetConsoleMode(handle, out int mode);
+        SetConsoleMode(handle, mode | 0x4);
+    }
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    static extern nint GetStdHandle(int nStdHandle);
+
+    [DllImport("kernel32.dll")]
+    static extern bool GetConsoleMode(nint hConsoleHandle, out int lpMode);
+
+    [DllImport("kernel32.dll")]
+    static extern bool SetConsoleMode(nint hConsoleHandle, int dwMode);
+}
 
 // Make the implicit Program class public so test projects can access it
 public partial class Program { }

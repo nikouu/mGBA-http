@@ -1,3 +1,16 @@
+# Removes empty static web assets files
+function Remove-EmptyStaticWebAssetsFiles {
+  param (
+      [string]$folder
+  )
+  Get-ChildItem "$folder\*.staticwebassets.endpoints.json" | ForEach-Object {
+      $content = Get-Content $_.FullName -Raw
+      if ($content -eq '{"Version":1,"ManifestType":"Publish","Endpoints":[]}') {
+          Remove-Item $_.FullName -Force
+      }
+  }
+}
+
 # Get version
 $projectFilePath = "src\mGBAHttpServer\mGBAHttpServer.csproj"
 $xml = [xml](Get-Content $projectFilePath)
@@ -13,19 +26,29 @@ if ($luaVersion -ne $version){
 
 # Setup publish variables
 $filenamePrefix = "mGBA-http-{0}" -f $version
-$rids = @("win-x86","win-x64", "linux-x64", "osx-x64")
+$rids = @("win-x86","win-x64", "win-arm64", "linux-arm", "linux-arm64", "linux-x64", "osx-x64", "osx-arm64")
 
-# Clean folder
-Remove-Item .\release\* -Recurse -Force
+foreach ($folder in @(".\release", ".\releaseStaging")) {
+  if (Test-Path $folder) {
+      Remove-Item "$folder\*" -Recurse -Force -ErrorAction SilentlyContinue
+  } else {
+      New-Item -Path $folder -ItemType Directory | Out-Null
+  }
+}
 
 # Create releases
 foreach ($rid in $rids) {
   dotnet publish src\mGBAHttpServer\mGBAHttpServer.csproj -r $rid --self-contained=false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)"  
+
+  Remove-EmptyStaticWebAssetsFiles -folder ".\releaseStaging"
   Move-Item -Path ".\releaseStaging\*.*" -Destination ".\release" -Force
 
   dotnet publish src\mGBAHttpServer\mGBAHttpServer.csproj -r $rid --self-contained=true  -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)-self-contained" -p:TrimMode=partial -p:PublishTrimmed=false -p:IncludeAllContentForSelfExtract=true -p:JsonSerializerIsReflectionEnabledByDefault=true
+
+  Remove-EmptyStaticWebAssetsFiles -folder ".\releaseStaging"
   Move-Item -Path ".\releaseStaging\*.*" -Destination ".\release" -Force
 }
+
 
 # Copy over lua script
 Copy-Item -Path ".\mGBASocketServer.lua" -Destination ".\release" -Force
