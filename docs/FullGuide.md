@@ -46,15 +46,37 @@ If needed, there are minimal configuration points
 #### appsettings.json
 This file is **not** required for running mGBA-http normally. 
 
-However, if you need to configure ports or logging, download this file from the releases page and put it in the same directory as mGBA-http. mGBA-http will pick up on these settings when run. See the [ASP.NET Core logging documentation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-8.0#configure-logging) for more.
+However, if you need further configuration, download this file from the releases page and put it in the same directory as mGBA-http. mGBA-http will pick up on these settings when run. See the [ASP.NET Core logging documentation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-8.0#configure-logging) for more.
 
-See below how the HTTP port has changed from the `5000` to `6969` and there is now an HTTPS endpoint as well at `6970`. Harder to picture is the log levels are now mostly set to warning, from the in-built defaults of error.
+The following configuration is available:
 
-![](Images/PortChange.jpg)
+| Config                                                | Notes                                                                |
+| ----------------------------------------------------- | -------------------------------------------------------------------- |
+| `Logging.LogLevel`                                    | Configure log levels                                                 |
+| `Logging.LogFilters`                                  | Filter log levels                                                    |
+| `Logging.Console.FormatterOptions.IncludeJsonDetails` | Includes a more full log entry in the console as a JSON string       |
+| `Logging.Console.FormatterOptions.TimestampFormat`    | Update the timestamp format of the console log entries.              |
+| `Kestrel.Endpoints`                                   | These are the mGBA-http listening ports                              |
+| `mgba-http`                                           | These are the socket configurations for connecting mGBA-http to mGBA |
+
+The image below shows to changes to the default settings:
+1. `IncludeJsonDetails` to true
+1. Update the mGBA-http listening ports
+
+![](Images/UpdatedSettingsExample.jpg)
+
 
 #### mGBASocketServer.lua
 
-At the top, there is the `enableLogging` flag. This will output timestamped logs to the scripting console if set to `true`. Otherwise set to `false` for no logging.
+At the top, there is the `logLevel` flag. This will output timestamped logs to the scripting console based on the severity of the log entry. By default it is set to **2 - Information**:
+
+| Value | Name        | Description  |
+| ----- | ----------- | ------------ |
+| 1     | Debug       | Debug logs   |
+| 2     | Information | Info logs    |
+| 3     | Warning     | Warning logs |
+| 4     | Error       | Error logs   |
+| 5     | None        | No logging   |
 
 ### Gotchas
 - Make sure not to load the script twice. This causes issues with recieving data. If you need to reload the script, close and reopen mGBA then load up the script again. Closing and reopening the scripting window is not enough. 
@@ -64,4 +86,5 @@ At the top, there is the `enableLogging` flag. This will output timestamped logs
 
 ### Examples
 1. See the [examples page](Examples.md).
-1. There is a test console project where you can send keys to mGBA.
+1. There is a [C# test console project](/testing/) where you can send keys to mGBA.
+1. The [CPU-Plays-Pokemon repo](https://github.com/nikouu/CPU-Plays-Pokemon).

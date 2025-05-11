@@ -18,9 +18,7 @@ Using the C# console app mGBAHttpServer.TestClient included in this repository, 
 | -------------------- | -------------- | -------------- | -------- |
 | Moving the character | Pokémon Yellow | C# console app | /button  |
 
-https://github.com/nikouu/mGBA-http/assets/983351/691d5379-ed7d-4f58-9f93-24223e35f275
-
-*API has been updated since this video, but the functionality is the same.*
+https://github.com/user-attachments/assets/e136f6f3-5a17-49fa-8160-ee33609080a1
 
 ### Code
 See [mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient).
@@ -42,6 +40,8 @@ We can validate this by checking the nature of the Pokémon just caught. In this
 
 https://github.com/nikouu/mGBA-http/assets/983351/43ee097c-3d21-464b-93da-3227334dc586
 
+*Note: This video is from an earlier version of mGBA-http, however the calls are the same.*
+
 ### Code
 N/A, uses SwaggerUI.
 
@@ -56,6 +56,8 @@ The bomb count on the top right of the game going from 35 to 50.
 
 https://github.com/nikouu/mGBA-http/assets/983351/b63bf880-aba9-4963-871b-5ce0ce8929ae
 
+*Note: This video is from an earlier version of mGBA-http, however the calls are the same.*
+
 ### Code
 N/A, uses Postman.
 
@@ -67,6 +69,8 @@ Automating loading a savestate is easy. Perhaps your bot needs to reset the game
 | Loading a specific save file | The Legend of Zelda: Oracle of Seasons | Node.js | /core/loadstatefile |
 
 https://github.com/nikouu/mGBA-http/assets/983351/8faf78fd-99fe-4d2d-80fe-90c64c0d6cf4
+
+*Note: This video is from an earlier version of mGBA-http, however the calls are the same.*
 
 ### Code
 ```javascript
@@ -102,6 +106,8 @@ Perhaps your AI bot needs a way to see the game world. Maybe your Twitch audienc
 
 https://github.com/nikouu/mGBA-http/assets/983351/22f9ce71-31ca-4cd2-aad9-ac80fa58c3b5
 
+*Note: This video is from an earlier version of mGBA-http, however the calls are the same.*
+
 ### Code
 ```python
 import requests
@@ -123,6 +129,8 @@ A lot of the calls are simple GET requests, meaning we can even use the URL bar 
 
 https://github.com/nikouu/mGBA-http/assets/983351/c70ae826-9e5b-4a89-a334-e96d7d6a6f7d
 
+*Note: This video is from an earlier version of mGBA-http, however the calls are the same.*
+
 ### Code
 ```
 http://localhost:5000/core/getframecount
@@ -137,6 +145,8 @@ Each retail game has the game title in the header, here we use PowerShell (*???*
 | Get game title from ROM header | Pokémon FireRed | PowerShell | /core/getgametitle |
 
 https://github.com/nikouu/mGBA-http/assets/983351/6e734fd3-2838-406d-9237-bde0fa26d630
+
+*Note: This video is from an earlier version of mGBA-http, however the calls are the same.*
 
 ### Code
 ```powershell

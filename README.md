@@ -28,11 +28,11 @@ In the example below, we accept inputs from one program and send them to mGBA:
 - (bottom left) mGBA's built-in scripting API accepting the requests from mGBA-http
 - (bottom right) then the key inputs are read by the ROM
 
+https://github.com/user-attachments/assets/e136f6f3-5a17-49fa-8160-ee33609080a1
+
 If you want to see more real examples with videos, code, and explanations, check out the [examples page](docs/Examples.md).
 
 There are also C# examples I use for testing in the [testing](testing) folder.
-
-https://github.com/nikouu/mGBA-http/assets/983351/691d5379-ed7d-4f58-9f93-24223e35f275
 
 ## Quick Start Guide
 mGBA-http works with 0.10.2+.
