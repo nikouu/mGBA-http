@@ -86,11 +86,9 @@ namespace mGBAHttpServer.Domain
 
         private async Task<string> SendAsync(string message)
         {
-            //Console.WriteLine(_socket.LocalEndPoint);
             if (!_socket.Connected)
             {
                 await _socket.ConnectAsync(_ipEndpoint);
-                Console.WriteLine(_socket.LocalEndPoint);
             }
 
             var messageBytes = Encoding.UTF8.GetBytes(message + _terminationString);
