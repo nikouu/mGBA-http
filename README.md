@@ -37,13 +37,6 @@ There are also C# examples I use for testing in the [testing](testing) folder.
 ## Quick Start Guide
 mGBA-http works with 0.10.2+.
 
-### Just the script
-
-A lot of users find the [mGBASocketServer.lua](mGBASocketServer.lua) script alone is useful enough for their projects. See the following for which version to download:
-
-- [Version 0.5.0](https://github.com/nikouu/mGBA-http/releases/tag/0.5.0) and lower is easier to use. Simply fire off the message
-- [Version 0.6.0](https://github.com/nikouu/mGBA-http/releases/tag/0.6.0) and higher requires `<|END|>` to be at the end of the request, and will reply with `<|END|>` at the end of the response.
-
 ### The full mGBA-http experience
 
 1. Ensure you have [mGBA](https://mgba.io/downloads.html)
@@ -53,7 +46,17 @@ A lot of users find the [mGBASocketServer.lua](mGBASocketServer.lua) script alon
 
 Once a ROM is loaded, you are now ready to start using mGBA-http.
 
-For a more in-depth guide with pictures, see the [Full Guide](docs/FullGuide.md).
+For a more in-depth guide with pictures, see the [Full Guide (application)](docs/FullGuide.md).
+
+### Just the script
+
+A lot of users find the [mGBASocketServer.lua](mGBASocketServer.lua) script alone is useful enough for their projects. See the following for which version to download:
+
+- [Version 0.5.0](https://github.com/nikouu/mGBA-http/releases/tag/0.5.0) and lower is easier to use. Simply fire off the message
+- [Version 0.6.0](https://github.com/nikouu/mGBA-http/releases/tag/0.6.0) and higher requires `<|END|>` to be at the end of the request, and will reply with `<|END|>` at the end of the response.
+
+For a more in-depth guide with pictures, see the [Full Guide (lua script only)](docs/FullGuide-lua.md.md).
+
 
 ## Limitations
 - No frame perfect calls. There is network latency between your application to mGBA-http and again latency between mGBA-http and mGBA. This will not be accurate for frame perfect manipulation and is meant for more general usage such as for "Twitch plays", AI playing bot, or other non frame specific application. For high accuracy manipulation see [Bizhawk](https://tasvideos.org/BizHawk/) which is used for TASBots.

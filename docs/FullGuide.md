@@ -1,4 +1,6 @@
-# Full Guide
+# Full Guide (application)
+
+This guide is for using the full mGBA-http application. If you only need to use the .lua script, see [Full Guide (lua script only)](/docs/FullGuide-lua.md).
 
 ## Setup
 
