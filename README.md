@@ -55,7 +55,7 @@ A lot of users find the [mGBASocketServer.lua](mGBASocketServer.lua) script alon
 - [Version 0.5.0](https://github.com/nikouu/mGBA-http/releases/tag/0.5.0) and lower is easier to use. Simply fire off the message
 - [Version 0.6.0](https://github.com/nikouu/mGBA-http/releases/tag/0.6.0) and higher requires `<|END|>` to be at the end of the request, and will reply with `<|END|>` at the end of the response.
 
-For a more in-depth guide with pictures, see the [Full Guide (lua script only)](docs/FullGuide-lua.md.md).
+For a more in-depth guide with pictures, see the [Full Guide (lua script only)](docs/FullGuide-lua.md).
 
 
 ## Limitations
