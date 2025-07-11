@@ -37,6 +37,15 @@ There are also C# examples I use for testing in the [testing](testing) folder.
 ## Quick Start Guide
 mGBA-http works with 0.10.2+.
 
+### Just the script
+
+A lot of users find the [mGBASocketServer.lua](mGBASocketServer.lua) script alone is useful enough for their projects. See the following for which version to download:
+
+- [Version 0.5.0](https://github.com/nikouu/mGBA-http/releases/tag/0.5.0) and lower is easier to use. Simply fire off the message
+- [Version 0.6.0](https://github.com/nikouu/mGBA-http/releases/tag/0.6.0) and higher requires `<|END|>` to be at the end of the request, and will reply with `<|END|>` at the end of the response.
+
+### The full mGBA-http experience
+
 1. Ensure you have [mGBA](https://mgba.io/downloads.html)
 1. Download mGBA-http and mGBASocketServer.lua from the [Releases](https://github.com/nikouu/mGBA-http/releases/latest) section 
 1. Run mGBA-http
