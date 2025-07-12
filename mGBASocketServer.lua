@@ -3,6 +3,7 @@
 -- Version: 0.7.0
 -- Lua interface for mGBA-http
 -- https://github.com/nikouu/mGBA-http
+-- https://github.com/nikouu/mGBA-http/blob/main/docs/FullGuide-lua.md
 -- ***********************
 
 -- logLevel values
