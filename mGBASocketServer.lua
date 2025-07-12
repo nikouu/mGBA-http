@@ -153,6 +153,7 @@ function messageRouter(rawMessage)
 	elseif messageType == "mgba-http.button.tapmany" then manageButtons(messageValue1)
 	elseif messageType == "mgba-http.button.hold" then manageButton(messageValue1, messageValue2)
 	elseif messageType == "mgba-http.button.holdmany" then manageButtons(messageValue1, messageValue2)
+	elseif messageType == "mgba-http.extension.loadfile" then loadFile(messageValue1)
 	elseif messageType == "core.addKey" then addKey(messageValue1)
 	elseif messageType == "core.addKeys" then emu:addKeys(tonumber(messageValue1))
 	elseif messageType == "core.autoloadSave" then returnValue = emu:autoloadSave()
@@ -214,6 +215,14 @@ function messageRouter(rawMessage)
 
 	logInformation("Returning: " .. returnValue)
 	return returnValue;
+end
+
+function loadFile(path)
+	local success = emu:loadFile(path)
+	if success then
+		emu:reset()
+	end
+	return success
 end
 
 -- ***********************

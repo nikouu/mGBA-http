@@ -166,7 +166,7 @@ namespace mGBAHttpServer.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Load a ROM file.";
-                o.Description = "Load a ROM file into the current state of this core.";
+                o.Description = "Load a ROM file into the current state of this core. NOTE: It's preferred to use the /mgba-http/extension/loadfile endpoint.";
                 return o;
             });
 

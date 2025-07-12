@@ -95,6 +95,7 @@ app.MapConsoleEndpoints();
 app.MapCoreAdapterEndpoints();
 app.MapMemoryDomainEndpoints();
 app.MapButtonEndpoints();
+app.MapExtensionEndpoints();
 
 app.Run();
 

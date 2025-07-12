@@ -27,7 +27,7 @@ namespace mGBAHttpServer.IntegrationTests
         }
 
         [TestMethod]
-        [Ignore] // Unsure fully how this works to test it. Loading seems to crash mGBA or do nothing.
+        [Ignore] // Unsure fully how this works to test it. Loading seems to crash mGBA or do nothing. Best to use /mgba-http/extension/loadfile
         public async Task LoadFile_SendsRequestSuccessfully()
         {
             // Act

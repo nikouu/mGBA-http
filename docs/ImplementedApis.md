@@ -6,45 +6,45 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 
 ## Core
 
-| mGBA call         | lua endpoint key     | mGBA-http endpoint                 |
-| ----------------- | -------------------- | ---------------------------------- |
-| addKey()          | core.addKey          | /core/addkey                       |
-| addKeys()         | core.addKeys         | /core/addkeys                      |
-| autoloadSave()    | core.autoloadSave    | /core/autoloadsave                 |
-| checksum()        | core.checksum        | /core/checksum                     |
-| clearKey()        | core.checksum        | /core/clearkey                     |
-| clearKeys()       | core.clearKeys       | /core/clearkeys                    |
-| currentFrame()    | core.currentFrame    | /core/currentframe                 |
-| frameCycles()     | core.frameCycles     | /core/framecycles                  |
-| frequency()       | core.frequency       | /core/frequency                    |
-| getGameCode()     | core.getGameCode     | /core/getgamecode                  |
-| getGameTitle()    | core.getGameTitle    | /core/getgametitle                 |
-| getKey()          | core.getKey          | /core/getkey                       |
-| getKeys()         | core.getKeys         | /core/getkeys                      |
-| loadFile()        | core.loadFile        | /core/loadfile (_Unstable_)        |
-| loadSaveFile()    | core.loadSaveFile    | /core/loadsavefile (_Unstable_)    |
-| loadStateBuffer() | core.loadStateBuffer | /core/loadstatebuffer (_Unstable_) |
-| loadStateFile()   | core.loadStateFile   | /core/loadstatefile                |
-| loadStateSlot()   | core.loadStateSlot   | /core/loadstateslot                |
-| platform()        | core.platform        | /core/platform                     |
-| read16()          | core.read16          | /core/read16                       |
-| read32()          | core.read32          | /core/read32                       |
-| read8()           | core.read8           | /core/read8                        |
-| readRange()       | core.readRange       | /core/readrange                    |
-| readRegister()    | core.readRegister    | /core/readregister                 |
-| reset()           | -                    | -                                  |
-| romSize()         | core.romSize         | /core/romsize                      |
-| runFrame()        | core.runFrame        | /core/runframe (_Unstable_)        |
-| saveStateBuffer() | core.saveStateBuffer | /core/savestatebuffer (_Unstable_) |
-| saveStateFile()   | core.saveStateFile   | /core/savestatefile                |
-| saveStateSlot()   | core.saveStateSlot   | /core/savestateslot                |
-| screenshot()      | core.screenshot      | /core/screenshot                   |
-| setKeys()         | core.setKeys         | /core/setkeys                      |
-| step()            | core.step            | /core/step                         |
-| write16()         | core.write16         | /core/write16                      |
-| write32()         | core.write32         | /core/write32                      |
-| write8()          | core.write8          | /core/write8                       |
-| writeRegister()   | core.writeRegister   | /core/writeregister                |
+| mGBA call         | lua endpoint key     | mGBA-http endpoint                                   |
+| ----------------- | -------------------- | ---------------------------------------------------- |
+| addKey()          | core.addKey          | /core/addkey                                         |
+| addKeys()         | core.addKeys         | /core/addkeys                                        |
+| autoloadSave()    | core.autoloadSave    | /core/autoloadsave                                   |
+| checksum()        | core.checksum        | /core/checksum                                       |
+| clearKey()        | core.checksum        | /core/clearkey                                       |
+| clearKeys()       | core.clearKeys       | /core/clearkeys                                      |
+| currentFrame()    | core.currentFrame    | /core/currentframe                                   |
+| frameCycles()     | core.frameCycles     | /core/framecycles                                    |
+| frequency()       | core.frequency       | /core/frequency                                      |
+| getGameCode()     | core.getGameCode     | /core/getgamecode                                    |
+| getGameTitle()    | core.getGameTitle    | /core/getgametitle                                   |
+| getKey()          | core.getKey          | /core/getkey                                         |
+| getKeys()         | core.getKeys         | /core/getkeys                                        |
+| loadFile()        | core.loadFile        | /core/loadfile (_Use /mgba-http/extension/loadfile_) |
+| loadSaveFile()    | core.loadSaveFile    | /core/loadsavefile (_Unstable_)                      |
+| loadStateBuffer() | core.loadStateBuffer | /core/loadstatebuffer (_Unstable_)                   |
+| loadStateFile()   | core.loadStateFile   | /core/loadstatefile                                  |
+| loadStateSlot()   | core.loadStateSlot   | /core/loadstateslot                                  |
+| platform()        | core.platform        | /core/platform                                       |
+| read16()          | core.read16          | /core/read16                                         |
+| read32()          | core.read32          | /core/read32                                         |
+| read8()           | core.read8           | /core/read8                                          |
+| readRange()       | core.readRange       | /core/readrange                                      |
+| readRegister()    | core.readRegister    | /core/readregister                                   |
+| reset()           | -                    | -                                                    |
+| romSize()         | core.romSize         | /core/romsize                                        |
+| runFrame()        | core.runFrame        | /core/runframe (_Unstable_)                          |
+| saveStateBuffer() | core.saveStateBuffer | /core/savestatebuffer (_Unstable_)                   |
+| saveStateFile()   | core.saveStateFile   | /core/savestatefile                                  |
+| saveStateSlot()   | core.saveStateSlot   | /core/savestateslot                                  |
+| screenshot()      | core.screenshot      | /core/screenshot                                     |
+| setKeys()         | core.setKeys         | /core/setkeys                                        |
+| step()            | core.step            | /core/step                                           |
+| write16()         | core.write16         | /core/write16                                        |
+| write32()         | core.write32         | /core/write32                                        |
+| write8()          | core.write8          | /core/write8                                         |
+| writeRegister()   | core.writeRegister   | /core/writeregister                                  |
 
 ## CallbackManager
 `CallbackManager` is not implemented in mGBA-http. 
@@ -93,3 +93,9 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 |     -     | mgba-http.button.tapmany  | /mgba-http/button/tapmany  |
 |     -     | mgba-http.button.hold     | /mgba-http/button/hold     |
 |     -     | mgba-http.button.holdmany | /mgba-http/button/holdmany |
+
+## Extension - Custom API
+
+| mGBA call | lua endpoint key             | mGBA-http endpoint            |
+| :-------: | ---------------------------- | ----------------------------- |
+|     -     | mgba-http.extension.loadfile | /mgba-http/extension/loadfile |
