@@ -33,7 +33,7 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Void"
+                  "type": "string"
                 }
               }
             }
@@ -68,7 +68,7 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Void"
+                  "type": "string"
                 }
               }
             }
@@ -110,7 +110,7 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Void"
+                  "type": "string"
                 }
               }
             }
@@ -155,7 +155,7 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Void"
+                  "type": "string"
                 }
               }
             }
@@ -186,7 +186,7 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Void"
+                  "type": "string"
                 }
               }
             }
@@ -217,7 +217,7 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Void"
+                  "type": "string"
                 }
               }
             }
@@ -248,7 +248,7 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Void"
+                  "type": "string"
                 }
               }
             }
@@ -592,7 +592,7 @@
           "Core"
         ],
         "summary": "Load a ROM file.",
-        "description": "Load a ROM file into the current state of this core.",
+        "description": "Load a ROM file into the current state of this core. **Note: Prefer using the /mgba-http/extension/loadfile endpoint.**",
         "parameters": [
           {
             "name": "path",
@@ -1389,7 +1389,7 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Void"
+                  "type": "string"
                 }
               }
             }
@@ -1414,6 +1414,37 @@
                   "items": {
                     "type": "string"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/extension/loadfile": {
+      "post": {
+        "tags": [
+          "Extension"
+        ],
+        "summary": "Load a ROM file.",
+        "description": "Load a ROM file into the current state of this core. This convenience API handles the ROM load and reset of the emulator.",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1881,10 +1912,6 @@
           "L"
         ],
         "type": "string"
-      },
-      "Void": {
-        "type": "object",
-        "additionalProperties": false
       }
     }
   }

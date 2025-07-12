@@ -1,6 +1,7 @@
 # API Documentation
 
 The following is generated from the [swagger.json](swagger.json) file via https://swagger-markdown-ui.netlify.app/ 
+
 # mGBA-http
 An HTTP interface for mGBA scripting.
 
@@ -431,7 +432,7 @@ Load a ROM file.
 
 ##### Description:
 
-Load a ROM file into the current state of this core.
+Load a ROM file into the current state of this core. **Note: Prefer using the /mgba-http/extension/loadfile endpoint.**
 
 ##### Parameters
 
@@ -965,6 +966,29 @@ Get the platform specific set of MemoryDomains.
 ##### Description:
 
 Gets the platform specific set of memory domains as an array of strings.
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | OK |
+
+### /mgba-http/extension/loadfile
+
+#### POST
+##### Summary:
+
+Load a ROM file.
+
+##### Description:
+
+Load a ROM file into the current state of this core. This convenience API handles the ROM load and reset of the emulator.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| path | query |  | Yes | string |
 
 ##### Responses
 
