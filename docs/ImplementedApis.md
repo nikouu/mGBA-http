@@ -22,7 +22,7 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 | getKey()          | core.getKey          | /core/getkey                                         |
 | getKeys()         | core.getKeys         | /core/getkeys                                        |
 | loadFile()        | core.loadFile        | /core/loadfile (_Use /mgba-http/extension/loadfile_) |
-| loadSaveFile()    | core.loadSaveFile    | /core/loadsavefile (_Unstable_)                      |
+| loadSaveFile()    | core.loadSaveFile    | /core/loadsavefile                                   |
 | loadStateBuffer() | core.loadStateBuffer | /core/loadstatebuffer (_Unstable_)                   |
 | loadStateFile()   | core.loadStateFile   | /core/loadstatefile                                  |
 | loadStateSlot()   | core.loadStateSlot   | /core/loadstateslot                                  |
