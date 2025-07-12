@@ -12,7 +12,7 @@ _Note: There may be some differences with your experience in what mGBA or the sc
 
 ## 1. Moving and interacting
 
-Using the C# console app mGBAHttpServer.TestClient included in this repository, we're able to move the main character around the overworld and interact with Pikachu in Pokémon Yellow.
+Using the C# console app mGBAHttpExamples included in this repository, we're able to move the main character around the overworld and interact with Pikachu in Pokémon Yellow.
 
 | Scenario             | Game           | Caller         | Endpoint |
 | -------------------- | -------------- | -------------- | -------- |
@@ -21,7 +21,7 @@ Using the C# console app mGBAHttpServer.TestClient included in this repository, 
 https://github.com/user-attachments/assets/e136f6f3-5a17-49fa-8160-ee33609080a1
 
 ### Code
-See [mGBAHttpServer.TestClient](../src/mGBAHttpServer.TestClient).
+See [mGBAHttpExamples Keyboard.cs](../testing/Keyboard.cs).
 
 ## 2. Reading what nature a wild Pokémon has
 

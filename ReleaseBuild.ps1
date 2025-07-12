@@ -12,7 +12,7 @@ function Remove-EmptyStaticWebAssetsFiles {
 }
 
 # Get version
-$projectFilePath = "src\mGBAHttpServer\mGBAHttpServer.csproj"
+$projectFilePath = "src\mGBAHttp\mGBAHttp.csproj"
 $xml = [xml](Get-Content $projectFilePath)
 $version = $xml.Project.PropertyGroup.Version[0]
 
@@ -38,12 +38,12 @@ foreach ($folder in @(".\release", ".\releaseStaging")) {
 
 # Create releases
 foreach ($rid in $rids) {
-  dotnet publish src\mGBAHttpServer\mGBAHttpServer.csproj -r $rid --self-contained=false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)"  
+  dotnet publish src\mGBAHttp\mGBAHttp.csproj -r $rid --self-contained=false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)"  
 
   Remove-EmptyStaticWebAssetsFiles -folder ".\releaseStaging"
   Move-Item -Path ".\releaseStaging\*.*" -Destination ".\release" -Force
 
-  dotnet publish src\mGBAHttpServer\mGBAHttpServer.csproj -r $rid --self-contained=true  -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)-self-contained" -p:TrimMode=partial -p:PublishTrimmed=false -p:IncludeAllContentForSelfExtract=true -p:JsonSerializerIsReflectionEnabledByDefault=true
+  dotnet publish src\mGBAHttp\mGBAHttp.csproj -r $rid --self-contained=true  -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)-self-contained" -p:TrimMode=partial -p:PublishTrimmed=false -p:IncludeAllContentForSelfExtract=true -p:JsonSerializerIsReflectionEnabledByDefault=true
 
   Remove-EmptyStaticWebAssetsFiles -folder ".\releaseStaging"
   Move-Item -Path ".\releaseStaging\*.*" -Destination ".\release" -Force

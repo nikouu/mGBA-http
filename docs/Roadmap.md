@@ -7,7 +7,7 @@ A rough, non-committal roadmap.
 - ✅ Fully implement: 
     - `/core/loadfile`  (now as `/mgba-http/extension/loadfile`)
     - `/core/loadsavefile`
-- Cleanup of project structure, example code, and load test code
+- ✅ Cleanup of project structure, example code, and load test code
 - ✅ Docs for using just the Lua script
 - ✅ Further integration tests
  

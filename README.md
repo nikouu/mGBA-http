@@ -76,7 +76,7 @@ Future projects such as the proof of concept: [CPU Plays Pokemon](https://github
 If you know Lua, GameBoy/Advance, or mGBA specifics, I'd love for help. 
 
 ### Development
-If you're a .NET developer, the setup simple and familiar opening the [solution file](src/CmGBAHttpServer.sln). I use Visual Studio (At least VS 17.9) and the latest .NET. However, if you choose to develop C# without Visual Studio, that's fine too. 
+If you're a .NET developer, the setup simple and familiar opening the [solution file](src/mGBAHttp.sln). I use Visual Studio (At least VS 17.9) and the latest .NET. However, if you choose to develop C# without Visual Studio, that's fine too. 
 
 If you're not a .NET developer, check out the comprehensive [C# learning website](https://dotnet.microsoft.com/en-us/learn/csharp) from Microsoft. You can program in C# on whatever platform whether it's Windows, Mac, or Linux.
 

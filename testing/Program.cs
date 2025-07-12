@@ -1,4 +1,4 @@
-﻿using mGBAHttpServerExamples;
+﻿using mGBAHttpExamples;
 
 await new Keyboard().Run();
 
