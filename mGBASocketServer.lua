@@ -1,6 +1,6 @@
 -- ***********************
 -- mGBA-http
--- Version: 0.7.0
+-- Version: 0.8.0
 -- Lua interface for mGBA-http
 -- https://github.com/nikouu/mGBA-http
 -- https://github.com/nikouu/mGBA-http/blob/main/docs/FullGuide-lua.md
@@ -41,7 +41,7 @@ function beginSocket()
 				server:close()
 				logError(formatSocketMessage("Listen", error, true))
 			else
-				logInformation("mGBA script server 0.7.0 ready. Listening on port " .. port)
+				logInformation("mGBA script server 0.8.0 ready. Listening on port " .. port)
 				server:add("received", socketAccept)
 			end
 		end
