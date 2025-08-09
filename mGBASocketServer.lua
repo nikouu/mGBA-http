@@ -14,7 +14,9 @@
 -- 5 = None
 local logLevel = 2
 local truncateLogs = true
-local TERMINATION_MARKER = "<|END|>"
+local TERMINATION_MARKER <const> = "<|END|>"
+local DEFAULT_RETURN <const> = "<|SUCCESS|>";
+local ERROR_RETURN <const> = "<|ERROR|>";
 
 -- ***********************
 -- Sockets
@@ -77,9 +79,17 @@ function socketReceived(id)
                 local message = sock._buffer:sub(1, marker_start - 1)
                 sock._buffer = sock._buffer:sub(marker_end + 1)
                 logDebug(formatSocketMessage(id, message:match("^(.-)%s*$")))
-                -- Route the message and send back the response with the marker
-                local returnValue = messageRouter(message:match("^(.-)%s*$"))
-                sock:send(returnValue .. TERMINATION_MARKER)
+                
+                local success, returnValue = pcall(function()
+                    return messageRouter(message:match("^(.-)%s*$"))
+                end)
+                
+                if not success then
+                    logError("Error executing command: " .. tostring(returnValue))
+                    sock:send(ERROR_RETURN .. TERMINATION_MARKER)
+                else
+                    sock:send(returnValue .. TERMINATION_MARKER)
+                end
             end
         elseif error then
             -- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
@@ -178,9 +188,9 @@ function messageRouter(rawMessage)
         messageValue3 = parsedInput[4]
     end
 
-	local defaultReturnValue <const> = "<|SUCCESS|>";
 
-	local returnValue = defaultReturnValue;
+
+	local returnValue = DEFAULT_RETURN;
 
 	logInformation("messageRouter: \n\tRaw message: " .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
 
@@ -246,7 +256,7 @@ function messageRouter(rawMessage)
 	else logInformation(messageType)	
 	end
 	
-	returnValue = tostring(returnValue or defaultReturnValue);
+	returnValue = tostring(returnValue or DEFAULT_RETURN);
 
 	logInformation("Returning: " .. returnValue)
 	return returnValue;

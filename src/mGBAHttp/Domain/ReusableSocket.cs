@@ -45,7 +45,17 @@ namespace mGBAHttp.Domain
                 {
                     attempts++;
                     var response = await SendAsync(message);
+
+                    if (response.Contains("<|ERROR|>"))
+                    {
+                        throw new MgbaException("Error executing command. See mGBA scripting window for details.");
+                    }
+
                     return response.Replace("<|SUCCESS|>", "");
+                }
+                catch (MgbaException)
+                {
+                    throw;
                 }
                 catch (Exception ex)
                 {

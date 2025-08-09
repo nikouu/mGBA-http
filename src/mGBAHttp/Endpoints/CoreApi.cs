@@ -337,8 +337,7 @@ namespace mGBAHttp.Endpoints
             group.MapPost("/savestatebuffer", async (ObjectPool<ReusableSocket> socketPool, int flags = 31) =>
             {
                 var messageModel = new MessageModel("core.saveStateBuffer", flags.ToString()).ToString();
-                var result = await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
-                return result;
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Save state and return as a buffer.";
