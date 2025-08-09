@@ -323,17 +323,6 @@ namespace mGBAHttp.Endpoints
                 return o;
             });
 
-            group.MapPost("/runFrame", async (ObjectPool<ReusableSocket> socketPool) =>
-            {
-                var messageModel = new MessageModel("core.runFrame").ToString();
-                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
-            }).WithOpenApi(o =>
-            {
-                o.Summary = "Run until the next frame.";
-                o.Description = "Run until the next frame.";
-                return o;
-            });
-
             group.MapPost("/savestatebuffer", async (ObjectPool<ReusableSocket> socketPool, int flags = 31) =>
             {
                 var messageModel = new MessageModel("core.saveStateBuffer", flags.ToString()).ToString();

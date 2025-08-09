@@ -23,7 +23,7 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 | getKeys()         | core.getKeys         | /core/getkeys                                        |
 | loadFile()        | core.loadFile        | /core/loadfile (_Use /mgba-http/extension/loadfile_) |
 | loadSaveFile()    | core.loadSaveFile    | /core/loadsavefile                                   |
-| loadStateBuffer() | core.loadStateBuffer | /core/loadstatebuffer (_Unstable_)                   |
+| loadStateBuffer() | core.loadStateBuffer | /core/loadstatebuffer                                |
 | loadStateFile()   | core.loadStateFile   | /core/loadstatefile                                  |
 | loadStateSlot()   | core.loadStateSlot   | /core/loadstateslot                                  |
 | platform()        | core.platform        | /core/platform                                       |
@@ -34,8 +34,8 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 | readRegister()    | core.readRegister    | /core/readregister                                   |
 | reset()           | -                    | -                                                    |
 | romSize()         | core.romSize         | /core/romsize                                        |
-| runFrame()        | core.runFrame        | /core/runframe (_Unstable_)                          |
-| saveStateBuffer() | core.saveStateBuffer | /core/savestatebuffer (_Unstable_)                   |
+| runFrame()        | -                    | -                                                    |
+| saveStateBuffer() | core.saveStateBuffer | /core/savestatebuffer                                |
 | saveStateFile()   | core.saveStateFile   | /core/savestatefile                                  |
 | saveStateSlot()   | core.saveStateSlot   | /core/savestateslot                                  |
 | screenshot()      | core.screenshot      | /core/screenshot                                     |

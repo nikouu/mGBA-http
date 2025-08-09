@@ -166,17 +166,6 @@ namespace mGBAHttp.IntegrationTests
         }
 
         [TestMethod]
-        [Ignore] // I don't think this is a valid test for the HTTP work
-        public async Task RunFrame_SendsRequestSuccessfully()
-        {
-            // Act
-            var response = await _client.PostAsync("/core/runFrame", null);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [TestMethod]
         public async Task Step_SendsRequestSuccessfully()
         {
             // Act
