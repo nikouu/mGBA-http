@@ -1,6 +1,9 @@
 ﻿using mGBAHttp.Domain;
 using mGBAHttp.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.ObjectPool;
+using Microsoft.OpenApi.Models;
+using System.Text.RegularExpressions;
 
 namespace mGBAHttp.Endpoints
 {
@@ -181,14 +184,35 @@ namespace mGBAHttp.Endpoints
                 return o;
             });
 
-            group.MapPost("/loadstatebuffer", async (ObjectPool<ReusableSocket> socketPool, string buffer, int flags = 29) =>
+            group.MapPost("/loadstatebuffer", async (ObjectPool<ReusableSocket> socketPool, HttpContext context, int flags = 29) =>
             {
-                var messageModel = new MessageModel("core.loadStateBuffer", buffer, flags.ToString()).ToString();
+                using var reader = new StreamReader(context.Request.Body);
+                var buffer = await reader.ReadToEndAsync();
+                var cleanedBuffer = Regex.Replace(buffer, @"\s", string.Empty);
+
+                var messageModel = new MessageModel("core.loadStateBuffer", cleanedBuffer, flags.ToString()).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
-            }).WithOpenApi(o =>
+            })
+            .WithOpenApi(o =>
             {
                 o.Summary = "Load state from a buffer.";
                 o.Description = "Load state from a buffer.";
+                o.RequestBody = new OpenApiRequestBody
+                {
+                    Description = "State buffer data as int array: [137,80,78,71,...]",
+                    Required = true,
+                    Content = new Dictionary<string, OpenApiMediaType>
+                    {
+                        ["text/plain"] = new OpenApiMediaType
+                        {
+                            Schema = new OpenApiSchema
+                            {
+                                Type = "string"
+                            }
+                        }
+                    }
+                };
+
                 return o;
             });
 
@@ -314,7 +338,7 @@ namespace mGBAHttp.Endpoints
             {
                 var messageModel = new MessageModel("core.saveStateBuffer", flags.ToString()).ToString();
                 var result = await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
-                return result.Split(',', StringSplitOptions.TrimEntries).Select(x => int.Parse(x));
+                return result;
             }).WithOpenApi(o =>
             {
                 o.Summary = "Save state and return as a buffer.";

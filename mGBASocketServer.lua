@@ -13,6 +13,7 @@
 -- 4 = Error
 -- 5 = None
 local logLevel = 2
+local truncateLogs = true
 local TERMINATION_MARKER = "<|END|>"
 
 -- ***********************
@@ -41,7 +42,7 @@ function beginSocket()
 				server:close()
 				logError(formatSocketMessage("Listen", error, true))
 			else
-				logInformation("mGBA script server 0.8.0 ready. Listening on port " .. port)
+				logWithOverride("mGBA script server 0.8.0 ready. Listening on port " .. port, 4)
 				server:add("received", socketAccept)
 			end
 		end
@@ -137,12 +138,45 @@ local keyValues = {
 }
 
 function messageRouter(rawMessage)
-	local parsedInput = splitStringToTable(rawMessage, ",")
-
-	local messageType = parsedInput[1]
-	local messageValue1 = parsedInput[2]
-	local messageValue2 = parsedInput[3]
-	local messageValue3 = parsedInput[4]
+    local messageType, rest = rawMessage:match("^([^,]+),(.*)$")
+    
+    local messageValue1, messageValue2, messageValue3
+    
+	-- Changes behaviour if the second arugment is an array
+    if rest and rest:sub(1,1) == "[" then
+        -- Find matching closing bracket
+        local bracketCount = 1
+        local endBracket
+        for i = 2, #rest do
+            if rest:sub(i,i) == "[" then
+                bracketCount = bracketCount + 1
+            elseif rest:sub(i,i) == "]" then
+                bracketCount = bracketCount - 1
+                if bracketCount == 0 then
+                    endBracket = i
+                    break
+                end
+            end
+        end
+        
+        if endBracket then
+            messageValue1 = rest:sub(1, endBracket)
+            -- Parse remaining values after the bracketed content
+            local remaining = rest:sub(endBracket + 2) -- +2 to skip the comma after closing bracket
+            if remaining ~= "" then
+                local remainingValues = splitStringToTable(remaining, ",")
+                messageValue2 = remainingValues[1]
+                messageValue3 = remainingValues[2]
+            end
+        end
+    else
+        -- Original comma-based parsing for non-bracketed content
+        local parsedInput = splitStringToTable(rawMessage, ",")
+        messageType = parsedInput[1]
+        messageValue1 = parsedInput[2]
+        messageValue2 = parsedInput[3]
+        messageValue3 = parsedInput[4]
+    end
 
 	local defaultReturnValue <const> = "<|SUCCESS|>";
 
@@ -170,18 +204,18 @@ function messageRouter(rawMessage)
 	elseif messageType == "core.getKeys" then returnValue = emu:getKeys()
 	elseif messageType == "core.loadFile" then returnValue = emu:loadFile(messageValue1)
 	elseif messageType == "core.loadSaveFile" then returnValue = emu:loadSaveFile(messageValue1, toBoolean(messageValue2))
-	elseif messageType == "core.loadStateBuffer" then returnValue = emu:loadStateBuffer(messageValue1, messageValue2)
+	elseif messageType == "core.loadStateBuffer" then returnValue = emu:loadStateBuffer(convertByteStringToBinary(messageValue1), tonumber(messageValue2))
 	elseif messageType == "core.loadStateFile" then returnValue = emu:loadStateFile(messageValue1, tonumber(messageValue2))
 	elseif messageType == "core.loadStateSlot" then returnValue = emu:loadStateSlot(tonumber(messageValue1), tonumber(messageValue2))
 	elseif messageType == "core.platform" then returnValue = emu:platform()
 	elseif messageType == "core.read16" then returnValue = emu:read16(tonumber(messageValue1))
 	elseif messageType == "core.read32" then returnValue = emu:read32(tonumber(messageValue1))
 	elseif messageType == "core.read8" then returnValue = emu:read8(tonumber(messageValue1))
-	elseif messageType == "core.readRange" then returnValue = formatByteString(emu:readRange(tonumber(messageValue1), tonumber(messageValue2)))
+	elseif messageType == "core.readRange" then returnValue = convertBinaryToByteString(emu:readRange(tonumber(messageValue1), tonumber(messageValue2)))
 	elseif messageType == "core.readRegister" then returnValue = tonumber(emu:readRegister(messageValue1))
 	elseif messageType == "core.romSize" then returnValue = emu:romSize()
 	elseif messageType == "core.runFrame" then emu:runFrame()
-	elseif messageType == "core.saveStateBuffer" then formatByteString(emu:saveStateBuffer(tonumber(messageValue1)))
+	elseif messageType == "core.saveStateBuffer" then returnValue = convertBinaryToByteString(emu:saveStateBuffer(tonumber(messageValue1)))
 	elseif messageType == "core.saveStateFile" then returnValue = emu:saveStateFile(messageValue1, tonumber(messageValue2))
 	elseif messageType == "core.saveStateSlot" then returnValue = emu:saveStateSlot(tonumber(messageValue1), tonumber(messageValue2))
 	elseif messageType == "core.screenshot" then emu:screenshot(messageValue1)
@@ -202,7 +236,7 @@ function messageRouter(rawMessage)
 	elseif messageType == "memoryDomain.read16" then returnValue = emu.memory[messageValue1]:read16(tonumber(messageValue2))
 	elseif messageType == "memoryDomain.read32" then returnValue = emu.memory[messageValue1]:read32(tonumber(messageValue2))
 	elseif messageType == "memoryDomain.read8" then returnValue = emu.memory[messageValue1]:read8(tonumber(messageValue2))
-	elseif messageType == "memoryDomain.readRange" then returnValue = formatByteString(emu.memory[messageValue1]:readRange(tonumber(messageValue2), tonumber(messageValue3)))
+	elseif messageType == "memoryDomain.readRange" then returnValue = convertBinaryToByteString(emu.memory[messageValue1]:readRange(tonumber(messageValue2), tonumber(messageValue3)))
 	elseif messageType == "memoryDomain.size" then returnValue = emu.memory[messageValue1]:size()
 	elseif messageType == "memoryDomain.write16" then returnValue = emu.memory[messageValue1]:write16(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write32" then returnValue = emu.memory[messageValue1]:write32(tonumber(messageValue2), tonumber(messageValue3))
@@ -337,12 +371,21 @@ function toBitmask(keys)
     return mask
 end
 
-function formatByteString(byteStr)
+function convertBinaryToByteString(binaryString)
     local bytes = {}
-    for i = 1, #byteStr do
-        table.insert(bytes, tostring(byteStr:byte(i)))
+    for i = 1, #binaryString do
+        table.insert(bytes, tostring(binaryString:byte(i)))
     end
-    return table.concat(bytes, ",")
+    return "[" .. table.concat(bytes, ",") .. "]"
+end
+
+function convertByteStringToBinary(bracketedBytes)
+    local commaDelimitedBytes = bracketedBytes:match("%[(.+)%]")
+    local bytes = {}
+    for byteStr in commaDelimitedBytes:gmatch("([^,]+)") do
+        table.insert(bytes, string.char(tonumber(byteStr)))
+    end
+    return table.concat(bytes)
 end
 
 function formatMemoryDomains(domains)
@@ -357,31 +400,45 @@ end
 -- Logging
 -- ***********************
 
+function formatLogMessage(message)
+    if truncateLogs and #message > 500 then
+        return string.sub(message, 1, 97) .. "..."
+    end
+    return message
+end
+
 function logDebug(message)
     if logLevel <= 1 then
         local timestamp = "[" .. os.date("%X", os.time()) .. "] "
-        console:log(timestamp .. message)
+        console:log(timestamp .. formatLogMessage(message))
     end
 end
 
 function logInformation(message)
     if logLevel <= 2 then
         local timestamp = "[" .. os.date("%X", os.time()) .. "] "
-        console:log(timestamp .. message)
+        console:log(timestamp .. formatLogMessage(message))
     end
 end
 
 function logWarning(message)
     if logLevel <= 3 then
         local timestamp = "[" .. os.date("%X", os.time()) .. "] "
-        console:warn(timestamp .. message)
+        console:warn(timestamp .. formatLogMessage(message))
     end
 end
 
 function logError(message)
     if logLevel <= 4 then
         local timestamp = "[" .. os.date("%X", os.time()) .. "] "
-        console:error(timestamp .. message)
+        console:error(timestamp .. formatLogMessage(message))
+    end
+end
+
+function logWithOverride(message, overrideLogLevel)
+    if logLevel <= overrideLogLevel then
+        local timestamp = "[" .. os.date("%X", os.time()) .. "] "
+        console:log(timestamp .. formatLogMessage(message))
     end
 end
 

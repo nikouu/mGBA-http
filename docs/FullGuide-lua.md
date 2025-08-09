@@ -1,6 +1,6 @@
 # Full Guide (lua script only)
 
-This guide is for using the .lua script. If you only need to use the full application, see [Full Guide (application)](/docs/FullGuide.md).
+This guide is for using the .lua script. If you need to use the full application, see [Full Guide (application)](/docs/FullGuide.md).
 
 
 ## Setup
