@@ -290,7 +290,7 @@ namespace mGBAHttp.Endpoints
             {
                 var messageModel = new MessageModel("core.readRange", address, length).ToString();
                 var result = await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
-                return result.Split(',', StringSplitOptions.TrimEntries).Select(x => int.Parse(x));
+                return result;
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read byte range from the given offset.";

@@ -397,7 +397,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task Read8_ReturnsValue()
         {
             // Arrange
-            string address = "0x10000000";
+            var address = "0x10000000";
 
             // Act
             var response = await _client.GetAsync($"/core/read8?address={address}");
@@ -414,7 +414,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task Read16_ReturnsValue()
         {
             // Arrange
-            string address = "0x10000000";
+            var address = "0x10000000";
 
             // Act
             var response = await _client.GetAsync($"/core/read16?address={address}");
@@ -431,7 +431,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task Read32_ReturnsValue()
         {
             // Arrange
-            string address = "0x10000000";
+            var address = "0x10000000";
 
             // Act
             var response = await _client.GetAsync($"/core/read32?address={address}");
@@ -448,8 +448,8 @@ namespace mGBAHttp.IntegrationTests
         public async Task ReadRange_ReturnsValues()
         {
             // Arrange
-            string address = "0x10000000";
-            string length = "16";
+            var address = "0x10000000";
+            var length = 16;
 
             // Act
             var response = await _client.GetAsync($"/core/readrange?address={address}&length={length}");
@@ -458,16 +458,16 @@ namespace mGBAHttp.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
             var content = await response.Content.ReadAsStringAsync();
-            var values = JsonSerializer.Deserialize<int[]>(content);
-            Assert.IsNotNull(values);
-            Assert.AreEqual(16, values.Length);
+            var valuesLength = content.Split(',').Length;
+            Assert.IsNotNull(content);
+            Assert.AreEqual(length, valuesLength);
         }
 
         [TestMethod]
         public async Task ReadRange_Large_ReturnsValues()
         {
             // Arrange
-            string address = "0x10000000";
+            var address = "0x10000000";
             int length = 16000;
 
             // Act
@@ -477,9 +477,9 @@ namespace mGBAHttp.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
             var content = await response.Content.ReadAsStringAsync();
-            var values = JsonSerializer.Deserialize<int[]>(content);
-            Assert.IsNotNull(values);
-            Assert.AreEqual(length, values.Length);
+            var valuesLength = content.Split(',').Length;
+            Assert.IsNotNull(content);
+            Assert.AreEqual(length, valuesLength);
         }
 
         [TestMethod]
@@ -487,7 +487,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task Write8_SendsRequestSuccessfully()
         {
             // Arrange
-            string address = "0x10000000";
+            var address = "0x10000000";
             const int value = 42;
 
             // Act
@@ -507,7 +507,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task Write16_SendsRequestSuccessfully()
         {
             // Arrange
-            string address = "0x10000002";
+            var address = "0x10000002";
             const int value = 12345;
 
             // Act
@@ -527,7 +527,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task Write32_SendsRequestSuccessfully()
         {
             // Arrange
-            string address = "0x10000004";
+            var address = "0x10000004";
             const int value = 0x12345678;
 
             // Act

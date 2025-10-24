@@ -121,7 +121,7 @@ namespace mGBAHttp.IntegrationTests
         {
             // Arrange
             const string length = "16"; // Read 16 bytes
-            int[] expected = [211, 0, 0, 234, 102, 0, 0, 234, 12, 0, 0, 234, 254, 255, 255, 234];
+            int[] expected = [0xd3, 0x00, 0x00, 0xea, 0x66, 0x00, 0x00, 0xea, 0x0c, 0x00, 0x00, 0xea, 0xfe, 0xff, 0xff, 0xea];
 
             // Act
             var response = await _client.GetAsync($"/memorydomain/readrange?memoryDomain={BiosDomain}&address={ReadAddress}&length={length}");
@@ -130,7 +130,7 @@ namespace mGBAHttp.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
             var content = await response.Content.ReadAsStringAsync();
-            var values = JsonSerializer.Deserialize<int[]>(content);
+            var values = content.Trim('[', ']').Split(',').Select(x => Convert.ToInt32(x.Trim(), 16)).ToArray();
 
             CollectionAssert.AreEqual(expected, values);
         }
@@ -148,9 +148,9 @@ namespace mGBAHttp.IntegrationTests
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
             var content = await response.Content.ReadAsStringAsync();
-            var values = JsonSerializer.Deserialize<int[]>(content);
-
-            Assert.AreEqual(length, values.Length);
+            var valuesLength = content.Split(',').Length;
+            Assert.IsNotNull(content);
+            Assert.AreEqual(length, valuesLength);
         }
 
         [TestMethod]

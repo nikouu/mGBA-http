@@ -383,16 +383,27 @@ end
 function convertBinaryToByteString(binaryString)
     local bytes = {}
     for i = 1, #binaryString do
-        table.insert(bytes, tostring(binaryString:byte(i)))
+        table.insert(bytes, string.format("%02x", binaryString:byte(i)))
     end
     return "[" .. table.concat(bytes, ",") .. "]"
 end
 
 function convertByteStringToBinary(bracketedBytes)
-    local commaDelimitedBytes = bracketedBytes:match("%[(.+)%]")
+    local hexString = bracketedBytes:match("%[(.+)%]")
+    if not hexString then
+        logError("Failed to parse bracketed bytes: " .. tostring(bracketedBytes))
+        return nil
+    end
+    
     local bytes = {}
-    for byteStr in commaDelimitedBytes:gmatch("([^,]+)") do
-        table.insert(bytes, string.char(tonumber(byteStr)))
+    for hexByte in hexString:gmatch("([^,]+)") do
+        local byte = tonumber(hexByte, 16)  -- Parse as hex (base 16)
+        if byte then
+            table.insert(bytes, string.char(byte))
+        else
+            logError("Invalid hex byte: " .. tostring(hexByte))
+            return nil
+        end
     end
     return table.concat(bytes)
 end
