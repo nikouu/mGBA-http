@@ -378,22 +378,6 @@ namespace mGBAHttp.IntegrationTests
         }
 
         [TestMethod]
-        [Ignore] // Still an unstable API in mGBA-http
-        public async Task SaveStateBuffer_ReturnsStateData()
-        {
-            // Act
-            var response = await _client.PostAsync("/core/savestatebuffer?flags=31", null);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            var stateData = JsonSerializer.Deserialize<int[]>(content);
-            Assert.IsNotNull(stateData);
-            Assert.IsTrue(stateData.Length > 0);
-        }
-
-        [TestMethod]
         public async Task Read8_ReturnsValue()
         {
             // Arrange
@@ -577,6 +561,44 @@ namespace mGBAHttp.IntegrationTests
             var readResponse = await _client.GetAsync($"/core/readregister?regName={regName}");
             var content = await readResponse.Content.ReadAsStringAsync();
             Assert.AreEqual(value, int.Parse(content));
+        }
+
+        [TestMethod]
+        public async Task SaveStateBuffer_ReturnsStateData()
+        {
+            // Act
+            var response = await _client.PostAsync("/core/savestatebuffer?flags=31", null);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            Assert.IsTrue(content.StartsWith(']'));
+            Assert.IsTrue(content.EndsWith(']'));
+
+            var hexValues = content.Trim('[', ']').Split(',');
+            Assert.IsTrue(hexValues.Length > 0);
+
+            foreach (var hex in hexValues)
+            {
+                Assert.IsTrue(int.TryParse(hex.Trim(), System.Globalization.NumberStyles.HexNumber, null, out _));
+            }
+        }
+
+        [TestMethod]
+        public async Task LoadStateBuffer_SendsRequestSuccessfully()
+        {
+            // Arrange
+            var saveResponse = await _client.PostAsync("/core/savestatebuffer?flags=31", null);
+            var savedState = await saveResponse.Content.ReadAsStringAsync();
+
+            // Act
+            var content = new StringContent(savedState, System.Text.Encoding.UTF8, "text/plain");
+            var response = await _client.PostAsync("/core/loadstatebuffer?flags=29", content);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         public void Dispose()
