@@ -665,14 +665,6 @@
         "description": "Load state from a buffer.",
         "parameters": [
           {
-            "name": "buffer",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "flags",
             "in": "query",
             "schema": {
@@ -682,6 +674,17 @@
             }
           }
         ],
+        "requestBody": {
+          "description": "State buffer data as int array: [137,80,78,71,...]",
+          "content": {
+            "text/plain": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -923,13 +926,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
+                  "type": "string"
                 }
               }
             }
@@ -990,27 +989,6 @@
         }
       }
     },
-    "/core/runFrame": {
-      "post": {
-        "tags": [
-          "Core"
-        ],
-        "summary": "Run until the next frame.",
-        "description": "Run until the next frame.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/core/savestatebuffer": {
       "post": {
         "tags": [
@@ -1033,13 +1011,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
+                  "type": "string"
                 }
               }
             }
@@ -1703,13 +1677,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "integer",
-                    "format": "int32"
-                  }
+                  "type": "string"
                 }
               }
             }

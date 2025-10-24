@@ -574,7 +574,7 @@ namespace mGBAHttp.IntegrationTests
 
             var content = await response.Content.ReadAsStringAsync();
 
-            Assert.IsTrue(content.StartsWith(']'));
+            Assert.IsTrue(content.StartsWith('['));
             Assert.IsTrue(content.EndsWith(']'));
 
             var hexValues = content.Trim('[', ']').Split(',');

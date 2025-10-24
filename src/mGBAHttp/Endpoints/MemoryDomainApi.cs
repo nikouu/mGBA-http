@@ -17,8 +17,11 @@ namespace mGBAHttp.Endpoints
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
-                o.Summary = "Get the address of the base of this memory domain.";
-                o.Description = "Get the address of the base of this memory domain.";
+                o.Summary = "Get the base address of the memory domain.";
+                o.Description = "Get the base address of the specified memory domain as a decimal string.";
+                o.Parameters[0].Description = "Memory domain name (e.g., 'ewram', 'iwram', 'vram')";
+                o.Responses["200"].Description = "Base address as decimal string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("50331648");
                 return o;
             });
 
@@ -28,8 +31,11 @@ namespace mGBAHttp.Endpoints
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
-                o.Summary = "Get the address of the end bound of this memory domain.";
-                o.Description = "Get the address of the end bound of this memory domain. Note that this address is not in the domain itself, and is the address of the first byte past it.";
+                o.Summary = "Get the bound (end address) of the memory domain.";
+                o.Description = "Get the bound (end address) of the specified memory domain as a decimal string.";
+                o.Parameters[0].Description = "Memory domain name (e.g., 'ewram', 'iwram', 'vram')";
+                o.Responses["200"].Description = "Bound address as decimal string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("50594303");
                 return o;
             });
 
@@ -39,8 +45,11 @@ namespace mGBAHttp.Endpoints
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
-                o.Summary = "Get a short, human-readable name for this memory domain.";
-                o.Description = "Get a short, human-readable name for this memory domain.";
+                o.Summary = "Get the name of the memory domain.";
+                o.Description = "Get the name of the specified memory domain.";
+                o.Parameters[0].Description = "Memory domain name (e.g., 'ewram', 'iwram', 'vram')";
+                o.Responses["200"].Description = "Memory domain name";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("ewram");
                 return o;
             });
 
@@ -51,8 +60,11 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read a 16-bit value from the given offset.";
-                o.Description = "Read a 16-bit value from the given offset.";
-                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
+                o.Description = "Read a 16-bit value from the given offset in the specified memory domain.";
+                o.Parameters[0].Description = "Memory domain name (e.g., 'ewram', 'iwram', 'vram')";
+                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Responses["200"].Description = "16-bit value as decimal string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("65535");
                 return o;
             });
 
@@ -63,8 +75,11 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read a 32-bit value from the given offset.";
-                o.Description = "Read a 32-bit value from the given offset.";
-                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
+                o.Description = "Read a 32-bit value from the given offset in the specified memory domain.";
+                o.Parameters[0].Description = "Memory domain name (e.g., 'ewram', 'iwram', 'vram')";
+                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Responses["200"].Description = "32-bit value as decimal string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("4294967295");
                 return o;
             });
 
@@ -75,8 +90,11 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read an 8-bit value from the given offset.";
-                o.Description = "Read an 8-bit value from the given offset.";
-                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
+                o.Description = "Read an 8-bit value from the given offset in the specified memory domain.";
+                o.Parameters[0].Description = "Memory domain name (e.g., 'ewram', 'iwram', 'vram')";
+                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Responses["200"].Description = "8-bit value as decimal string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("255");
                 return o;
             });
 
@@ -88,8 +106,12 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read byte range from the given offset.";
-                o.Description = "Read byte range from the given offset and returns an array of unsigned integers";
-                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
+                o.Description = "Read byte range from the given offset and returns a hex array string in the format: [d3,00,ea,66,...]";
+                o.Parameters[0].Description = "Memory domain name (e.g., 'ewram', 'iwram', 'vram')";
+                o.Parameters[1].Description = "Address as hex string (e.g., '0x03000000')";
+                o.Parameters[2].Description = "Number of bytes to read";
+                o.Responses["200"].Description = "Hex array string format: [d3,00,ea,66,...]";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("[d3,00,00,ea,66,00,00,ea]");
                 return o;
             });
 
@@ -99,8 +121,11 @@ namespace mGBAHttp.Endpoints
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
-                o.Summary = "Get the size of this memory domain in bytes.";
-                o.Description = "Get the size of this memory domain in bytes.";
+                o.Summary = "Get the size of the memory domain.";
+                o.Description = "Get the size of the specified memory domain in bytes as a decimal string.";
+                o.Parameters[0].Description = "Memory domain name (e.g., 'ewram', 'iwram', 'vram')";
+                o.Responses["200"].Description = "Size in bytes as decimal string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("262144");
                 return o;
             });
 
@@ -110,9 +135,11 @@ namespace mGBAHttp.Endpoints
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
-                o.Summary = "Write a 16-bit value from the given offset.";
-                o.Description = "Write a 16-bit value from the given offset.";
-                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
+                o.Summary = "Write a 16-bit value to the given offset.";
+                o.Description = "Write a 16-bit value to the given offset in the specified memory domain.";
+                o.Parameters[0].Description = "Memory domain name (e.g., 'ewram', 'iwram', 'vram')";
+                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Parameters[2].Description = "16-bit value to write (0-65535)";
                 return o;
             });
 
@@ -122,9 +149,11 @@ namespace mGBAHttp.Endpoints
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
-                o.Summary = "Write a 32-bit value from the given offset.";
-                o.Description = "Write a 32-bit value from the given offset.";
-                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
+                o.Summary = "Write a 32-bit value to the given offset.";
+                o.Description = "Write a 32-bit value to the given offset in the specified memory domain.";
+                o.Parameters[0].Description = "Memory domain name (e.g., 'ewram', 'iwram', 'vram')";
+                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Parameters[2].Description = "32-bit value to write (0-4294967295)";
                 return o;
             });
 
@@ -134,9 +163,11 @@ namespace mGBAHttp.Endpoints
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
-                o.Summary = "Write an 8-bit value from the given offset.";
-                o.Description = "Write an 8-bit value from the given offset.";
-                o.Parameters[1].Description = "Address in hex, e.g. 0x03000000";
+                o.Summary = "Write an 8-bit value to the given offset.";
+                o.Description = "Write an 8-bit value to the given offset in the specified memory domain.";
+                o.Parameters[0].Description = "Memory domain name (e.g., 'ewram', 'iwram', 'vram')";
+                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Parameters[2].Description = "8-bit value to write (0-255)";
                 return o;
             });
 
