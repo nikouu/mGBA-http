@@ -3,7 +3,7 @@
 namespace mGBAHttp.Models
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum KeysEnum
+    public enum ButtonEnum
     {
         A,
         B,

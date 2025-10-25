@@ -12,9 +12,51 @@ namespace mGBAHttp.Endpoints
             var group = routes.MapGroup("/mgba-http/button");
             group.WithTags("Button");
 
-            group.MapPost("/tap", async (ObjectPool<ReusableSocket> socketPool, KeysEnum key) =>
+            group.MapPost("/add", async (ObjectPool<ReusableSocket> socketPool, ButtonEnum button) =>
             {
-                var messageModel = new MessageModel("mgba-http.button.tap", key.ToString()).ToString();
+                var messageModel = new MessageModel("mgba-http.button.add", button.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
+            }).WithOpenApi(o =>
+            {
+                o.Summary = "Adds a single button.";
+                o.Description = "A custom convenience API that mimics /core/addkey but uses button names as opposed to their number value.";
+                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Responses["200"].Description = "Empty success response.";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
+                return o;
+            });
+
+            group.MapPost("/clear", async (ObjectPool<ReusableSocket> socketPool, ButtonEnum button) =>
+            {
+                var messageModel = new MessageModel("mgba-http.button.clear", button.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
+            }).WithOpenApi(o =>
+            {
+                o.Summary = "Remove a single button.";
+                o.Description = "A custom convenience API that mimics /core/clearkey but uses button names as opposed to their number value.";
+                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Responses["200"].Description = "Empty success response/";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
+                return o;
+            });
+
+            group.MapGet("/get", async (ObjectPool<ReusableSocket> socketPool, ButtonEnum button) =>
+            {
+                var messageModel = new MessageModel("mgba-http.button.get", button.ToString()).ToString();
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
+            }).WithOpenApi(o =>
+            {
+                o.Summary = "Get the active state of a given button.";
+                o.Description = "A custom convenience API that mimics /core/getkey but uses button names as opposed to their number value.";
+                o.Parameters[0].Description = "Button value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Responses["200"].Description = "0 if key is not pressed or 1 if the key is pressed.";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("1");
+                return o;
+            });
+
+            group.MapPost("/tap", async (ObjectPool<ReusableSocket> socketPool, ButtonEnum button) =>
+            {
+                var messageModel = new MessageModel("mgba-http.button.tap", button.ToString()).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
@@ -26,7 +68,7 @@ namespace mGBAHttp.Endpoints
                 return o;
             });
 
-            group.MapPost("/tapmany", async (ObjectPool<ReusableSocket> socketPool, [FromQuery] KeysEnum[] keys) =>
+            group.MapPost("/tapmany", async (ObjectPool<ReusableSocket> socketPool, [FromQuery] ButtonEnum[] keys) =>
             {
                 var messageModel = new MessageModel("mgba-http.button.tapmany", string.Join(";", keys)).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
@@ -40,9 +82,9 @@ namespace mGBAHttp.Endpoints
                 return o;
             });
 
-            group.MapPost("/hold", async (ObjectPool<ReusableSocket> socketPool, KeysEnum key, int duration) =>
+            group.MapPost("/hold", async (ObjectPool<ReusableSocket> socketPool, ButtonEnum button, int duration) =>
             {
-                var messageModel = new MessageModel("mgba-http.button.hold", key.ToString(), duration.ToString()).ToString();
+                var messageModel = new MessageModel("mgba-http.button.hold", button.ToString(), duration.ToString()).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
@@ -55,7 +97,7 @@ namespace mGBAHttp.Endpoints
                 return o;
             });
 
-            group.MapPost("/holdmany", async (ObjectPool<ReusableSocket> socketPool, [FromQuery] KeysEnum[] keys, int duration) =>
+            group.MapPost("/holdmany", async (ObjectPool<ReusableSocket> socketPool, [FromQuery] ButtonEnum[] keys, int duration) =>
             {
                 var messageModel = new MessageModel("mgba-http.button.holdmany", string.Join(";", keys), duration.ToString()).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);

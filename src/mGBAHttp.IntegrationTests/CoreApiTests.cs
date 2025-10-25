@@ -38,17 +38,17 @@ namespace mGBAHttp.IntegrationTests
         }
 
         [DataTestMethod]
-        [DataRow(KeysEnum.A, DisplayName = "Add Key A")]
-        [DataRow(KeysEnum.B, DisplayName = "Add Key B")]
-        [DataRow(KeysEnum.Start, DisplayName = "Add Key Start")]
-        [DataRow(KeysEnum.Select, DisplayName = "Add Key Select")]
-        [DataRow(KeysEnum.Right, DisplayName = "Add Key Right")]
-        [DataRow(KeysEnum.Left, DisplayName = "Add Key Left")]
-        [DataRow(KeysEnum.Up, DisplayName = "Add Key Up")]
-        [DataRow(KeysEnum.Down, DisplayName = "Add Key Down")]
-        [DataRow(KeysEnum.R, DisplayName = "Add Key R")]
-        [DataRow(KeysEnum.L, DisplayName = "Add Key L")]
-        public async Task AddKey_SendsRequestSuccessfully(KeysEnum key)
+        [DataRow(0, DisplayName = "Add Key A")]
+        [DataRow(1, DisplayName = "Add Key B")]
+        [DataRow(2, DisplayName = "Add Key Select")]
+        [DataRow(3, DisplayName = "Add Key Start")]
+        [DataRow(4, DisplayName = "Add Key Right")]
+        [DataRow(5, DisplayName = "Add Key Left")]
+        [DataRow(6, DisplayName = "Add Key Up")]
+        [DataRow(7, DisplayName = "Add Key Down")]
+        [DataRow(8, DisplayName = "Add Key R")]
+        [DataRow(9, DisplayName = "Add Key L")]
+        public async Task AddKey_SendsRequestSuccessfully(int key)
         {
             // Act
             var response = await _client.PostAsync($"/core/addkey?key={key}", null);
@@ -81,17 +81,17 @@ namespace mGBAHttp.IntegrationTests
         }
 
         [DataTestMethod]
-        [DataRow(KeysEnum.A, DisplayName = "Clear Key A")]
-        [DataRow(KeysEnum.B, DisplayName = "Clear Key B")]
-        [DataRow(KeysEnum.Start, DisplayName = "Clear Key Start")]
-        [DataRow(KeysEnum.Select, DisplayName = "Clear Key Select")]
-        [DataRow(KeysEnum.Right, DisplayName = "Clear Key Right")]
-        [DataRow(KeysEnum.Left, DisplayName = "Clear Key Left")]
-        [DataRow(KeysEnum.Up, DisplayName = "Clear Key Up")]
-        [DataRow(KeysEnum.Down, DisplayName = "Clear Key Down")]
-        [DataRow(KeysEnum.R, DisplayName = "Clear Key R")]
-        [DataRow(KeysEnum.L, DisplayName = "Clear Key L")]
-        public async Task ClearKey_SendsRequestSuccessfully(KeysEnum key)
+        [DataRow(0, DisplayName = "Clear Key A")]
+        [DataRow(1, DisplayName = "Clear Key B")]
+        [DataRow(2, DisplayName = "Clear Key Select")]
+        [DataRow(3, DisplayName = "Clear Key Start")]
+        [DataRow(4, DisplayName = "Clear Key Right")]
+        [DataRow(5, DisplayName = "Clear Key Left")]
+        [DataRow(6, DisplayName = "Clear Key Up")]
+        [DataRow(7, DisplayName = "Clear Key Down")]
+        [DataRow(8, DisplayName = "Clear Key R")]
+        [DataRow(9, DisplayName = "Clear Key L")]
+        public async Task ClearKey_SendsRequestSuccessfully(int key)
         {
             // Arrange
             await _client.PostAsync($"/core/addkey?key={key}", null);
@@ -141,9 +141,9 @@ namespace mGBAHttp.IntegrationTests
         }
 
         [DataTestMethod]
-        [DataRow(KeysEnum.A, DisplayName = "Get Key A")]
-        [DataRow(KeysEnum.B, DisplayName = "Get Key B")]
-        public async Task GetKey_ReturnsKeyState(KeysEnum key)
+        [DataRow(0, DisplayName = "Get Key A")]
+        [DataRow(1, DisplayName = "Get Key B")]
+        public async Task GetKey_ReturnsKeyState(int key)
         {
             // Act
             var response = await _client.GetAsync($"/core/getkey?key={key}");
@@ -159,7 +159,7 @@ namespace mGBAHttp.IntegrationTests
         {
             // Arrange - 3 is A (1) and B (2)
             var keysBitmask = 3;
-            await _client.PostAsync($"/core/addkey?key={KeysEnum.Select}", null);
+            await _client.PostAsync($"/core/addkey?key={ButtonEnum.Select}", null);
 
             // Act
             var response = await _client.PostAsync($"/core/setkeys?keys={keysBitmask}", null);

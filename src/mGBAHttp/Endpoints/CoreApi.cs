@@ -14,7 +14,7 @@ namespace mGBAHttp.Endpoints
             var group = routes.MapGroup("/core");
             group.WithTags("Core");
 
-            group.MapPost("/addkey", async (ObjectPool<ReusableSocket> socketPool, KeysEnum key) =>
+            group.MapPost("/addkey", async (ObjectPool<ReusableSocket> socketPool, int key) =>
             {
                 var messageModel = new MessageModel("core.addKey", key.ToString()).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
@@ -22,7 +22,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Add a single key.";
                 o.Description = "Add a single key to the currently active key list. As if the key were held down.";
-                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Parameters[0].Description = "Key value of: 0-9";
                 o.Responses["200"].Description = "Empty success response";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -68,7 +68,7 @@ namespace mGBAHttp.Endpoints
                 return o;
             });
 
-            group.MapPost("/clearkey", async (ObjectPool<ReusableSocket> socketPool, KeysEnum key) =>
+            group.MapPost("/clearkey", async (ObjectPool<ReusableSocket> socketPool, int key) =>
             {
                 var messageModel = new MessageModel("core.clearKey", key.ToString()).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
@@ -76,7 +76,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Remove a single key.";
                 o.Description = "Remove a single key from the currently active key list. As if the key were released.";
-                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Parameters[0].Description = "Key value of: 0-9";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -161,7 +161,7 @@ namespace mGBAHttp.Endpoints
                 return o;
             });
 
-            group.MapGet("/getkey", async (ObjectPool<ReusableSocket> socketPool, KeysEnum key) =>
+            group.MapGet("/getkey", async (ObjectPool<ReusableSocket> socketPool, int key) =>
             {
                 var messageModel = new MessageModel("core.getKey", key.ToString()).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
@@ -169,7 +169,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Get the active state of a given key.";
                 o.Description = "Get the active state of a given key.";
-                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Parameters[0].Description = "Key value of: 0-9";
                 o.Responses["200"].Description = "0 if key is not pressed or 1 if the key is pressed.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("1");
                 return o;
