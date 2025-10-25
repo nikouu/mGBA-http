@@ -398,7 +398,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task Read8_ReturnsValue()
         {
             // Arrange
-            var address = "0x10000000";
+            var address = "0x1000";
 
             // Act
             var response = await _client.GetAsync($"/core/read8?address={address}");
@@ -413,7 +413,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task Read16_ReturnsValue()
         {
             // Arrange
-            var address = "0x10000000";
+            var address = "0x1000";
 
             // Act
             var response = await _client.GetAsync($"/core/read16?address={address}");
@@ -428,7 +428,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task Read32_ReturnsValue()
         {
             // Arrange
-            var address = "0x10000000";
+            var address = "0x1000";
 
             // Act
             var response = await _client.GetAsync($"/core/read32?address={address}");
@@ -443,7 +443,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task ReadRange_ReturnsValues()
         {
             // Arrange
-            var address = "0x10000000";
+            var address = "0x1000";
             var length = 16;
 
             // Act
@@ -462,7 +462,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task ReadRange_Large_ReturnsValues()
         {
             // Arrange
-            var address = "0x10000000";
+            var address = "0x1000";
             int length = 16000;
 
             // Act
@@ -482,7 +482,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task Write8_SendsRequestSuccessfully()
         {
             // Arrange
-            var address = "0x10000000";
+            var address = "0x1000";
             const int value = 42;
 
             // Act
@@ -590,10 +590,8 @@ namespace mGBAHttp.IntegrationTests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.IsTrue(responseContent.StartsWith('['));
-            Assert.IsTrue(responseContent.EndsWith(']'));
 
-            var hexValues = responseContent.Trim('[', ']').Split(',');
+            var hexValues = responseContent.Split(',');
             Assert.IsTrue(hexValues.Length > 0);
 
             foreach (var hex in hexValues)
@@ -610,7 +608,7 @@ namespace mGBAHttp.IntegrationTests
             var savedState = await saveResponse.Content.ReadAsStringAsync();
 
             // Act
-            var content = new StringContent(savedState, System.Text.Encoding.UTF8, "text/plain");
+            var content = new StringContent($"[{savedState}]", System.Text.Encoding.UTF8, "text/plain");
             var response = await _client.PostAsync("/core/loadstatebuffer?flags=29", content);
             var responseContent = await response.Content.ReadAsStringAsync();
 

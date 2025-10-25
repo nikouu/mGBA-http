@@ -296,7 +296,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Read a 16-bit value from the given bus address.";
                 o.Description = "Read a 16-bit value from the given bus address.";
-                o.Parameters[0].Description = "Address as hex string with 0x prefix (e.g., '0x03000000').";
+                o.Parameters[0].Description = "Address as hex string with 0x prefix (e.g., '0x0300').";
                 o.Responses["200"].Description = "16-bit value as string.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("65535");
                 return o;
@@ -310,7 +310,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Read a 32-bit value from the given bus address.";
                 o.Description = "Read a 32-bit value from the given bus address.";
-                o.Parameters[0].Description = "Address as hex string with 0x prefix (e.g., '0x03000000').";
+                o.Parameters[0].Description = "Address as hex string with 0x prefix (e.g., '0x0300').";
                 o.Responses["200"].Description = "32-bit value as string.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("4294967295");
                 return o;
@@ -324,7 +324,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Read an 8-bit value from the given bus address.";
                 o.Description = "Read an 8-bit value from the given bus address.";
-                o.Parameters[0].Description = "Address as hex string with 0x prefix (e.g., '0x03000000').";
+                o.Parameters[0].Description = "Address as hex string with 0x prefix (e.g., '0x0300').";
                 o.Responses["200"].Description = "8-bit value as string.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("255");
                 return o;
@@ -340,10 +340,10 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Read byte range from the given offset.";
                 o.Description = "Read byte range from the given offset.";
-                o.Parameters[0].Description = "Address as hex string with 0x prefix (e.g., '0x03000000').";
+                o.Parameters[0].Description = "Address as hex string with 0x prefix (e.g., '0x0300').";
                 o.Parameters[1].Description = "Number of bytes to read.";
-                o.Responses["200"].Description = "Hex array string format: [d3,00,ea,66,...]";
-                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("[d3,00,00,ea,66,00,00,ea]");
+                o.Responses["200"].Description = "Comma separated hex values.";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("d3,00,00,ea,66,00,00,ea");
                 return o;
             });
 
@@ -382,8 +382,8 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Save state and return as a buffer.";
                 o.Description = "Save state and return as a buffer. This can be used with /core/loadstatebuffer to restore state.";
                 o.Parameters[0].Description = "State flags bitmask. Default 31 includes all flags (screenshot, metadata, etc). Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.";
-                o.Responses["200"].Description = "State buffer as hex array string";
-                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("[d3,00,00,ea,66,00,00,ea,0c,00,00,ea,fe,ff,ff,ea]");
+                o.Responses["200"].Description = "Comma separated hex values.";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("d3,00,00,ea,66,00,00,ea,0c,00,00,ea,fe,ff,ff,ea");
                 return o;
             });
 
@@ -461,7 +461,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Write a 16-bit value from the given bus address.";
                 o.Description = "Write a 16-bit value from the given bus address.";
-                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
+                o.Parameters[0].Description = "Address in hex, e.g. 0x0300";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -475,7 +475,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Write a 32-bit value from the given bus address.";
                 o.Description = "Write a 32-bit value from the given bus address.";
-                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
+                o.Parameters[0].Description = "Address in hex, e.g. 0x0300";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -489,7 +489,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Write an 8-bit value from the given bus address.";
                 o.Description = "Write an 8-bit value from the given bus address.";
-                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
+                o.Parameters[0].Description = "Address in hex, e.g. 0x0300";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -503,7 +503,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Write the value of the register with the given name.";
                 o.Description = "Write the value of the register with the given name.";
-                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
+                o.Parameters[0].Description = "Address in hex, e.g. 0x0300";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;

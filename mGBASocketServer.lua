@@ -385,7 +385,7 @@ function convertBinaryToByteString(binaryString)
     for i = 1, #binaryString do
         table.insert(bytes, string.format("%02x", binaryString:byte(i)))
     end
-    return "[" .. table.concat(bytes, ",") .. "]"
+    return table.concat(bytes, ",")
 end
 
 function convertByteStringToBinary(bracketedBytes)
@@ -413,7 +413,7 @@ function formatMemoryDomains(domains)
     for name, _ in pairs(domains) do
         table.insert(names, '"' .. name .. '"')
     end
-    return "[" .. table.concat(names, ",") .. "]"
+    return table.concat(names, ",")
 end
 
 -- ***********************

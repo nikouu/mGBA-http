@@ -62,7 +62,7 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Read a 16-bit value from the given offset.";
                 o.Description = "Read a 16-bit value from the given offset in the specified memory domain.";
                 o.Parameters[0].Description = "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).";
-                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x0300')";
                 o.Responses["200"].Description = "16-bit value as a string.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("65535");
                 return o;
@@ -77,7 +77,7 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Read a 32-bit value from the given offset.";
                 o.Description = "Read a 32-bit value from the given offset in the specified memory domain.";
                 o.Parameters[0].Description = "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).";
-                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x0300')";
                 o.Responses["200"].Description = "32-bit value as a string.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("4294967295");
                 return o;
@@ -92,7 +92,7 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Read an 8-bit value from the given offset.";
                 o.Description = "Read an 8-bit value from the given offset in the specified memory domain.";
                 o.Parameters[0].Description = "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).";
-                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x0300')";
                 o.Responses["200"].Description = "8-bit value as a string.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("255");
                 return o;
@@ -108,10 +108,10 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Read byte range from the given offset.";
                 o.Description = "Read byte range from the given offset.";
                 o.Parameters[0].Description = "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).";
-                o.Parameters[1].Description = "Address as hex string (e.g., '0x03000000').";
+                o.Parameters[1].Description = "Address as hex string (e.g., '0x0300').";
                 o.Parameters[2].Description = "Number of bytes to read.";
-                o.Responses["200"].Description = "Hex array string format: [d3,00,ea,66,...].";
-                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("[d3,00,00,ea,66,00,00,ea]");
+                o.Responses["200"].Description = "Comma separated hex values.";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("d3,00,00,ea,66,00,00,ea");
                 return o;
             });
 
@@ -138,7 +138,7 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Write a 16-bit value to the given offset.";
                 o.Description = "Write a 16-bit value to the given offset in the specified memory domain.";
                 o.Parameters[0].Description = "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).";
-                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x03000000').";
+                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x0300').";
                 o.Parameters[2].Description = "16-bit value to write (0-65535).";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
@@ -154,7 +154,7 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Write a 32-bit value to the given offset.";
                 o.Description = "Write a 32-bit value to the given offset in the specified memory domain.";
                 o.Parameters[0].Description = "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).";
-                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x03000000').";
+                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x0300').";
                 o.Parameters[2].Description = "32-bit value to write (0-4294967295).";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
@@ -170,7 +170,7 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Write an 8-bit value to the given offset.";
                 o.Description = "Write an 8-bit value to the given offset in the specified memory domain.";
                 o.Parameters[0].Description = "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).";
-                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x03000000').";
+                o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x0300').";
                 o.Parameters[2].Description = "8-bit value to write (0-255).";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
