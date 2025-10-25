@@ -202,7 +202,7 @@ function messageRouter(rawMessage)
 	elseif messageType == "mgba-http.button.tapmany" then manageButtons(messageValue1)
 	elseif messageType == "mgba-http.button.hold" then manageButton(messageValue1, messageValue2)
 	elseif messageType == "mgba-http.button.holdmany" then manageButtons(messageValue1, messageValue2)
-	elseif messageType == "mgba-http.extension.loadfile" then loadFile(messageValue1)
+	elseif messageType == "mgba-http.extension.loadfile" then returnValue = loadFile(messageValue1)
 	elseif messageType == "core.addKey" then emu:addKey(tonumber(messageValue1))
 	elseif messageType == "core.addKeys" then emu:addKeys(tonumber(messageValue1))
 	elseif messageType == "core.autoloadSave" then returnValue = emu:autoloadSave()
@@ -414,7 +414,7 @@ end
 function formatMemoryDomains(domains)
     local names = {}
     for name, _ in pairs(domains) do
-        table.insert(names, '"' .. name .. '"')
+        table.insert(names, name)
     end
     return table.concat(names, ",")
 end

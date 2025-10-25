@@ -33,15 +33,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Get the platform specific set of memory domains.";
                 o.Description = "Get the platform specific set of memory domains.";
-                o.Responses["200"].Description = "Quoted string array format: [\"cart2\",\"wram\",\"cart0\",...]";
-                o.Responses["200"].Content["text/plain"] = new OpenApiMediaType
-                {
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string",
-                        Example = new Microsoft.OpenApi.Any.OpenApiString("[\"cart2\",\"wram\",\"cart0\",\"iwram\",\"bios\",\"vram\",\"io\",\"palette\",\"cart1\"]")
-                    }
-                };
+                o.Responses["200"].Description = "The memory domains as a comma separated string.";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("cart2,wram,cart0,oam,iwram,bios,vram,io,palette,cart1");
                 return o;
             });
 
