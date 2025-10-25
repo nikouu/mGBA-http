@@ -25,7 +25,7 @@ A rough, non-committal roadmap.
 
 ## Version 0.10.0
 
-- ✅ Upgrade to .NET 10
+- Upgrade to .NET 10
 - Explore new AOT options
   - Including swapping out Swashbuckle
 - Return to looking at loadfile and how that needs brackets at the moment to be parsed correctly

@@ -87,8 +87,13 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 
 ## Button - Custom API
 
+Uses key enums as opposed to key IDs.
+
 | mGBA call | lua endpoint key          | mGBA-http endpoint         |
 | :-------: | ------------------------- | -------------------------- |
+|     -     | mgba-http.button.add      | /mgba-http/button/add      |
+|     -     | mgba-http.button.clear    | /mgba-http/button/clear    |
+|     -     | mgba-http.button.get      | /mgba-http/button/get      |
 |     -     | mgba-http.button.tap      | /mgba-http/button/tap      |
 |     -     | mgba-http.button.tapmany  | /mgba-http/button/tapmany  |
 |     -     | mgba-http.button.hold     | /mgba-http/button/hold     |
