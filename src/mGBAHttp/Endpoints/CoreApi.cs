@@ -475,7 +475,7 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Write a 16-bit value from the given bus address.";
                 o.Description = "Write a 16-bit value from the given bus address.";
                 o.Parameters[0].Description = "Address in hex, e.g. 0x0300";
-                o.Parameters[1].Description = "16-bit value to write.";
+                o.Parameters[1].Description = "16-bit decimal value to write (0-65535).";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -490,7 +490,7 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Write a 32-bit value from the given bus address.";
                 o.Description = "Write a 32-bit value from the given bus address.";
                 o.Parameters[0].Description = "Address in hex, e.g. 0x0300";
-                o.Parameters[1].Description = "32-bit value to write.";
+                o.Parameters[1].Description = "32-bit decimal value to write.";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -505,7 +505,7 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Write an 8-bit value from the given bus address.";
                 o.Description = "Write an 8-bit value from the given bus address.";
                 o.Parameters[0].Description = "Address in hex, e.g. 0x0300";
-                o.Parameters[1].Description = "8-bit value to write.";
+                o.Parameters[1].Description = "8-bit decimal value to write (0-255).";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -519,8 +519,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Write the value of the register with the given name.";
                 o.Description = "Write the value of the register with the given name.";
-                o.Parameters[0].Description = "Address in hex, e.g. 0x0300";
-                o.Parameters[1].Description = "Value to write to the register.";
+                o.Parameters[0].Description = "Register name to write (e.g., 'r0', 'r1', 'sp', 'lr', 'pc', etc).";
+                o.Parameters[1].Description = "Decimal value to write to the register.";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
