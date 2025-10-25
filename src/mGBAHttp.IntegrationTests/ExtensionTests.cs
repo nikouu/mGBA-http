@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
+using System.Net;
 
 namespace mGBAHttp.IntegrationTests
 {
@@ -25,11 +26,15 @@ namespace mGBAHttp.IntegrationTests
         public async Task LoadFile_ROMLoadsSuccessfully()
         {
             // Act
-            await _client.PostAsync($"/mgba-http/extension/loadfile?path={TestRomPath2}", null);
-            var response = await _client.GetStringAsync("/core/getgametitle");
+            var response = await _client.PostAsync($"/mgba-http/extension/loadfile?path={TestRomPath2}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var titleResponse = await _client.GetAsync("/core/getgametitle");
+            var titleResponseContent = await titleResponse.Content.ReadAsStringAsync();
 
             // Assert
-            Assert.AreEqual("POKEMON FIRE", response);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
+            Assert.AreEqual("POKEMON FIRE", titleResponseContent);
 
             // Cleanup
             await _client.PostAsync($"/mgba-http/extension/loadfile?path={TestRomPath}", null);

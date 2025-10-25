@@ -23,6 +23,8 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Add a single key.";
                 o.Description = "Add a single key to the currently active key list. As if the key were held down.";
                 o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -35,6 +37,8 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Add a bitmask of keys.";
                 o.Description = "Add a bitmask of keys to the currently active key list. As if the keys were held down.";
                 o.Parameters[0].Description = "Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -45,7 +49,9 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Load save data.";
-                o.Description = "Load the save data associated with the currently loaded ROM file.";
+                o.Description = "Load the save data associated with the currently loaded ROM file. Returns 'true' or 'false' as text indicating success.";
+                o.Responses["200"].Description = "Boolean as text string.";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("true");
                 return o;
             });
 
@@ -56,7 +62,9 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the checksum of the loaded ROM.";
-                o.Description = "Get the checksum of the loaded ROM as base 10.";
+                o.Description = "Get the checksum of the loaded ROM as an integer string.";
+                o.Responses["200"].Description = "Checksum as an integer string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("123456789");
                 return o;
             });
 
@@ -69,6 +77,8 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Remove a single key.";
                 o.Description = "Remove a single key from the currently active key list. As if the key were released.";
                 o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -81,6 +91,8 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Remove a bitmask of keys.";
                 o.Description = "Remove a bitmask of keys from the currently active key list. As if the keys were released.";
                 o.Parameters[0].Description = "Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -91,7 +103,9 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the number of the current frame.";
-                o.Description = "Get the number of the current frame.";
+                o.Description = "Get the number of the current frame as an integer string.";
+                o.Responses["200"].Description = "Frame number as integer string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("12345");
                 return o;
             });
 
@@ -102,7 +116,9 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the number of cycles per frame.";
-                o.Description = "Get the number of cycles per frame.";
+                o.Description = "Get the number of cycles per frame as an integer string.";
+                o.Responses["200"].Description = "Cycles per frame as integer string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("280896");
                 return o;
             });
 
@@ -113,7 +129,9 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the number of cycles per second.";
-                o.Description = "Get the number of cycles per second.";
+                o.Description = "Get the number of cycles per second as an integer string.";
+                o.Responses["200"].Description = "The number of cycles per second as integer string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("16777216");
                 return o;
             });
 
@@ -125,6 +143,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Get internal product code for the game.";
                 o.Description = "Get internal product code for the game from the ROM header, if available.";
+                o.Responses["200"].Description = "Product code string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("AGB-BPRE");
                 return o;
             });
 
@@ -136,6 +156,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Get internal title of the game.";
                 o.Description = "Get internal title of the game from the ROM header.";
+                o.Responses["200"].Description = "Game title string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("POKEMON FIRE");
                 return o;
             });
 
@@ -146,8 +168,10 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the active state of a given key.";
-                o.Description = "Get the active state of a given key.";
+                o.Description = "Get the active state of a given key. Returns 'true' or 'false' as text.";
                 o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Responses["200"].Description = "0 if key is not pressed or 1 if the key is pressed";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("1");
                 return o;
             });
 
@@ -159,6 +183,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Get the currently active keys as a bitmask.";
                 o.Description = "Get the currently active keys as a bitmask.";
+                o.Responses["200"].Description = "Bitmask integer string representing currently active keys";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("12");
                 return o;
             });
 
@@ -170,6 +196,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Load a ROM file.";
                 o.Description = "Load a ROM file into the current state of this core. **Note: Prefer using the /mgba-http/extension/loadfile endpoint.**";
+                o.Responses["200"].Description = "Boolean as text string ('true' or 'false')";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("true");
                 return o;
             });
 
@@ -181,6 +209,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Load save data file.";
                 o.Description = "Load save data from the given path. If the temporary flag is set, the given save data will not be written back to disk.";
+                o.Responses["200"].Description = "Boolean as text string ('true' or 'false')";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("true");
                 return o;
             });
 
@@ -192,14 +222,16 @@ namespace mGBAHttp.Endpoints
 
                 var messageModel = new MessageModel("core.loadStateBuffer", cleanedBuffer, flags.ToString()).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
-            })
-            .WithOpenApi(o =>
+            }).WithOpenApi(o =>
             {
                 o.Summary = "Load state from a buffer.";
-                o.Description = "Load state from a buffer.";
+                o.Description = "Load state from a hex array string buffer in the format: [d3,00,ea,66,...].";
+                o.Parameters[0].Description = "State flags bitmask. Default 29 excludes screenshot flag (all except SCREENSHOT). Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16";
+                o.Responses["200"].Description = "Boolean as text string ('true' or 'false')";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("true");
                 o.RequestBody = new OpenApiRequestBody
                 {
-                    Description = "State buffer data as int array: [137,80,78,71,...]",
+                    Description = "State buffer data as hex array string format: [d3,00,ea,66,...]",
                     Required = true,
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
@@ -207,7 +239,8 @@ namespace mGBAHttp.Endpoints
                         {
                             Schema = new OpenApiSchema
                             {
-                                Type = "string"
+                                Type = "string",
+                                Example = new Microsoft.OpenApi.Any.OpenApiString("[d3,00,00,ea,66,00,00,ea,0c,00,00,ea,fe,ff,ff,ea]")
                             }
                         }
                     }
@@ -224,6 +257,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Load state from the given path.";
                 o.Description = "Load state from the given path.";
+                o.Responses["200"].Description = "Boolean as text string ('true' or 'false')";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("true");
                 return o;
             });
 
@@ -235,6 +270,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Load state from the slot number.";
                 o.Description = "Load state from the slot number.";
+                o.Responses["200"].Description = "Boolean as text string ('true' or 'false')";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("true");
                 return o;
             });
 
@@ -245,7 +282,9 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get which platform is being emulated.";
-                o.Description = "Get which platform is being emulated.";
+                o.Description = "Get which platform is being emulated. Returns platform identifier integer.";
+                o.Responses["200"].Description = "Platform identifier. None: -1, GBA: 0, GB: 1";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("1");
                 return o;
             });
 
@@ -257,7 +296,9 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Read a 16-bit value from the given bus address.";
                 o.Description = "Read a 16-bit value from the given bus address.";
-                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
+                o.Parameters[0].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Responses["200"].Description = "16-bit value as string.";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("65535");
                 return o;
             });
 
@@ -269,7 +310,9 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Read a 32-bit value from the given bus address.";
                 o.Description = "Read a 32-bit value from the given bus address.";
-                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
+                o.Parameters[0].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Responses["200"].Description = "32-bit value as string.";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("4294967295");
                 return o;
             });
 
@@ -281,7 +324,9 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Read an 8-bit value from the given bus address.";
                 o.Description = "Read an 8-bit value from the given bus address.";
-                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
+                o.Parameters[0].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Responses["200"].Description = "8-bit value as string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("255");
                 return o;
             });
 
@@ -294,21 +339,24 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read byte range from the given offset.";
-                o.Description = "Read byte range from the given offset and returns an array of unsigned integers";
-                o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
+                o.Description = "Read byte range from the given offset.";
+                o.Parameters[0].Description = "Address as hex string with 0x prefix (e.g., '0x03000000')";
+                o.Parameters[1].Description = "Number of bytes to read as integer";
+                o.Responses["200"].Description = "Hex array string format: [d3,00,ea,66,...]";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("[d3,00,00,ea,66,00,00,ea]");
                 return o;
             });
 
-            // todo: why is this int.parse and the /romsize request isnt?
             group.MapGet("/readregister", async (ObjectPool<ReusableSocket> socketPool, string regName) =>
             {
                 var messageModel = new MessageModel("core.readRegister", regName).ToString();
-                var result = await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
-                return int.Parse(result);
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Read the value of the register with the given name.";
                 o.Description = "Read the value of the register with the given name.";
+                o.Responses["200"].Description = "Register value as string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("50363837");
                 return o;
             });
 
@@ -319,7 +367,9 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the size of the loaded ROM.";
-                o.Description = "Get the size of the loaded ROM.";
+                o.Description = "Get the size of the loaded ROM in bytes as an integer string.";
+                o.Responses["200"].Description = "ROM size in bytes as integer string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("16777216");
                 return o;
             });
 
@@ -330,7 +380,10 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Save state and return as a buffer.";
-                o.Description = "Save state and returns an array of unsigned integers";
+                o.Description = "Save state and returns a hex array string in the format: [d3,00,ea,66,...]. This can be used with /core/loadstatebuffer to restore state.";
+                o.Parameters[0].Description = "State flags bitmask. Default 31 includes all flags (screenshot, metadata, etc). Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16";
+                o.Responses["200"].Description = "State buffer as hex array string";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("[d3,00,00,ea,66,00,00,ea,0c,00,00,ea,fe,ff,ff,ea]");
                 return o;
             });
 
@@ -341,7 +394,9 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Save state to the given path.";
-                o.Description = "Save state to the given path.";
+                o.Description = "Save state to the given path. Returns 'true' on success, 'false' on failure.";
+                o.Responses["200"].Description = "Boolean as text string ('true' or 'false')";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("true");
                 return o;
             });
 
@@ -353,6 +408,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Save state to the slot number.";
                 o.Description = "Save state to the slot number.";
+                o.Responses["200"].Description = "Boolean as text string ('true' or 'false')";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("true");
                 return o;
             });
 
@@ -365,6 +422,8 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Save a screenshot.";
                 o.Description = "Save a screenshot.";
                 o.Parameters[0].Description = @"For example, C:\screenshots\screenshot.png";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -376,6 +435,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Set the currently active key list.";
                 o.Description = "Set the currently active key list.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -387,6 +448,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Run a single instruction.";
                 o.Description = "Run a single instruction.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -399,6 +462,8 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Write a 16-bit value from the given bus address.";
                 o.Description = "Write a 16-bit value from the given bus address.";
                 o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -411,6 +476,8 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Write a 32-bit value from the given bus address.";
                 o.Description = "Write a 32-bit value from the given bus address.";
                 o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -423,6 +490,8 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Write an 8-bit value from the given bus address.";
                 o.Description = "Write an 8-bit value from the given bus address.";
                 o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -435,6 +504,8 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Write the value of the register with the given name.";
                 o.Description = "Write the value of the register with the given name.";
                 o.Parameters[0].Description = "Address in hex, e.g. 0x03000000";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 

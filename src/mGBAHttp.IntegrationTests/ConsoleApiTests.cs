@@ -27,9 +27,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/console/error?message={Uri.EscapeDataString(message)}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [TestMethod]
@@ -37,9 +39,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/console/error?message={Uri.EscapeDataString(_longMessage)}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [DataTestMethod]
@@ -49,9 +53,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/console/log?message={Uri.EscapeDataString(message)}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [TestMethod]
@@ -59,9 +65,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/console/log?message={Uri.EscapeDataString(_longMessage)}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [DataTestMethod]
@@ -71,9 +79,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/console/warn?message={Uri.EscapeDataString(message)}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [TestMethod]
@@ -81,9 +91,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/console/warn?message={Uri.EscapeDataString(_longMessage)}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         public void Dispose()

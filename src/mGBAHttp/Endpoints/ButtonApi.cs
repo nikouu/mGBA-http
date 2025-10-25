@@ -21,6 +21,8 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Sends button presses.";
                 o.Description = "A custom convenience API that implements a key press and release. This is as opposed to the key based core API that sends only either a press or release message.";
                 o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -33,6 +35,8 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Sends multiple button presses simultaneously.";
                 o.Description = "A custom convenience API that implements multiple simultaneously keys being pressed and released. This is as opposed to the key based core API that sends only either a press or release message.";
                 o.Parameters[0].Description = "A key array.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -46,6 +50,8 @@ namespace mGBAHttp.Endpoints
                 o.Description = "A custom convenience API that implements a held down button for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.";
                 o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
                 o.Parameters[1].Description = "Duration in frames.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -59,6 +65,8 @@ namespace mGBAHttp.Endpoints
                 o.Description = "A custom convenience API that implements multiple simultaneously keys being pressed and released for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.";
                 o.Parameters[0].Description = "A key array.";
                 o.Parameters[1].Description = "Duration in frames.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 

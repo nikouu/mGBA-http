@@ -19,6 +19,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Print an error to the console.";
                 o.Description = "Presents textual information to the user via a console.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -30,6 +32,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Print a log to the console.";
                 o.Description = "Presents textual information to the user via a console.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
@@ -41,6 +45,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Print a warning to the console.";
                 o.Description = "Presents textual information to the user via a console.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 

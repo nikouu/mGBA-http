@@ -19,6 +19,8 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Load a ROM file.";
                 o.Description = "Load a ROM file into the current state of this core. This convenience API handles the ROM load and reset of the emulator.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 

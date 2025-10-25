@@ -411,9 +411,9 @@ end
 function formatMemoryDomains(domains)
     local names = {}
     for name, _ in pairs(domains) do
-        table.insert(names, name)
+        table.insert(names, '"' .. name .. '"')
     end
-    return table.concat(names, ", ")
+    return "[" .. table.concat(names, ",") .. "]"
 end
 
 -- ***********************

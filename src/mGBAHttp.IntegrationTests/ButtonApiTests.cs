@@ -35,9 +35,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/mgba-http/button/tap?key={key}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [DataTestMethod]
@@ -52,9 +54,11 @@ namespace mGBAHttp.IntegrationTests
             // Act
             var queryString = string.Join("&", keys.Select(k => $"keys={k}"));
             var response = await _client.PostAsync($"/mgba-http/button/tapmany?{queryString}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [DataTestMethod]
@@ -67,9 +71,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/mgba-http/button/hold?key={key}&duration={duration}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [DataTestMethod]
@@ -83,9 +89,11 @@ namespace mGBAHttp.IntegrationTests
             // Act
             var queryString = string.Join("&", keys.Select(k => $"keys={k}")) + $"&duration={duration}";
             var response = await _client.PostAsync($"/mgba-http/button/holdmany?{queryString}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         public void Dispose()

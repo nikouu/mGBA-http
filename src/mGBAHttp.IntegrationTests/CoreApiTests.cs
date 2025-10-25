@@ -52,10 +52,14 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/core/addkey?key={key}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            // Reset state
             await _client.PostAsync($"/core/clearkey?key={key}", null);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [TestMethod]
@@ -66,10 +70,14 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/core/addkeys?keyBitmask={keyBitmask}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            // Reset state
             await _client.PostAsync($"/core/clearkeys?keyBitmask={keyBitmask}", null);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [DataTestMethod]
@@ -90,9 +98,11 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/core/clearkey?key={key}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [TestMethod]
@@ -104,9 +114,11 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/core/clearkeys?keyBitmask={keyBitmask}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [TestMethod]
@@ -118,13 +130,14 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.GetAsync("/core/getkeys");
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            // Reset state
             await _client.PostAsync($"/core/clearkeys?keyBitmask={keyBitmask}", null);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.AreEqual(keyBitmask, int.Parse(content));
+            Assert.AreEqual(keyBitmask, int.Parse(responseContent));
         }
 
         [DataTestMethod]
@@ -134,35 +147,32 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync($"/core/getkey?key={key}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.AreEqual(0, int.Parse(content));
+            Assert.AreEqual(0, int.Parse(responseContent));
         }
 
         [TestMethod]
         public async Task SetKeys_SendsRequestSuccessfully()
         {
             // Arrange - 3 is A (1) and B (2)
-            const int keysBitmask = 3;
+            var keysBitmask = 3;
             await _client.PostAsync($"/core/addkey?key={KeysEnum.Select}", null);
-
 
             // Act
             var response = await _client.PostAsync($"/core/setkeys?keys={keysBitmask}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var currentlySetKeysResponse = await _client.GetStringAsync("/core/getkeys");
 
+            // Reset state
+            await _client.PostAsync($"/core/clearkeys?keyBitmask={keysBitmask}", null);
 
             // Assert
-            var currentlySetKeysResponse = await _client.GetAsync("/core/getkeys");
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await currentlySetKeysResponse.Content.ReadAsStringAsync();
-
-            Assert.AreEqual(keysBitmask, int.Parse(content));
-
-            await _client.PostAsync($"/core/clearkeys?keyBitmask={keysBitmask}", null);
+            Assert.AreEqual("", responseContent);
+            Assert.AreEqual(keysBitmask, int.Parse(currentlySetKeysResponse));
         }
 
         [TestMethod]
@@ -170,9 +180,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync("/core/step", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
         }
 
         [TestMethod]
@@ -180,12 +192,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/currentFrame");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.IsTrue(int.Parse(content) >= 0);
+            Assert.IsTrue(int.Parse(responseContent) >= 0);
         }
 
         [TestMethod]
@@ -193,12 +204,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/framecycles");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.IsTrue(int.Parse(content) > 0);
+            Assert.IsTrue(int.Parse(responseContent) > 0);
         }
 
         [TestMethod]
@@ -206,12 +216,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/frequency");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.IsTrue(int.Parse(content) > 0);
+            Assert.IsTrue(int.Parse(responseContent) > 0);
         }
 
         [TestMethod]
@@ -220,12 +229,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/getgamecode");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.IsFalse(string.IsNullOrEmpty(content));
+            Assert.IsFalse(string.IsNullOrEmpty(responseContent));
         }
 
         [TestMethod]
@@ -233,12 +241,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/getgametitle");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.AreEqual("(BIOS)", content);
+            Assert.AreEqual("(BIOS)", responseContent);
         }
 
         [TestMethod]
@@ -246,12 +253,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/platform");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.AreEqual(0, int.Parse(content));
+            Assert.AreEqual(0, int.Parse(responseContent));
         }
 
         [TestMethod]
@@ -259,13 +265,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/checksum");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            long checksum = long.Parse(content);
-            Assert.IsTrue(checksum >= 0);
+            Assert.IsTrue(long.Parse(responseContent) >= 0);
         }
 
         [TestMethod]
@@ -274,13 +278,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/core/romsize");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            int size = int.Parse(content);
-            Assert.IsTrue(size > 0);
+            Assert.IsTrue(int.Parse(responseContent) > 0);
         }
 
         [TestMethod]
@@ -288,9 +290,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync("/core/autoloadsave", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("true", responseContent);
         }
 
         [TestMethod]
@@ -298,9 +302,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/core/loadsavefile?path={TestSavePath}&temporary=true", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("true", responseContent);
         }
 
         [TestMethod]
@@ -308,9 +314,12 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/core/screenshot?path={TestScreenshotPath}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
+
             var file = new FileInfo(TestScreenshotPath);
             Assert.IsTrue(file.Exists);
             Assert.IsTrue(file.Length > 0);
@@ -323,9 +332,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync($"/core/savestatefile?path={TestStatePath}&flags=31", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("true", responseContent);
 
             var file = new FileInfo(TestStatePath);
             Assert.IsTrue(file.Exists);
@@ -342,9 +353,11 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/core/loadstatefile?path={TestStatePath}&flags=29", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("true", responseContent);
 
             // Clean up
             string directory = Path.GetDirectoryName(TestStatePath);
@@ -359,9 +372,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync("/core/savestateslot?slot=1&flags=31", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("true", responseContent);
         }
 
         [TestMethod]
@@ -372,9 +387,11 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync("/core/loadstateslot?slot=1&flags=29", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("true", responseContent);
         }
 
         [TestMethod]
@@ -385,13 +402,11 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.GetAsync($"/core/read8?address={address}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            int value = int.Parse(content);
-            Assert.IsNotNull(value);
+            Assert.IsTrue(int.Parse(responseContent) >= 0);
         }
 
         [TestMethod]
@@ -402,13 +417,11 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.GetAsync($"/core/read16?address={address}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            int value = int.Parse(content);
-            Assert.IsNotNull(value);
+            Assert.IsTrue(int.Parse(responseContent) >= 0);
         }
 
         [TestMethod]
@@ -419,13 +432,11 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.GetAsync($"/core/read32?address={address}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            long value = long.Parse(content);
-            Assert.IsNotNull(value);
+            Assert.IsTrue(long.Parse(responseContent) >= 0);
         }
 
         [TestMethod]
@@ -437,13 +448,13 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.GetAsync($"/core/readrange?address={address}&length={length}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            var valuesLength = content.Split(',').Length;
-            Assert.IsNotNull(content);
+            
+            var valuesLength = responseContent.Split(',').Length;
+            Assert.IsNotNull(responseContent);
             Assert.AreEqual(length, valuesLength);
         }
 
@@ -456,13 +467,13 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.GetAsync($"/core/readrange?address={address}&length={length}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            var valuesLength = content.Split(',').Length;
-            Assert.IsNotNull(content);
+            
+            var valuesLength = responseContent.Split(',').Length;
+            Assert.IsNotNull(responseContent);
             Assert.AreEqual(length, valuesLength);
         }
 
@@ -476,9 +487,11 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/core/write8?address={address}&value={value}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
 
             // Verify write
             var readResponse = await _client.GetAsync($"/core/read8?address={address}");
@@ -496,9 +509,11 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/core/write16?address={address}&value={value}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
 
             // Verify write
             var readResponse = await _client.GetAsync($"/core/read16?address={address}");
@@ -516,9 +531,11 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/core/write32?address={address}&value={value}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
 
             // Verify write
             var readResponse = await _client.GetAsync($"/core/read32?address={address}");
@@ -534,13 +551,12 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.GetAsync($"/core/readregister?regName={regName}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            int value = int.Parse(content);
-            Assert.IsNotNull(value);
+            Assert.IsFalse(string.IsNullOrEmpty(responseContent));
+            Assert.IsTrue(int.Parse(responseContent) >= 0);
         }
 
         [TestMethod]
@@ -553,9 +569,11 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/core/writeregister?regName={regName}&value={value}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
 
             // Verify write
             var readResponse = await _client.GetAsync($"/core/readregister?regName={regName}");
@@ -568,16 +586,14 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync("/core/savestatebuffer?flags=31", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.IsTrue(responseContent.StartsWith('['));
+            Assert.IsTrue(responseContent.EndsWith(']'));
 
-            var content = await response.Content.ReadAsStringAsync();
-
-            Assert.IsTrue(content.StartsWith('['));
-            Assert.IsTrue(content.EndsWith(']'));
-
-            var hexValues = content.Trim('[', ']').Split(',');
+            var hexValues = responseContent.Trim('[', ']').Split(',');
             Assert.IsTrue(hexValues.Length > 0);
 
             foreach (var hex in hexValues)
@@ -596,9 +612,11 @@ namespace mGBAHttp.IntegrationTests
             // Act
             var content = new StringContent(savedState, System.Text.Encoding.UTF8, "text/plain");
             var response = await _client.PostAsync("/core/loadstatebuffer?flags=29", content);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("true", responseContent);
         }
 
         public void Dispose()

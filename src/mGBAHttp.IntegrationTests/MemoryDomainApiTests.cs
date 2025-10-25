@@ -30,12 +30,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync($"/memorydomain/base?memoryDomain={BiosDomain}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.AreEqual(0, int.Parse(content));
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);            
+            Assert.AreEqual(0, int.Parse(responseContent));
         }
 
         [TestMethod]
@@ -43,12 +42,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync($"/memorydomain/bound?memoryDomain={BiosDomain}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.AreEqual(16384, int.Parse(content));
+            Assert.AreEqual(16384, int.Parse(responseContent));
         }
 
         [TestMethod]
@@ -56,12 +54,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync($"/memorydomain/name?memoryDomain={BiosDomain}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.AreEqual("BIOS", content);
+            Assert.AreEqual("BIOS", responseContent);
         }
 
         [TestMethod]
@@ -69,12 +66,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync($"/memorydomain/size?memoryDomain={BiosDomain}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.AreEqual(16384, int.Parse(content));
+            Assert.AreEqual(16384, int.Parse(responseContent));
         }
 
         [TestMethod]
@@ -82,12 +78,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync($"/memorydomain/read8?memoryDomain={BiosDomain}&address={ReadAddress}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.AreEqual(211, int.Parse(content));
+            Assert.AreEqual(211, int.Parse(responseContent));
         }
 
         [TestMethod]
@@ -95,12 +90,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync($"/memorydomain/read16?memoryDomain={BiosDomain}&address={ReadAddress}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.AreEqual(211, int.Parse(content));
+            Assert.AreEqual(211, int.Parse(responseContent));
         }
 
         [TestMethod]
@@ -108,12 +102,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync($"/memorydomain/read32?memoryDomain={BiosDomain}&address={ReadAddress}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.AreEqual(3925868755, long.Parse(content));
+            Assert.AreEqual(3925868755, long.Parse(responseContent));
         }
 
         [TestMethod]
@@ -125,13 +118,12 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.GetAsync($"/memorydomain/readrange?memoryDomain={BiosDomain}&address={ReadAddress}&length={length}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            var values = content.Trim('[', ']').Split(',').Select(x => Convert.ToInt32(x.Trim(), 16)).ToArray();
-
+            
+            var values = responseContent.Trim('[', ']').Split(',').Select(x => Convert.ToInt32(x.Trim(), 16)).ToArray();
             CollectionAssert.AreEqual(expected, values);
         }
 
@@ -143,13 +135,13 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.GetAsync($"/memorydomain/readrange?memoryDomain={BiosDomain}&address={0x0}&length={length}");
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
-            var content = await response.Content.ReadAsStringAsync();
-            var valuesLength = content.Split(',').Length;
-            Assert.IsNotNull(content);
+            var valuesLength = responseContent.Split(',').Length;
+            Assert.IsNotNull(responseContent);
             Assert.AreEqual(length, valuesLength);
         }
 
@@ -161,15 +153,17 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/memorydomain/write8?memoryDomain={WRam}&address={WriteAddress}&value={value}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
 
             // Verify the write by reading back the value
             var readResponse = await _client.GetAsync($"/memorydomain/read8?memoryDomain={WRam}&address={WriteAddress}");
-            var content = await readResponse.Content.ReadAsStringAsync();
+            var readResponseContent = await readResponse.Content.ReadAsStringAsync();
 
-            Assert.AreEqual(value, int.Parse(content));
+            Assert.AreEqual(value, int.Parse(readResponseContent));
         }
 
         [TestMethod]
@@ -180,15 +174,17 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/memorydomain/write16?memoryDomain={WRam}&address={WriteAddress + 16}&value={value}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
 
             // Verify the write by reading back the value
             var readResponse = await _client.GetAsync($"/memorydomain/read16?memoryDomain={WRam}&address={WriteAddress + 16}");
-            var content = await readResponse.Content.ReadAsStringAsync();
+            var readResponseContent = await readResponse.Content.ReadAsStringAsync();
 
-            Assert.AreEqual(value, int.Parse(content));
+            Assert.AreEqual(value, int.Parse(readResponseContent));
         }
 
         [TestMethod]
@@ -199,15 +195,17 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/memorydomain/write32?memoryDomain={WRam}&address={WriteAddress + 32}&value={value}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
 
             // Verify the write by reading back the value
             var readResponse = await _client.GetAsync($"/memorydomain/read32?memoryDomain={WRam}&address={WriteAddress + 32}");
-            var content = await readResponse.Content.ReadAsStringAsync();
+            var readResponseContent = await readResponse.Content.ReadAsStringAsync();
 
-            Assert.AreEqual(value, long.Parse(content));
+            Assert.AreEqual(value, long.Parse(readResponseContent));
         }
 
         public void Dispose()

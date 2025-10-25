@@ -27,9 +27,11 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.PostAsync("/coreadapter/reset", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
 
             Thread.Sleep(1000); // give space for the ROM to finish resetting for the next tests
         }
@@ -39,15 +41,19 @@ namespace mGBAHttp.IntegrationTests
         {
             // Act
             var response = await _client.GetAsync("/coreadapter/memory");
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var domains = responseContent.Trim('[', ']')
+                .Split(',')
+                .Select(d => d.Trim().Trim('"'))
+                .ToArray();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
-            var content = await response.Content.ReadAsStringAsync();
-            var memoryDomains = JsonSerializer.Deserialize<string[]>(content);
+            var valuesLength = responseContent.Split(',').Length;
 
-            Assert.IsNotNull(memoryDomains);
-            Assert.AreEqual(10, memoryDomains.Length);
+            Assert.IsNotNull(domains);
+            Assert.AreEqual(10, domains.Length);
         }
 
         public void Dispose()

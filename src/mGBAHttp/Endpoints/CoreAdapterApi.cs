@@ -1,6 +1,7 @@
 ﻿using mGBAHttp.Domain;
 using mGBAHttp.Models;
 using Microsoft.Extensions.ObjectPool;
+using Microsoft.OpenApi.Models;
 
 namespace mGBAHttp.Endpoints
 {
@@ -19,31 +20,27 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Reset the emulation.";
                 o.Description = "Reset the emulation and calls the reset callback.";
+                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
             group.MapGet("/memory", async (ObjectPool<ReusableSocket> socketPool) =>
             {
                 var messageModel = new MessageModel("coreAdapter.memory").ToString();
-                var result = await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
-                return result.Split(',', StringSplitOptions.TrimEntries);
+                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
                 o.Summary = "Get the platform specific set of MemoryDomains.";
                 o.Description = "Gets the platform specific set of memory domains as an array of strings.";
-                o.Responses["200"].Description = "Array of available memory domain names";
-                o.Responses["200"].Content["application/json"].Example = new Microsoft.OpenApi.Any.OpenApiArray
+                o.Responses["200"].Description = "Quoted string array format: [\"cart2\",\"wram\",\"cart0\",...]";
+                o.Responses["200"].Content["text/plain"] = new OpenApiMediaType
                 {
-                    new Microsoft.OpenApi.Any.OpenApiString("cart2"),
-                    new Microsoft.OpenApi.Any.OpenApiString("wram"),
-                    new Microsoft.OpenApi.Any.OpenApiString("cart0"),
-                    new Microsoft.OpenApi.Any.OpenApiString("oam"),
-                    new Microsoft.OpenApi.Any.OpenApiString("iwram"),
-                    new Microsoft.OpenApi.Any.OpenApiString("bios"),
-                    new Microsoft.OpenApi.Any.OpenApiString("vram"),
-                    new Microsoft.OpenApi.Any.OpenApiString("io"),
-                    new Microsoft.OpenApi.Any.OpenApiString("palette"),
-                    new Microsoft.OpenApi.Any.OpenApiString("cart1")
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "string",
+                        Example = new Microsoft.OpenApi.Any.OpenApiString("[\"cart2\",\"wram\",\"cart0\",\"iwram\",\"bios\",\"vram\",\"io\",\"palette\",\"cart1\"]")
+                    }
                 };
                 return o;
             });
