@@ -20,7 +20,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Reset the emulation.";
                 o.Description = "Reset the emulation and calls the reset callback.";
-                o.Responses["200"].Description = "Empty success response";
+                o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
@@ -31,8 +31,8 @@ namespace mGBAHttp.Endpoints
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
-                o.Summary = "Get the platform specific set of MemoryDomains.";
-                o.Description = "Gets the platform specific set of memory domains as an array of strings.";
+                o.Summary = "Get the platform specific set of memory domains.";
+                o.Description = "Get the platform specific set of memory domains.";
                 o.Responses["200"].Description = "Quoted string array format: [\"cart2\",\"wram\",\"cart0\",...]";
                 o.Responses["200"].Content["text/plain"] = new OpenApiMediaType
                 {

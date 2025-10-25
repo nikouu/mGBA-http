@@ -18,8 +18,8 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Print an error to the console.";
-                o.Description = "Presents textual information to the user via a console.";
-                o.Responses["200"].Description = "Empty success response";
+                o.Description = "Print an error to the console. This will be shown as red text on light red background.";
+                o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
@@ -31,8 +31,8 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Print a log to the console.";
-                o.Description = "Presents textual information to the user via a console.";
-                o.Responses["200"].Description = "Empty success response";
+                o.Description = "Print a log to the console. This will be shown as regular text.";
+                o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
@@ -44,8 +44,8 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Print a warning to the console.";
-                o.Description = "Presents textual information to the user via a console.";
-                o.Responses["200"].Description = "Empty success response";
+                o.Description = "Print a warning to the console. This will be shown as yellow text on light yellow background.";
+                o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
