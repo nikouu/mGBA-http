@@ -33,7 +33,7 @@ namespace mGBAHttp.IntegrationTests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.AreEqual("", responseContent);
+            Assert.AreEqual("true", responseContent);
             Assert.AreEqual("POKEMON FIRE", titleResponseContent);
 
             // Cleanup

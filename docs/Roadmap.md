@@ -17,7 +17,7 @@ A rough, non-committal roadmap.
   - `/core/loadstatebuffer`
   - `/core/savestatebuffer`
 - ✅ Explore the possibility of implementing `/core/runframe` (Expore done. [Dev says don't use runFrame()](https://discord.com/channels/453962671499509772/979634439237816360/1360317485596807179))
-- Further integration tests
+- ✅ Further integration tests
 
 ## Version 0.9.0
 
@@ -25,9 +25,10 @@ A rough, non-committal roadmap.
 
 ## Version 0.10.0
 
-- Upgrade to .NET 10
+- ✅ Upgrade to .NET 10
 - Explore new AOT options
   - Including swapping out Swashbuckle
+- Return to looking at loadfile and how that needs brackets at the moment to be parsed correctly
  
 ## Version 1.0.0
 
