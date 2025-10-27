@@ -22,6 +22,18 @@ A rough, non-committal roadmap.
 ## Version 0.9.0
 
 - Re-explore `TextBuffer`
+- Re-explore how arrays are sent and recieved
+  - `core.loadStateBuffer`
+  - `core.savestatebuffer`
+  - `core.readRange`
+  - `memoryDomain.readRange`
+  - `coreAdapter.memory`
+  - `memoryDomain.readRange`
+  - `mgba-http.button.addmany`
+  - `mgba-http.button.clearmany`
+  - `mgba-http.button.getmany`
+  
+- Consistent casing for Lua endpoint keys
 
 ## Version 0.10.0
 
