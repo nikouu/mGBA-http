@@ -96,7 +96,7 @@ Uses key letters as opposed to key IDs and bitmasks.
 |     -     | mgba-http.button.clear     | /mgba-http/button/clear     |
 |     -     | mgba-http.button.clearMany | /mgba-http/button/clearmany |
 |     -     | mgba-http.button.get       | /mgba-http/button/get       |
-|     -     | mgba-http.button.getMany   | /mgba-http/button/getmany   |
+|     -     | mgba-http.button.getAll    | /mgba-http/button/getall    |
 |     -     | mgba-http.button.tap       | /mgba-http/button/tap       |
 |     -     | mgba-http.button.tapMany   | /mgba-http/button/tapmany   |
 |     -     | mgba-http.button.hold      | /mgba-http/button/hold      |
