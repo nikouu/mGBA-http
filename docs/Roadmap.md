@@ -29,9 +29,9 @@ A rough, non-committal roadmap.
   - `memoryDomain.readRange`
   - `coreAdapter.memory`
   - `memoryDomain.readRange`
-  - `mgba-http.button.addmany`
-  - `mgba-http.button.clearmany`
-  - `mgba-http.button.getmany`
+  - `mgba-http.button.addMany`
+  - `mgba-http.button.clearMany`
+  - `mgba-http.button.getAll`
   
 - Consistent casing for Lua endpoint keys
 

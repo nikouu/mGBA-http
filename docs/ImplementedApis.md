@@ -89,18 +89,21 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 
 Uses key enums as opposed to key IDs.
 
-| mGBA call | lua endpoint key          | mGBA-http endpoint         |
-| :-------: | ------------------------- | -------------------------- |
-|     -     | mgba-http.button.add      | /mgba-http/button/add      |
-|     -     | mgba-http.button.clear    | /mgba-http/button/clear    |
-|     -     | mgba-http.button.get      | /mgba-http/button/get      |
-|     -     | mgba-http.button.tap      | /mgba-http/button/tap      |
-|     -     | mgba-http.button.tapmany  | /mgba-http/button/tapmany  |
-|     -     | mgba-http.button.hold     | /mgba-http/button/hold     |
-|     -     | mgba-http.button.holdmany | /mgba-http/button/holdmany |
+| mGBA call | lua endpoint key           | mGBA-http endpoint          |
+| :-------: | -------------------------- | --------------------------- |
+|     -     | mgba-http.button.add       | /mgba-http/button/add       |
+|     -     | mgba-http.button.addMany   | /mgba-http/button/addmany   |
+|     -     | mgba-http.button.clear     | /mgba-http/button/clear     |
+|     -     | mgba-http.button.clearMany | /mgba-http/button/clearmany |
+|     -     | mgba-http.button.get       | /mgba-http/button/get       |
+|     -     | mgba-http.button.getMany   | /mgba-http/button/getmany   |
+|     -     | mgba-http.button.tap       | /mgba-http/button/tap       |
+|     -     | mgba-http.button.tapMany   | /mgba-http/button/tapmany   |
+|     -     | mgba-http.button.hold      | /mgba-http/button/hold      |
+|     -     | mgba-http.button.holdMany  | /mgba-http/button/holdmany  |
 
 ## Extension - Custom API
 
 | mGBA call | lua endpoint key             | mGBA-http endpoint            |
 | :-------: | ---------------------------- | ----------------------------- |
-|     -     | mgba-http.extension.loadfile | /mgba-http/extension/loadfile |
+|     -     | mgba-http.extension.loadFile | /mgba-http/extension/loadfile |

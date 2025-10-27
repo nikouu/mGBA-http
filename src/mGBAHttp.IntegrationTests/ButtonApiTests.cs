@@ -45,6 +45,31 @@ namespace mGBAHttp.IntegrationTests
             Assert.AreEqual("", responseContent);
         }
 
+
+        [DataTestMethod]
+        [DataRow(new[] { ButtonEnum.A }, DisplayName = "Key A")]
+        [DataRow(new[] { ButtonEnum.B }, DisplayName = "Key B")]
+        [DataRow(new[] { ButtonEnum.A, ButtonEnum.B }, DisplayName = "Keys A+B")]
+        [DataRow(new[] { ButtonEnum.Up, ButtonEnum.A }, DisplayName = "Keys Up+A")]
+        [DataRow(new[] { ButtonEnum.Left, ButtonEnum.Right }, DisplayName = "Keys Left+Right")]
+        [DataRow(new[] { ButtonEnum.Up, ButtonEnum.Down, ButtonEnum.Left, ButtonEnum.Right }, DisplayName = "Keys Up+Down+Left+Right")]
+        [DataRow(new[] { ButtonEnum.L, ButtonEnum.R, ButtonEnum.Start, ButtonEnum.Select }, DisplayName = "Keys L+R+Start+Select")]
+        public async Task AddMany_SendsRequestSuccessfully(ButtonEnum[] buttons)
+        {
+            // Act
+            var queryString = string.Join("&", buttons.Select(k => $"buttons={k}"));
+            var response = await _client.PostAsync($"/mgba-http/button/addmany?{queryString}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            // Reset state
+            var clearQueryString = string.Join("&", buttons.Select(k => $"buttons={k}"));
+            await _client.PostAsync($"/mgba-http/button/clearmany?{clearQueryString}", null);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
+        }
+
         [DataTestMethod]
         [DataRow(ButtonEnum.A, DisplayName = "Clear Key A")]
         [DataRow(ButtonEnum.B, DisplayName = "Clear Key B")]
@@ -63,6 +88,30 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var response = await _client.PostAsync($"/mgba-http/button/clear?button={button}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("", responseContent);
+        }
+
+        [DataTestMethod]
+        [DataRow(new[] { ButtonEnum.A }, DisplayName = "Clear Key A")]
+        [DataRow(new[] { ButtonEnum.B }, DisplayName = "Clear Key B")]
+        [DataRow(new[] { ButtonEnum.A, ButtonEnum.B }, DisplayName = "Clear Keys A+B")]
+        [DataRow(new[] { ButtonEnum.Up, ButtonEnum.A }, DisplayName = "Clear Keys Up+A")]
+        [DataRow(new[] { ButtonEnum.Left, ButtonEnum.Right }, DisplayName = "Clear Keys Left+Right")]
+        [DataRow(new[] { ButtonEnum.Up, ButtonEnum.Down, ButtonEnum.Left, ButtonEnum.Right }, DisplayName = "Clear Keys Up+Down+Left+Right")]
+        [DataRow(new[] { ButtonEnum.L, ButtonEnum.R, ButtonEnum.Start, ButtonEnum.Select }, DisplayName = "Clear Keys L+R+Start+Select")]
+        public async Task ClearMany_SendsRequestSuccessfully(ButtonEnum[] buttons)
+        {
+            // Arrange
+            var addQueryString = string.Join("&", buttons.Select(k => $"buttons={k}"));
+            await _client.PostAsync($"/mgba-http/button/addmany?{addQueryString}", null);
+
+            // Act
+            var clearQueryString = string.Join("&", buttons.Select(k => $"buttons={k}"));
+            var response = await _client.PostAsync($"/mgba-http/button/clearmany?{clearQueryString}", null);
             var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
@@ -106,23 +155,40 @@ namespace mGBAHttp.IntegrationTests
             Assert.AreEqual("", responseContent);
         }
 
-        [DataTestMethod]
-        [DataRow(new[] { ButtonEnum.A }, DisplayName = "Key A")]
-        [DataRow(new[] { ButtonEnum.B }, DisplayName = "Key B")]
-        [DataRow(new[] { ButtonEnum.A, ButtonEnum.B }, DisplayName = "Keys A+B")]
-        [DataRow(new[] { ButtonEnum.Up, ButtonEnum.A }, DisplayName = "Keys Up+A")]
-        [DataRow(new[] { ButtonEnum.Left, ButtonEnum.Right }, DisplayName = "Keys Left+Right")]
-        [DataRow(new[] { ButtonEnum.Up, ButtonEnum.Down, ButtonEnum.Left, ButtonEnum.Right }, DisplayName = "Keys Up+Down+Left+Right")]
-        public async Task TapManyEndpoint_SendsRequestSuccessfully(ButtonEnum[] buttons)
+        [TestMethod]
+        public async Task GetAll_ReturnsCurrentlyPressedKeys()
         {
+            // Arrange
+            await _client.PostAsync("/mgba-http/button/clearmany?buttons=A&buttons=B&buttons=Up&buttons=Down&buttons=Left&buttons=Right&buttons=Start&buttons=Select&buttons=L&buttons=R", null);
+
             // Act
-            var queryString = string.Join("&", buttons.Select(k => $"keys={k}"));
-            var response = await _client.PostAsync($"/mgba-http/button/tapmany?{queryString}", null);
+            var response = await _client.GetAsync("/mgba-http/button/getall");
             var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.AreEqual("", responseContent);
+            Assert.AreEqual("", responseContent); // Should be empty when no keys are pressed
+        }
+
+        [TestMethod]
+        public async Task GetAll_ReturnsCommaSeparatedPressedKeys()
+        {
+            // Arrange
+            await _client.PostAsync("/mgba-http/button/clearmany?buttons=A&buttons=B&buttons=Up&buttons=Down&buttons=Left&buttons=Right&buttons=Start&buttons=Select&buttons=L&buttons=R", null);
+            await _client.PostAsync("/mgba-http/button/addmany?buttons=A&buttons=B", null);
+
+            // Act
+            var response = await _client.GetAsync("/mgba-http/button/getall");
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            await _client.PostAsync("/mgba-http/button/clearmany?buttons=A&buttons=B", null);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.IsTrue(responseContent.Contains('A'));
+            Assert.IsTrue(responseContent.Contains('B'));
+            Assert.IsTrue(responseContent.Contains(','));
+            Assert.IsTrue(responseContent.Length == 3);
         }
 
         [DataTestMethod]
@@ -151,7 +217,7 @@ namespace mGBAHttp.IntegrationTests
         public async Task HoldManyEndpoint_SendsRequestSuccessfully(ButtonEnum[] buttons, int duration)
         {
             // Act
-            var queryString = string.Join("&", buttons.Select(k => $"keys={k}")) + $"&duration={duration}";
+            var queryString = string.Join("&", buttons.Select(k => $"buttons={k}")) + $"&duration={duration}";
             var response = await _client.PostAsync($"/mgba-http/button/holdmany?{queryString}", null);
             var responseContent = await response.Content.ReadAsStringAsync();
 

@@ -159,7 +159,7 @@ namespace mGBAHttp.IntegrationTests
         {
             // Arrange - 3 is A (1) and B (2)
             var keysBitmask = 3;
-            await _client.PostAsync($"/core/addkey?key={ButtonEnum.Select}", null);
+            await _client.PostAsync($"/core/addkey?key=2", null);
 
             // Act
             var response = await _client.PostAsync($"/core/setkeys?keys={keysBitmask}", null);

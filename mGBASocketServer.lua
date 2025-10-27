@@ -195,14 +195,17 @@ function messageRouter(rawMessage)
 	logInformation("messageRouter: \n\tRaw message: " .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
 
 	if rawMessage == "<|ACK|>" then logInformation("Connecting.")
-	elseif messageType == "mgba-http.button.add" then addKey(messageValue1)
-	elseif messageType == "mgba-http.button.clear" then clearKey(messageValue1)
+	elseif messageType == "mgba-http.button.add" then addButton(messageValue1)
+	elseif messageType == "mgba-http.button.addMany" then addButtons(messageValue1)
+	elseif messageType == "mgba-http.button.clear" then clearButton(messageValue1)
+	elseif messageType == "mgba-http.button.clearMany" then clearButtons(messageValue1)
 	elseif messageType == "mgba-http.button.get" then returnValue = emu:getKey(keyValues[messageValue1])
+	elseif messageType == "mgba-http.button.getAll" then returnValue = getAllActiveButtons()
 	elseif messageType == "mgba-http.button.tap" then manageButton(messageValue1)
-	elseif messageType == "mgba-http.button.tapmany" then manageButtons(messageValue1)
+	elseif messageType == "mgba-http.button.tapMany" then manageButtons(messageValue1)
 	elseif messageType == "mgba-http.button.hold" then manageButton(messageValue1, messageValue2)
-	elseif messageType == "mgba-http.button.holdmany" then manageButtons(messageValue1, messageValue2)
-	elseif messageType == "mgba-http.extension.loadfile" then returnValue = loadFile(messageValue1)
+	elseif messageType == "mgba-http.button.holdMany" then manageButtons(messageValue1, messageValue2)
+	elseif messageType == "mgba-http.extension.loadFile" then returnValue = loadFile(messageValue1)
 	elseif messageType == "core.addKey" then emu:addKey(tonumber(messageValue1))
 	elseif messageType == "core.addKeys" then emu:addKeys(tonumber(messageValue1))
 	elseif messageType == "core.autoloadSave" then returnValue = emu:autoloadSave()
@@ -276,14 +279,47 @@ end
 -- Button (Convenience abstraction)
 -- ***********************
 
-function addKey(keyLetter)
+function addButton(keyLetter)
 	local key = keyValues[keyLetter];
 	emu:addKey(key)
 end
 
-function clearKey(keyLetter)
+function clearButton(keyLetter)
 	local key = keyValues[keyLetter];
 	emu:clearKey(key)
+end
+
+function addButtons(keyLetters)
+	local keyLettersArray = splitStringToTable(keyLetters, ";")	
+	local keys = {}
+	for i, keyLetter in ipairs(keyLettersArray) do
+		keys[i] = keyValues[keyLetter]
+	end
+	local bitmask = toBitmask(keys)
+	emu:addKeys(bitmask)
+end
+
+function clearButtons(keyLetters)
+	local keyLettersArray = splitStringToTable(keyLetters, ";")	
+	local keys = {}
+	for i, keyLetter in ipairs(keyLettersArray) do
+		keys[i] = keyValues[keyLetter]
+	end
+	local bitmask = toBitmask(keys)
+	emu:clearKeys(bitmask)
+end
+
+function getAllActiveButtons()
+    local currentKeys = emu:getKeys()
+    local pressedKeys = {}
+    
+    for keyLetter, keyValue in pairs(keyValues) do
+        if (currentKeys & (1 << keyValue)) ~= 0 then
+            table.insert(pressedKeys, keyLetter)
+        end
+    end
+    
+    return table.concat(pressedKeys, ",")
 end
 
 local keyEventQueue = {}

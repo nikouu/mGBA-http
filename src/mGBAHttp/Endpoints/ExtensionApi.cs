@@ -13,7 +13,7 @@ namespace mGBAHttp.Endpoints
 
             group.MapPost("/loadfile", async (ObjectPool<ReusableSocket> socketPool, string path) =>
             {
-                var messageModel = new MessageModel("mgba-http.extension.loadfile", path).ToString();
+                var messageModel = new MessageModel("mgba-http.extension.loadFile", path).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
