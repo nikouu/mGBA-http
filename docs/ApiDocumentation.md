@@ -18,13 +18,36 @@ Adds a single button.
 
 ##### Description:
 
-A custom convenience API that mimics /core/addkey but uses button names as opposed to their number value.
+A custom convenience API that mimics /core/addkey but uses button names as opposed to a bitmask.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | button | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | Empty success response. |
+
+### /mgba-http/button/addmany
+
+#### POST
+##### Summary:
+
+Adds multiple buttons.
+
+##### Description:
+
+A custom convenience API that mimics /core/addkeys but uses button names as opposed to their number value.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| buttons | query | Key values of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ [ButtonEnum](#ButtonEnum) ] |
 
 ##### Responses
 
@@ -53,7 +76,30 @@ A custom convenience API that mimics /core/clearkey but uses button names as opp
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | Empty success response/ |
+| 200 | Empty success response. |
+
+### /mgba-http/button/clearmany
+
+#### POST
+##### Summary:
+
+Remove multiple buttons.
+
+##### Description:
+
+A custom convenience API that mimics /core/clearkeys but uses button names as opposed to a bitmask.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| buttons | query | Key values of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ [ButtonEnum](#ButtonEnum) ] |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | Empty success response. |
 
 ### /mgba-http/button/get
 
@@ -77,6 +123,23 @@ A custom convenience API that mimics /core/getkey but uses button names as oppos
 | Code | Description |
 | ---- | ----------- |
 | 200 | 0 if key is not pressed or 1 if the key is pressed. |
+
+### /mgba-http/button/getall
+
+#### GET
+##### Summary:
+
+Gets all active buttons.
+
+##### Description:
+
+A custom convenience API that gets all active buttons.
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | Comma separated string with all active keys |
 
 ### /mgba-http/button/tap
 
@@ -116,7 +179,7 @@ A custom convenience API that implements multiple simultaneously keys being pres
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| keys | query | A key array. | Yes | [ [ButtonEnum](#ButtonEnum) ] |
+| buttons | query | A key array. | Yes | [ [ButtonEnum](#ButtonEnum) ] |
 
 ##### Responses
 
@@ -163,7 +226,7 @@ A custom convenience API that implements multiple simultaneously keys being pres
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| keys | query | A key array. | Yes | [ [ButtonEnum](#ButtonEnum) ] |
+| buttons | query | A key array. | Yes | [ [ButtonEnum](#ButtonEnum) ] |
 | duration | query | Duration in frames. | Yes | integer |
 
 ##### Responses

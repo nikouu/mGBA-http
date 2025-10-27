@@ -9,6 +9,199 @@
     }
   },
   "paths": {
+    "/mgba-http/button/add": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Adds a single button.",
+        "description": "A custom convenience API that mimics /core/addkey but uses button names as opposed to a bitmask.",
+        "parameters": [
+          {
+            "name": "button",
+            "in": "query",
+            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ButtonEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/addmany": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Adds multiple buttons.",
+        "description": "A custom convenience API that mimics /core/addkeys but uses button names as opposed to their number value.",
+        "parameters": [
+          {
+            "name": "buttons",
+            "in": "query",
+            "description": "Key values of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ButtonEnum"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/clear": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Remove a single button.",
+        "description": "A custom convenience API that mimics /core/clearkey but uses button names as opposed to their number value.",
+        "parameters": [
+          {
+            "name": "button",
+            "in": "query",
+            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ButtonEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/clearmany": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Remove multiple buttons.",
+        "description": "A custom convenience API that mimics /core/clearkeys but uses button names as opposed to a bitmask.",
+        "parameters": [
+          {
+            "name": "buttons",
+            "in": "query",
+            "description": "Key values of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ButtonEnum"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/get": {
+      "get": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Get the active state of a given button.",
+        "description": "A custom convenience API that mimics /core/getkey but uses button names as opposed to their number value.",
+        "parameters": [
+          {
+            "name": "button",
+            "in": "query",
+            "description": "Button value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ButtonEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "0 if key is not pressed or 1 if the key is pressed.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "1"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/getall": {
+      "get": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Gets all active buttons.",
+        "description": "A custom convenience API that gets all active buttons.",
+        "responses": {
+          "200": {
+            "description": "Comma separated string with all active keys",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "A,B,Start"
+              }
+            }
+          }
+        }
+      }
+    },
     "/mgba-http/button/tap": {
       "post": {
         "tags": [
@@ -18,23 +211,24 @@
         "description": "A custom convenience API that implements a key press and release. This is as opposed to the key based core API that sends only either a press or release message.",
         "parameters": [
           {
-            "name": "key",
+            "name": "button",
             "in": "query",
             "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/KeysEnum"
+              "$ref": "#/components/schemas/ButtonEnum"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -50,26 +244,27 @@
         "description": "A custom convenience API that implements multiple simultaneously keys being pressed and released. This is as opposed to the key based core API that sends only either a press or release message.",
         "parameters": [
           {
-            "name": "keys",
+            "name": "buttons",
             "in": "query",
             "description": "A key array.",
             "required": true,
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/KeysEnum"
+                "$ref": "#/components/schemas/ButtonEnum"
               }
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -85,12 +280,12 @@
         "description": "A custom convenience API that implements a held down button for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.",
         "parameters": [
           {
-            "name": "key",
+            "name": "button",
             "in": "query",
             "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/KeysEnum"
+              "$ref": "#/components/schemas/ButtonEnum"
             }
           },
           {
@@ -106,12 +301,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -127,14 +323,14 @@
         "description": "A custom convenience API that implements multiple simultaneously keys being pressed and released for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.",
         "parameters": [
           {
-            "name": "keys",
+            "name": "buttons",
             "in": "query",
             "description": "A key array.",
             "required": true,
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/KeysEnum"
+                "$ref": "#/components/schemas/ButtonEnum"
               }
             }
           },
@@ -151,12 +347,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -169,11 +366,12 @@
           "Console"
         ],
         "summary": "Print an error to the console.",
-        "description": "Presents textual information to the user via a console.",
+        "description": "Print an error to the console. This will be shown as red text on light red background.",
         "parameters": [
           {
             "name": "message",
             "in": "query",
+            "description": "The error message to display in console.",
             "required": true,
             "schema": {
               "type": "string"
@@ -182,12 +380,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -200,11 +399,12 @@
           "Console"
         ],
         "summary": "Print a log to the console.",
-        "description": "Presents textual information to the user via a console.",
+        "description": "Print a log to the console. This will be shown as regular text.",
         "parameters": [
           {
             "name": "message",
             "in": "query",
+            "description": "The log message to display in console.",
             "required": true,
             "schema": {
               "type": "string"
@@ -213,12 +413,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -231,11 +432,12 @@
           "Console"
         ],
         "summary": "Print a warning to the console.",
-        "description": "Presents textual information to the user via a console.",
+        "description": "Print a warning to the console. This will be shown as yellow text on light yellow background.",
         "parameters": [
           {
             "name": "message",
             "in": "query",
+            "description": "The warning message to display in console.",
             "required": true,
             "schema": {
               "type": "string"
@@ -244,12 +446,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -267,21 +470,23 @@
           {
             "name": "key",
             "in": "query",
-            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "description": "Key value of: 0-9",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/KeysEnum"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -299,7 +504,7 @@
           {
             "name": "keyBitmask",
             "in": "query",
-            "description": "Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.",
+            "description": "The bitmask of keys to add. Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -309,12 +514,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -330,12 +536,13 @@
         "description": "Load the save data associated with the currently loaded ROM file.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Boolean representing success.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "true"
               }
             }
           }
@@ -348,15 +555,16 @@
           "Core"
         ],
         "summary": "Get the checksum of the loaded ROM.",
-        "description": "Get the checksum of the loaded ROM as base 10.",
+        "description": "Get the checksum of the loaded ROM.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "The checksum.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "123456789"
               }
             }
           }
@@ -374,21 +582,23 @@
           {
             "name": "key",
             "in": "query",
-            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "description": "Key value of: 0-9",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/KeysEnum"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -406,7 +616,7 @@
           {
             "name": "keyBitmask",
             "in": "query",
-            "description": "Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.",
+            "description": "The bitmask of keys to clear. Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -416,12 +626,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -437,12 +648,13 @@
         "description": "Get the number of the current frame.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Current frame number.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "12345"
               }
             }
           }
@@ -458,12 +670,13 @@
         "description": "Get the number of cycles per frame.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Cycles per frame.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "280896"
               }
             }
           }
@@ -479,12 +692,13 @@
         "description": "Get the number of cycles per second.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Cycles per second.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "16777216"
               }
             }
           }
@@ -500,12 +714,13 @@
         "description": "Get internal product code for the game from the ROM header, if available.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Product code.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "AGB-BPRE"
               }
             }
           }
@@ -521,12 +736,13 @@
         "description": "Get internal title of the game from the ROM header.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Game title.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "POKEMON FIRE"
               }
             }
           }
@@ -544,21 +760,23 @@
           {
             "name": "key",
             "in": "query",
-            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "description": "Key value of: 0-9",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/KeysEnum"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "0 if key is not pressed or 1 if the key is pressed.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "1"
               }
             }
           }
@@ -574,12 +792,13 @@
         "description": "Get the currently active keys as a bitmask.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Bitmask string representing currently active keys.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "12"
               }
             }
           }
@@ -597,6 +816,7 @@
           {
             "name": "path",
             "in": "query",
+            "description": "Path to ROM file to load.",
             "required": true,
             "schema": {
               "type": "string"
@@ -605,12 +825,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success status as a boolean.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "true"
               }
             }
           }
@@ -628,6 +849,7 @@
           {
             "name": "path",
             "in": "query",
+            "description": "Path to save file to load.",
             "required": true,
             "schema": {
               "type": "string"
@@ -636,6 +858,7 @@
           {
             "name": "temporary",
             "in": "query",
+            "description": "If true, save data will not be written back to disk.",
             "required": true,
             "schema": {
               "type": "boolean"
@@ -644,12 +867,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success status as a boolean.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "true"
               }
             }
           }
@@ -662,11 +886,12 @@
           "Core"
         ],
         "summary": "Load state from a buffer.",
-        "description": "Load state from a buffer.",
+        "description": "Load state from a hex array string buffer in the format: [d3,00,ea,66,...].",
         "parameters": [
           {
             "name": "flags",
             "in": "query",
+            "description": "State flags bitmask. Default 29 excludes screenshot flag (all except SCREENSHOT). Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -675,11 +900,12 @@
           }
         ],
         "requestBody": {
-          "description": "State buffer data as int array: [137,80,78,71,...]",
+          "description": "State buffer data as hex array string format: [d3,00,ea,66,...]",
           "content": {
             "text/plain": {
               "schema": {
-                "type": "string"
+                "type": "string",
+                "example": "[d3,00,00,ea,66,00,00,ea,0c,00,00,ea,fe,ff,ff,ea]"
               }
             }
           },
@@ -687,12 +913,13 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success status as a boolean.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "true"
               }
             }
           }
@@ -710,6 +937,7 @@
           {
             "name": "path",
             "in": "query",
+            "description": "Path to state file to load.",
             "required": true,
             "schema": {
               "type": "string"
@@ -718,6 +946,7 @@
           {
             "name": "flags",
             "in": "query",
+            "description": "State flags bitmask. Default 29 excludes screenshot flag. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -727,12 +956,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success status as a boolean.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "true"
               }
             }
           }
@@ -750,6 +980,7 @@
           {
             "name": "slot",
             "in": "query",
+            "description": "State slot number to load from.",
             "required": true,
             "schema": {
               "type": "string"
@@ -758,6 +989,7 @@
           {
             "name": "flags",
             "in": "query",
+            "description": "State flags bitmask. Default 29 excludes screenshot flag. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -767,12 +999,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success status as a boolean.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "true"
               }
             }
           }
@@ -788,12 +1021,13 @@
         "description": "Get which platform is being emulated.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Platform identifier. None: -1, GBA: 0, GB: 1.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "1"
               }
             }
           }
@@ -811,7 +1045,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address as hex string with 0x prefix (e.g., '0x0300').",
             "required": true,
             "schema": {
               "type": "string"
@@ -820,12 +1054,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "16-bit value of the read memory.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "65535"
               }
             }
           }
@@ -843,7 +1078,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address as hex string with 0x prefix (e.g., '0x0300').",
             "required": true,
             "schema": {
               "type": "string"
@@ -852,12 +1087,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "32-bit value of the read memory.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "4294967295"
               }
             }
           }
@@ -875,7 +1111,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address as hex string with 0x prefix (e.g., '0x0300').",
             "required": true,
             "schema": {
               "type": "string"
@@ -884,12 +1120,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "8-bit value of the read memory.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "255"
               }
             }
           }
@@ -902,12 +1139,12 @@
           "Core"
         ],
         "summary": "Read byte range from the given offset.",
-        "description": "Read byte range from the given offset and returns an array of unsigned integers",
+        "description": "Read byte range from the given offset.",
         "parameters": [
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address as hex string with 0x prefix (e.g., '0x0300').",
             "required": true,
             "schema": {
               "type": "string"
@@ -916,6 +1153,7 @@
           {
             "name": "length",
             "in": "query",
+            "description": "Number of bytes to read.",
             "required": true,
             "schema": {
               "type": "string"
@@ -924,12 +1162,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Comma separated hex values of the read memory.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "d3,00,00,ea,66,00,00,ea"
               }
             }
           }
@@ -947,6 +1186,7 @@
           {
             "name": "regName",
             "in": "query",
+            "description": "Register name to read (e.g., 'r0', 'r1', 'sp', 'lr', 'pc').",
             "required": true,
             "schema": {
               "type": "string"
@@ -955,13 +1195,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "The value of the register.",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
+                  "type": "string"
+                },
+                "example": "50363837"
               }
             }
           }
@@ -977,12 +1217,13 @@
         "description": "Get the size of the loaded ROM.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "The ROM size.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "16777216"
               }
             }
           }
@@ -995,11 +1236,12 @@
           "Core"
         ],
         "summary": "Save state and return as a buffer.",
-        "description": "Save state and returns an array of unsigned integers",
+        "description": "Save state and return as a buffer. This can be used with /core/loadstatebuffer to restore state.",
         "parameters": [
           {
             "name": "flags",
             "in": "query",
+            "description": "State flags bitmask. Default 31 includes all flags (screenshot, metadata, etc). Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -1009,12 +1251,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Comma separated hex values.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "d3,00,00,ea,66,00,00,ea,0c,00,00,ea,fe,ff,ff,ea"
               }
             }
           }
@@ -1032,6 +1275,7 @@
           {
             "name": "path",
             "in": "query",
+            "description": "Path where state file will be saved.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1040,6 +1284,7 @@
           {
             "name": "flags",
             "in": "query",
+            "description": "State flags bitmask. Default 31 includes all flags. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -1049,12 +1294,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success status as a boolean.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "true"
               }
             }
           }
@@ -1072,6 +1318,7 @@
           {
             "name": "slot",
             "in": "query",
+            "description": "State slot number to save to.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1080,6 +1327,7 @@
           {
             "name": "flags",
             "in": "query",
+            "description": "State flags bitmask. Default 31 includes all flags. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -1089,12 +1337,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success status as a boolean.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "true"
               }
             }
           }
@@ -1121,12 +1370,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -1144,6 +1394,7 @@
           {
             "name": "keys",
             "in": "query",
+            "description": "The bitmask of keys to set as active. Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1153,12 +1404,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -1174,12 +1426,13 @@
         "description": "Run a single instruction.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -1197,7 +1450,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address in hex, e.g. 0x0300",
             "required": true,
             "schema": {
               "type": "string"
@@ -1206,6 +1459,7 @@
           {
             "name": "value",
             "in": "query",
+            "description": "16-bit decimal value to write (0-65535).",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1215,12 +1469,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -1238,7 +1493,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address in hex, e.g. 0x0300",
             "required": true,
             "schema": {
               "type": "string"
@@ -1247,6 +1502,7 @@
           {
             "name": "value",
             "in": "query",
+            "description": "32-bit decimal value to write.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1256,12 +1512,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -1279,7 +1536,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address in hex, e.g. 0x0300",
             "required": true,
             "schema": {
               "type": "string"
@@ -1288,6 +1545,7 @@
           {
             "name": "value",
             "in": "query",
+            "description": "8-bit decimal value to write (0-255).",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1297,12 +1555,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -1320,7 +1579,7 @@
           {
             "name": "regName",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Register name to write (e.g., 'r0', 'r1', 'sp', 'lr', 'pc', etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -1329,6 +1588,7 @@
           {
             "name": "value",
             "in": "query",
+            "description": "Decimal value to write to the register.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1338,12 +1598,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -1359,12 +1620,13 @@
         "description": "Reset the emulation and calls the reset callback.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -1376,19 +1638,17 @@
         "tags": [
           "CoreAdapter"
         ],
-        "summary": "Get the platform specific set of MemoryDomains.",
-        "description": "Gets the platform specific set of memory domains as an array of strings.",
+        "summary": "Get the platform specific set of memory domains.",
+        "description": "Get the platform specific set of memory domains.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "The memory domains as a comma separated string.",
             "content": {
-              "application/json": {
+              "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
+                  "type": "string"
+                },
+                "example": "cart2,wram,cart0,oam,iwram,bios,vram,io,palette,cart1"
               }
             }
           }
@@ -1406,6 +1666,7 @@
           {
             "name": "path",
             "in": "query",
+            "description": "Path to ROM file to load.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1414,12 +1675,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success status as a boolean.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "true"
               }
             }
           }
@@ -1431,12 +1693,13 @@
         "tags": [
           "MemoryDomain"
         ],
-        "summary": "Get the address of the base of this memory domain.",
-        "description": "Get the address of the base of this memory domain.",
+        "summary": "Get the base address of the memory domain.",
+        "description": "Get the base address of the specified memory domain.",
         "parameters": [
           {
             "name": "memoryDomain",
             "in": "query",
+            "description": "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -1445,12 +1708,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Address of the base of this memory domain.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "50331648"
               }
             }
           }
@@ -1462,12 +1726,13 @@
         "tags": [
           "MemoryDomain"
         ],
-        "summary": "Get the address of the end bound of this memory domain.",
+        "summary": "Get the bound of the memory domain.",
         "description": "Get the address of the end bound of this memory domain. Note that this address is not in the domain itself, and is the address of the first byte past it.",
         "parameters": [
           {
             "name": "memoryDomain",
             "in": "query",
+            "description": "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -1476,12 +1741,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Bound address as a string.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "50594303"
               }
             }
           }
@@ -1493,12 +1759,13 @@
         "tags": [
           "MemoryDomain"
         ],
-        "summary": "Get a short, human-readable name for this memory domain.",
+        "summary": "Get the name of the memory domain.",
         "description": "Get a short, human-readable name for this memory domain.",
         "parameters": [
           {
             "name": "memoryDomain",
             "in": "query",
+            "description": "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -1507,12 +1774,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Memory domain name.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "wram"
               }
             }
           }
@@ -1525,11 +1793,12 @@
           "MemoryDomain"
         ],
         "summary": "Read a 16-bit value from the given offset.",
-        "description": "Read a 16-bit value from the given offset.",
+        "description": "Read a 16-bit value from the given offset in the specified memory domain.",
         "parameters": [
           {
             "name": "memoryDomain",
             "in": "query",
+            "description": "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -1538,7 +1807,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address as hex string with 0x prefix (e.g., '0x0300')",
             "required": true,
             "schema": {
               "type": "string"
@@ -1547,12 +1816,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "16-bit value as a string.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "65535"
               }
             }
           }
@@ -1565,11 +1835,12 @@
           "MemoryDomain"
         ],
         "summary": "Read a 32-bit value from the given offset.",
-        "description": "Read a 32-bit value from the given offset.",
+        "description": "Read a 32-bit value from the given offset in the specified memory domain.",
         "parameters": [
           {
             "name": "memoryDomain",
             "in": "query",
+            "description": "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -1578,7 +1849,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address as hex string with 0x prefix (e.g., '0x0300')",
             "required": true,
             "schema": {
               "type": "string"
@@ -1587,12 +1858,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "32-bit value as a string.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "4294967295"
               }
             }
           }
@@ -1605,11 +1877,12 @@
           "MemoryDomain"
         ],
         "summary": "Read an 8-bit value from the given offset.",
-        "description": "Read an 8-bit value from the given offset.",
+        "description": "Read an 8-bit value from the given offset in the specified memory domain.",
         "parameters": [
           {
             "name": "memoryDomain",
             "in": "query",
+            "description": "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -1618,7 +1891,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address as hex string with 0x prefix (e.g., '0x0300')",
             "required": true,
             "schema": {
               "type": "string"
@@ -1627,12 +1900,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "8-bit value as a string.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "255"
               }
             }
           }
@@ -1645,11 +1919,12 @@
           "MemoryDomain"
         ],
         "summary": "Read byte range from the given offset.",
-        "description": "Read byte range from the given offset and returns an array of unsigned integers",
+        "description": "Read byte range from the given offset.",
         "parameters": [
           {
             "name": "memoryDomain",
             "in": "query",
+            "description": "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -1658,7 +1933,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address as hex string (e.g., '0x0300').",
             "required": true,
             "schema": {
               "type": "string"
@@ -1667,6 +1942,7 @@
           {
             "name": "length",
             "in": "query",
+            "description": "Number of bytes to read.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1675,12 +1951,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Comma separated hex values.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "d3,00,00,ea,66,00,00,ea"
               }
             }
           }
@@ -1692,12 +1969,13 @@
         "tags": [
           "MemoryDomain"
         ],
-        "summary": "Get the size of this memory domain in bytes.",
+        "summary": "Get the size of the memory domain.",
         "description": "Get the size of this memory domain in bytes.",
         "parameters": [
           {
             "name": "memoryDomain",
             "in": "query",
+            "description": "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -1706,12 +1984,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Size in bytes as a string.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "262144"
               }
             }
           }
@@ -1723,12 +2002,13 @@
         "tags": [
           "MemoryDomain"
         ],
-        "summary": "Write a 16-bit value from the given offset.",
-        "description": "Write a 16-bit value from the given offset.",
+        "summary": "Write a 16-bit value to the given offset.",
+        "description": "Write a 16-bit value to the given offset in the specified memory domain.",
         "parameters": [
           {
             "name": "memoryDomain",
             "in": "query",
+            "description": "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -1737,7 +2017,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address as hex string with 0x prefix (e.g., '0x0300').",
             "required": true,
             "schema": {
               "type": "string"
@@ -1746,6 +2026,7 @@
           {
             "name": "value",
             "in": "query",
+            "description": "16-bit decimal value to write (0-65535). Not hex.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1755,12 +2036,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -1772,12 +2054,13 @@
         "tags": [
           "MemoryDomain"
         ],
-        "summary": "Write a 32-bit value from the given offset.",
-        "description": "Write a 32-bit value from the given offset.",
+        "summary": "Write a 32-bit value to the given offset.",
+        "description": "Write a 32-bit value to the given offset in the specified memory domain.",
         "parameters": [
           {
             "name": "memoryDomain",
             "in": "query",
+            "description": "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -1786,7 +2069,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address as hex string with 0x prefix (e.g., '0x0300').",
             "required": true,
             "schema": {
               "type": "string"
@@ -1795,6 +2078,7 @@
           {
             "name": "value",
             "in": "query",
+            "description": "32-bit decimal value to write. Not hex.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1804,12 +2088,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -1821,12 +2106,13 @@
         "tags": [
           "MemoryDomain"
         ],
-        "summary": "Write an 8-bit value from the given offset.",
-        "description": "Write an 8-bit value from the given offset.",
+        "summary": "Write an 8-bit value to the given offset.",
+        "description": "Write an 8-bit value to the given offset in the specified memory domain.",
         "parameters": [
           {
             "name": "memoryDomain",
             "in": "query",
+            "description": "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -1835,7 +2121,7 @@
           {
             "name": "address",
             "in": "query",
-            "description": "Address in hex, e.g. 0x03000000",
+            "description": "Address as hex string with 0x prefix (e.g., '0x0300').",
             "required": true,
             "schema": {
               "type": "string"
@@ -1844,6 +2130,7 @@
           {
             "name": "value",
             "in": "query",
+            "description": "8-bit decimal value to write (0-255). Not hex.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1853,12 +2140,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Empty success response.",
             "content": {
               "text/plain": {
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": ""
               }
             }
           }
@@ -1868,7 +2156,7 @@
   },
   "components": {
     "schemas": {
-      "KeysEnum": {
+      "ButtonEnum": {
         "enum": [
           "A",
           "B",

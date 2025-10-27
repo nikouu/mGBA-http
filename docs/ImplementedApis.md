@@ -87,7 +87,7 @@ _Unstable_ APIs may not work as expected and may be fixed in a future update.
 
 ## Button - Custom API
 
-Uses key enums as opposed to key IDs.
+Uses key letters as opposed to key IDs and bitmasks.
 
 | mGBA call | lua endpoint key           | mGBA-http endpoint          |
 | :-------: | -------------------------- | --------------------------- |
