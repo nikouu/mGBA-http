@@ -9,6 +9,75 @@ An HTTP interface for mGBA scripting.
 GitHub Repository  
 https://github.com/nikouu/mGBA-http/  
 
+### /mgba-http/button/add
+
+#### POST
+##### Summary:
+
+Adds a single button.
+
+##### Description:
+
+A custom convenience API that mimics /core/addkey but uses button names as opposed to their number value.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| button | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | Empty success response. |
+
+### /mgba-http/button/clear
+
+#### POST
+##### Summary:
+
+Remove a single button.
+
+##### Description:
+
+A custom convenience API that mimics /core/clearkey but uses button names as opposed to their number value.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| button | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | Empty success response/ |
+
+### /mgba-http/button/get
+
+#### GET
+##### Summary:
+
+Get the active state of a given button.
+
+##### Description:
+
+A custom convenience API that mimics /core/getkey but uses button names as opposed to their number value.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| button | query | Button value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | 0 if key is not pressed or 1 if the key is pressed. |
+
 ### /mgba-http/button/tap
 
 #### POST
@@ -24,13 +93,13 @@ A custom convenience API that implements a key press and release. This is as opp
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [KeysEnum](#KeysEnum) |
+| button | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response |
 
 ### /mgba-http/button/tapmany
 
@@ -47,13 +116,13 @@ A custom convenience API that implements multiple simultaneously keys being pres
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| keys | query | A key array. | Yes | [ [KeysEnum](#KeysEnum) ] |
+| keys | query | A key array. | Yes | [ [ButtonEnum](#ButtonEnum) ] |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response |
 
 ### /mgba-http/button/hold
 
@@ -70,14 +139,14 @@ A custom convenience API that implements a held down button for a given duration
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [KeysEnum](#KeysEnum) |
+| button | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
 | duration | query | Duration in frames. | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response |
 
 ### /mgba-http/button/holdmany
 
@@ -94,14 +163,14 @@ A custom convenience API that implements multiple simultaneously keys being pres
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| keys | query | A key array. | Yes | [ [KeysEnum](#KeysEnum) ] |
+| keys | query | A key array. | Yes | [ [ButtonEnum](#ButtonEnum) ] |
 | duration | query | Duration in frames. | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response |
 
 ### /console/error
 
@@ -112,19 +181,19 @@ Print an error to the console.
 
 ##### Description:
 
-Presents textual information to the user via a console.
+Print an error to the console. This will be shown as red text on light red background.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| message | query |  | Yes | string |
+| message | query | The error message to display in console. | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /console/log
 
@@ -135,19 +204,19 @@ Print a log to the console.
 
 ##### Description:
 
-Presents textual information to the user via a console.
+Print a log to the console. This will be shown as regular text.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| message | query |  | Yes | string |
+| message | query | The log message to display in console. | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /console/warn
 
@@ -158,19 +227,19 @@ Print a warning to the console.
 
 ##### Description:
 
-Presents textual information to the user via a console.
+Print a warning to the console. This will be shown as yellow text on light yellow background.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| message | query |  | Yes | string |
+| message | query | The warning message to display in console. | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /core/addkey
 
@@ -187,13 +256,13 @@ Add a single key to the currently active key list. As if the key were held down.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [KeysEnum](#KeysEnum) |
+| key | query | Key value of: 0-9 | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response |
 
 ### /core/addkeys
 
@@ -210,13 +279,13 @@ Add a bitmask of keys to the currently active key list. As if the keys were held
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| keyBitmask | query | Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select. | Yes | integer |
+| keyBitmask | query | The bitmask of keys to add. Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select. | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /core/autoloadsave
 
@@ -233,7 +302,7 @@ Load the save data associated with the currently loaded ROM file.
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Boolean representing success. |
 
 ### /core/checksum
 
@@ -244,13 +313,13 @@ Get the checksum of the loaded ROM.
 
 ##### Description:
 
-Get the checksum of the loaded ROM as base 10.
+Get the checksum of the loaded ROM.
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | The checksum. |
 
 ### /core/clearkey
 
@@ -267,13 +336,13 @@ Remove a single key from the currently active key list. As if the key were relea
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [KeysEnum](#KeysEnum) |
+| key | query | Key value of: 0-9 | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /core/clearkeys
 
@@ -290,13 +359,13 @@ Remove a bitmask of keys from the currently active key list. As if the keys were
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| keyBitmask | query | Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select. | Yes | integer |
+| keyBitmask | query | The bitmask of keys to clear. Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select. | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /core/currentFrame
 
@@ -313,7 +382,7 @@ Get the number of the current frame.
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Current frame number. |
 
 ### /core/framecycles
 
@@ -330,7 +399,7 @@ Get the number of cycles per frame.
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Cycles per frame. |
 
 ### /core/frequency
 
@@ -347,7 +416,7 @@ Get the number of cycles per second.
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Cycles per second. |
 
 ### /core/getgamecode
 
@@ -364,7 +433,7 @@ Get internal product code for the game from the ROM header, if available.
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Product code. |
 
 ### /core/getgametitle
 
@@ -381,7 +450,7 @@ Get internal title of the game from the ROM header.
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Game title. |
 
 ### /core/getkey
 
@@ -398,13 +467,13 @@ Get the active state of a given key.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| key | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [KeysEnum](#KeysEnum) |
+| key | query | Key value of: 0-9 | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | 0 if key is not pressed or 1 if the key is pressed. |
 
 ### /core/getkeys
 
@@ -421,7 +490,7 @@ Get the currently active keys as a bitmask.
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Bitmask string representing currently active keys. |
 
 ### /core/loadfile
 
@@ -438,13 +507,13 @@ Load a ROM file into the current state of this core. **Note: Prefer using the /m
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| path | query |  | Yes | string |
+| path | query | Path to ROM file to load. | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Success status as a boolean. |
 
 ### /core/loadsavefile
 
@@ -461,14 +530,14 @@ Load save data from the given path. If the temporary flag is set, the given save
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| path | query |  | Yes | string |
-| temporary | query |  | Yes | boolean |
+| path | query | Path to save file to load. | Yes | string |
+| temporary | query | If true, save data will not be written back to disk. | Yes | boolean |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Success status as a boolean. |
 
 ### /core/loadstatebuffer
 
@@ -479,20 +548,19 @@ Load state from a buffer.
 
 ##### Description:
 
-Load state from a buffer.
+Load state from a hex array string buffer in the format: [d3,00,ea,66,...].
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| buffer | query |  | Yes | string |
-| flags | query |  | No | integer |
+| flags | query | State flags bitmask. Default 29 excludes screenshot flag (all except SCREENSHOT). Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16. | No | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Success status as a boolean. |
 
 ### /core/loadstatefile
 
@@ -509,14 +577,14 @@ Load state from the given path.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| path | query |  | Yes | string |
-| flags | query |  | No | integer |
+| path | query | Path to state file to load. | Yes | string |
+| flags | query | State flags bitmask. Default 29 excludes screenshot flag. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16. | No | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Success status as a boolean. |
 
 ### /core/loadstateslot
 
@@ -533,14 +601,14 @@ Load state from the slot number.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| slot | query |  | Yes | string |
-| flags | query |  | No | integer |
+| slot | query | State slot number to load from. | Yes | string |
+| flags | query | State flags bitmask. Default 29 excludes screenshot flag. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16. | No | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Success status as a boolean. |
 
 ### /core/platform
 
@@ -557,7 +625,7 @@ Get which platform is being emulated.
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Platform identifier. None: -1, GBA: 0, GB: 1. |
 
 ### /core/read16
 
@@ -574,13 +642,13 @@ Read a 16-bit value from the given bus address.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
+| address | query | Address as hex string with 0x prefix (e.g., '0x0300'). | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | 16-bit value of the read memory. |
 
 ### /core/read32
 
@@ -597,13 +665,13 @@ Read a 32-bit value from the given bus address.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
+| address | query | Address as hex string with 0x prefix (e.g., '0x0300'). | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | 32-bit value of the read memory. |
 
 ### /core/read8
 
@@ -620,13 +688,13 @@ Read an 8-bit value from the given bus address.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
+| address | query | Address as hex string with 0x prefix (e.g., '0x0300'). | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | 8-bit value of the read memory. |
 
 ### /core/readrange
 
@@ -637,20 +705,20 @@ Read byte range from the given offset.
 
 ##### Description:
 
-Read byte range from the given offset and returns an array of unsigned integers
+Read byte range from the given offset.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
-| length | query |  | Yes | string |
+| address | query | Address as hex string with 0x prefix (e.g., '0x0300'). | Yes | string |
+| length | query | Number of bytes to read. | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Comma separated hex values of the read memory. |
 
 ### /core/readregister
 
@@ -667,13 +735,13 @@ Read the value of the register with the given name.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| regName | query |  | Yes | string |
+| regName | query | Register name to read (e.g., 'r0', 'r1', 'sp', 'lr', 'pc'). | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | The value of the register. |
 
 ### /core/romsize
 
@@ -690,24 +758,7 @@ Get the size of the loaded ROM.
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
-
-### /core/runFrame
-
-#### POST
-##### Summary:
-
-Run until the next frame.
-
-##### Description:
-
-Run until the next frame.
-
-##### Responses
-
-| Code | Description |
-| ---- | ----------- |
-| 200 | OK |
+| 200 | The ROM size. |
 
 ### /core/savestatebuffer
 
@@ -718,19 +769,19 @@ Save state and return as a buffer.
 
 ##### Description:
 
-Save state and returns an array of unsigned integers
+Save state and return as a buffer. This can be used with /core/loadstatebuffer to restore state.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| flags | query |  | No | integer |
+| flags | query | State flags bitmask. Default 31 includes all flags (screenshot, metadata, etc). Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16. | No | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Comma separated hex values. |
 
 ### /core/savestatefile
 
@@ -747,14 +798,14 @@ Save state to the given path.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| path | query |  | Yes | string |
-| flags | query |  | No | integer |
+| path | query | Path where state file will be saved. | Yes | string |
+| flags | query | State flags bitmask. Default 31 includes all flags. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16. | No | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Success status as a boolean. |
 
 ### /core/savestateslot
 
@@ -771,14 +822,14 @@ Save state to the slot number.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| slot | query |  | Yes | string |
-| flags | query |  | No | integer |
+| slot | query | State slot number to save to. | Yes | string |
+| flags | query | State flags bitmask. Default 31 includes all flags. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16. | No | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Success status as a boolean. |
 
 ### /core/screenshot
 
@@ -801,7 +852,7 @@ Save a screenshot.
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /core/setkeys
 
@@ -818,13 +869,13 @@ Set the currently active key list.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| keys | query |  | Yes | integer |
+| keys | query | The bitmask of keys to set as active. Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select. | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /core/step
 
@@ -841,7 +892,7 @@ Run a single instruction.
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /core/write16
 
@@ -858,14 +909,14 @@ Write a 16-bit value from the given bus address.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
-| value | query |  | Yes | integer |
+| address | query | Address in hex, e.g. 0x0300 | Yes | string |
+| value | query | 16-bit decimal value to write (0-65535). | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /core/write32
 
@@ -882,14 +933,14 @@ Write a 32-bit value from the given bus address.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
-| value | query |  | Yes | integer |
+| address | query | Address in hex, e.g. 0x0300 | Yes | string |
+| value | query | 32-bit decimal value to write. | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /core/write8
 
@@ -906,14 +957,14 @@ Write an 8-bit value from the given bus address.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
-| value | query |  | Yes | integer |
+| address | query | Address in hex, e.g. 0x0300 | Yes | string |
+| value | query | 8-bit decimal value to write (0-255). | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /core/writeregister
 
@@ -930,14 +981,14 @@ Write the value of the register with the given name.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| regName | query | Address in hex, e.g. 0x03000000 | Yes | string |
-| value | query |  | Yes | integer |
+| regName | query | Register name to write (e.g., 'r0', 'r1', 'sp', 'lr', 'pc', etc). | Yes | string |
+| value | query | Decimal value to write to the register. | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /coreadapter/reset
 
@@ -954,24 +1005,24 @@ Reset the emulation and calls the reset callback.
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /coreadapter/memory
 
 #### GET
 ##### Summary:
 
-Get the platform specific set of MemoryDomains.
+Get the platform specific set of memory domains.
 
 ##### Description:
 
-Gets the platform specific set of memory domains as an array of strings.
+Get the platform specific set of memory domains.
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | The memory domains as a comma separated string. |
 
 ### /mgba-http/extension/loadfile
 
@@ -988,43 +1039,43 @@ Load a ROM file into the current state of this core. This convenience API handle
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| path | query |  | Yes | string |
+| path | query | Path to ROM file to load. | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Success status as a boolean. |
 
 ### /memorydomain/base
 
 #### GET
 ##### Summary:
 
-Get the address of the base of this memory domain.
+Get the base address of the memory domain.
 
 ##### Description:
 
-Get the address of the base of this memory domain.
+Get the base address of the specified memory domain.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| memoryDomain | query |  | Yes | string |
+| memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Address of the base of this memory domain. |
 
 ### /memorydomain/bound
 
 #### GET
 ##### Summary:
 
-Get the address of the end bound of this memory domain.
+Get the bound of the memory domain.
 
 ##### Description:
 
@@ -1034,20 +1085,20 @@ Get the address of the end bound of this memory domain. Note that this address i
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| memoryDomain | query |  | Yes | string |
+| memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Bound address as a string. |
 
 ### /memorydomain/name
 
 #### GET
 ##### Summary:
 
-Get a short, human-readable name for this memory domain.
+Get the name of the memory domain.
 
 ##### Description:
 
@@ -1057,13 +1108,13 @@ Get a short, human-readable name for this memory domain.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| memoryDomain | query |  | Yes | string |
+| memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Memory domain name. |
 
 ### /memorydomain/read16
 
@@ -1074,20 +1125,20 @@ Read a 16-bit value from the given offset.
 
 ##### Description:
 
-Read a 16-bit value from the given offset.
+Read a 16-bit value from the given offset in the specified memory domain.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| memoryDomain | query |  | Yes | string |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
+| memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
+| address | query | Address as hex string with 0x prefix (e.g., '0x0300') | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | 16-bit value as a string. |
 
 ### /memorydomain/read32
 
@@ -1098,20 +1149,20 @@ Read a 32-bit value from the given offset.
 
 ##### Description:
 
-Read a 32-bit value from the given offset.
+Read a 32-bit value from the given offset in the specified memory domain.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| memoryDomain | query |  | Yes | string |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
+| memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
+| address | query | Address as hex string with 0x prefix (e.g., '0x0300') | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | 32-bit value as a string. |
 
 ### /memorydomain/read8
 
@@ -1122,20 +1173,20 @@ Read an 8-bit value from the given offset.
 
 ##### Description:
 
-Read an 8-bit value from the given offset.
+Read an 8-bit value from the given offset in the specified memory domain.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| memoryDomain | query |  | Yes | string |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
+| memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
+| address | query | Address as hex string with 0x prefix (e.g., '0x0300') | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | 8-bit value as a string. |
 
 ### /memorydomain/readrange
 
@@ -1146,28 +1197,28 @@ Read byte range from the given offset.
 
 ##### Description:
 
-Read byte range from the given offset and returns an array of unsigned integers
+Read byte range from the given offset.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| memoryDomain | query |  | Yes | string |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
-| length | query |  | Yes | string |
+| memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
+| address | query | Address as hex string (e.g., '0x0300'). | Yes | string |
+| length | query | Number of bytes to read. | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Comma separated hex values. |
 
 ### /memorydomain/size
 
 #### GET
 ##### Summary:
 
-Get the size of this memory domain in bytes.
+Get the size of the memory domain.
 
 ##### Description:
 
@@ -1177,85 +1228,85 @@ Get the size of this memory domain in bytes.
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| memoryDomain | query |  | Yes | string |
+| memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Size in bytes as a string. |
 
 ### /memorydomain/write16
 
 #### POST
 ##### Summary:
 
-Write a 16-bit value from the given offset.
+Write a 16-bit value to the given offset.
 
 ##### Description:
 
-Write a 16-bit value from the given offset.
+Write a 16-bit value to the given offset in the specified memory domain.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| memoryDomain | query |  | Yes | string |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
-| value | query |  | Yes | integer |
+| memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
+| address | query | Address as hex string with 0x prefix (e.g., '0x0300'). | Yes | string |
+| value | query | 16-bit decimal value to write (0-65535). Not hex. | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /memorydomain/write32
 
 #### POST
 ##### Summary:
 
-Write a 32-bit value from the given offset.
+Write a 32-bit value to the given offset.
 
 ##### Description:
 
-Write a 32-bit value from the given offset.
+Write a 32-bit value to the given offset in the specified memory domain.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| memoryDomain | query |  | Yes | string |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
-| value | query |  | Yes | integer |
+| memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
+| address | query | Address as hex string with 0x prefix (e.g., '0x0300'). | Yes | string |
+| value | query | 32-bit decimal value to write. Not hex. | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
 
 ### /memorydomain/write8
 
 #### POST
 ##### Summary:
 
-Write an 8-bit value from the given offset.
+Write an 8-bit value to the given offset.
 
 ##### Description:
 
-Write an 8-bit value from the given offset.
+Write an 8-bit value to the given offset in the specified memory domain.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| memoryDomain | query |  | Yes | string |
-| address | query | Address in hex, e.g. 0x03000000 | Yes | string |
-| value | query |  | Yes | integer |
+| memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
+| address | query | Address as hex string with 0x prefix (e.g., '0x0300'). | Yes | string |
+| value | query | 8-bit decimal value to write (0-255). Not hex. | Yes | integer |
 
 ##### Responses
 
 | Code | Description |
 | ---- | ----------- |
-| 200 | OK |
+| 200 | Empty success response. |
