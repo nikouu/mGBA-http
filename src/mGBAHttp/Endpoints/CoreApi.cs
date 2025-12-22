@@ -337,7 +337,6 @@ namespace mGBAHttp.Endpoints
                 return o;
             });
 
-            // TODO: come back to these input datatypes for all the u32 and s32 types in the mGBA api documentation
             group.MapGet("/readrange", async (ObjectPool<ReusableSocket> socketPool, string address, string length) =>
             {
                 var messageModel = new MessageModel("core.readRange", address, length).ToString();
@@ -466,7 +465,7 @@ namespace mGBAHttp.Endpoints
                 return o;
             });
 
-            group.MapPost("/write16", async (ObjectPool<ReusableSocket> socketPool, string address, int value) =>
+            group.MapPost("/write16", async (ObjectPool<ReusableSocket> socketPool, string address, uint value) =>
             {
                 var messageModel = new MessageModel("core.write16", address, value.ToString()).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
@@ -475,13 +474,13 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Write a 16-bit value from the given bus address.";
                 o.Description = "Write a 16-bit value from the given bus address.";
                 o.Parameters[0].Description = "Address in hex, e.g. 0x0300";
-                o.Parameters[1].Description = "16-bit decimal value to write (0-65535).";
+                o.Parameters[1].Description = "16-bit unsigned integer value to write (0-65535).";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
-            group.MapPost("/write32", async (ObjectPool<ReusableSocket> socketPool, string address, int value) =>
+            group.MapPost("/write32", async (ObjectPool<ReusableSocket> socketPool, string address, uint value) =>
             {
                 var messageModel = new MessageModel("core.write32", address, value.ToString()).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
@@ -490,7 +489,7 @@ namespace mGBAHttp.Endpoints
                 o.Summary = "Write a 32-bit value from the given bus address.";
                 o.Description = "Write a 32-bit value from the given bus address.";
                 o.Parameters[0].Description = "Address in hex, e.g. 0x0300";
-                o.Parameters[1].Description = "32-bit decimal value to write.";
+                o.Parameters[1].Description = "32-bit unsigned integer value to write.";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;

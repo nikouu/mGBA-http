@@ -129,33 +129,33 @@ namespace mGBAHttp.Endpoints
                 return o;
             });
 
-            group.MapPost("/write16", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain, string address, int value) =>
+            group.MapPost("/write16", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain, string address, uint value) =>
             {
                 var messageModel = new MessageModel("memoryDomain.write16", memoryDomain.ToString(), address, value.ToString()).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
-                o.Summary = "Write a 16-bit value to the given offset.";
-                o.Description = "Write a 16-bit value to the given offset in the specified memory domain.";
+                o.Summary = "Write a 16-bit value from the given offset.";
+                o.Description = "Write a 16-bit value from the given offset in the specified memory domain.";
                 o.Parameters[0].Description = "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).";
                 o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x0300').";
-                o.Parameters[2].Description = "16-bit decimal value to write (0-65535). Not hex.";
+                o.Parameters[2].Description = "16-bit unsigned integer value to write (0-65535). Not hex.";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
             });
 
-            group.MapPost("/write32", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain, string address, int value) =>
+            group.MapPost("/write32", async (ObjectPool<ReusableSocket> socketPool, string memoryDomain, string address, uint value) =>
             {
                 var messageModel = new MessageModel("memoryDomain.write32", memoryDomain.ToString(), address, value.ToString()).ToString();
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
-                o.Summary = "Write a 32-bit value to the given offset.";
-                o.Description = "Write a 32-bit value to the given offset in the specified memory domain.";
+                o.Summary = "Write a 32-bit value from the given offset.";
+                o.Description = "Write a 32-bit value from the given offset in the specified memory domain.";
                 o.Parameters[0].Description = "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).";
                 o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x0300').";
-                o.Parameters[2].Description = "32-bit decimal value to write. Not hex.";
+                o.Parameters[2].Description = "32-bit unsigned integer value to write (0-4294967295). Not hex.";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -167,11 +167,11 @@ namespace mGBAHttp.Endpoints
                 return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
             }).WithOpenApi(o =>
             {
-                o.Summary = "Write an 8-bit value to the given offset.";
-                o.Description = "Write an 8-bit value to the given offset in the specified memory domain.";
+                o.Summary = "Write an 8-bit value from the given offset.";
+                o.Description = "Write an 8-bit value from the given offset in the specified memory domain.";
                 o.Parameters[0].Description = "Memory domain name (e.g., 'wram', 'cart0', 'bios', etc).";
                 o.Parameters[1].Description = "Address as hex string with 0x prefix (e.g., '0x0300').";
-                o.Parameters[2].Description = "8-bit decimal value to write (0-255). Not hex.";
+                o.Parameters[2].Description = "8-bit integer value to write (0-255). Not hex.";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
