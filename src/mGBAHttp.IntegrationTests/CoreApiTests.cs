@@ -617,6 +617,130 @@ namespace mGBAHttp.IntegrationTests
             Assert.AreEqual("true", responseContent);
         }
 
+
+        [TestMethod]
+        public async Task Write32_MaxSignedIntPlusOne_WritesCorrectValue()
+        {
+            // Arrange
+            var address = "0x02000000";
+            const uint value = 2147483648U; // Max signed int32 + 1 (0x80000000)
+
+            // Act
+            var writeResponse = await _client.PostAsync($"/core/write32?address={address}&value={value}", null);
+
+            var readResponse = await _client.GetAsync($"/core/read32?address={address}");
+            var readContent = await readResponse.Content.ReadAsStringAsync();
+            var readValue = uint.Parse(readContent);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, writeResponse.StatusCode);
+            Assert.AreEqual(value, readValue);
+        }
+
+        [TestMethod]
+        public async Task Write32_MaxUnsignedInt_WritesCorrectValue()
+        {
+            // Arrange
+            var address = "0x02000004";
+            const uint value = 4294967295U; // Max unsigned int32 (0xFFFFFFFF)
+
+            // Act
+            var writeResponse = await _client.PostAsync($"/core/write32?address={address}&value={value}", null);
+
+            var readResponse = await _client.GetAsync($"/core/read32?address={address}");
+            var readContent = await readResponse.Content.ReadAsStringAsync();
+            var readValue = uint.Parse(readContent);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, writeResponse.StatusCode);
+            Assert.AreEqual(value, readValue);
+        }
+
+        [TestMethod]
+        public async Task Write32_MaxSignedInt_WritesCorrectValue()
+        {
+            // Arrange
+            var address = "0x02000008";
+            const uint value = 2147483647U; // Max signed int32 (0x7FFFFFFF)
+
+            // Act
+            var writeResponse = await _client.PostAsync($"/core/write32?address={address}&value={value}", null);
+
+            var readResponse = await _client.GetAsync($"/core/read32?address={address}");
+            var readContent = await readResponse.Content.ReadAsStringAsync();
+            var readValue = uint.Parse(readContent);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, writeResponse.StatusCode);
+            Assert.AreEqual(value, readValue, $"Expected to write and read back {value} (0x{value:X8})");
+        }
+
+        [TestMethod]
+        public async Task Write16_MaxSignedInt16PlusOne_WritesCorrectValue()
+        {
+            // Arrange
+            var address = "0x0200000C";
+            const ushort value = 32768; // Max signed int16 + 1 (0x8000)
+
+            // Act
+            var writeResponse = await _client.PostAsync($"/core/write16?address={address}&value={value}", null);
+
+            var readResponse = await _client.GetAsync($"/core/read16?address={address}");
+            var readContent = await readResponse.Content.ReadAsStringAsync();
+            var readValue = ushort.Parse(readContent);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, writeResponse.StatusCode);
+            Assert.AreEqual(value, readValue, $"Expected to write and read back {value} (0x{value:X4})");
+        }
+
+        [TestMethod]
+        public async Task Write16_MaxUnsignedInt16_WritesCorrectValue()
+        {
+            // Arrange
+            var address = "0x0200000E";
+            const ushort value = 65535; // Max unsigned int16 (0xFFFF)
+
+            // Act
+            var writeResponse = await _client.PostAsync($"/core/write16?address={address}&value={value}", null);
+
+            var readResponse = await _client.GetAsync($"/core/read16?address={address}");
+            var readContent = await readResponse.Content.ReadAsStringAsync();
+            var readValue = ushort.Parse(readContent);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, writeResponse.StatusCode);
+            Assert.AreEqual(value, readValue, $"Expected to write and read back {value} (0x{value:X4})");
+        }
+
+        [TestMethod]
+        [DataRow(0U, DisplayName = "Write 0")]
+        [DataRow(1U, DisplayName = "Write 1")]
+        [DataRow(255U, DisplayName = "Write 255")]
+        [DataRow(256U, DisplayName = "Write 256")]
+        [DataRow(65535U, DisplayName = "Write 65535")]
+        [DataRow(65536U, DisplayName = "Write 65536")]
+        [DataRow(2147483647U, DisplayName = "Write Max Signed Int32")]
+        [DataRow(2147483648U, DisplayName = "Write Max Signed Int32 + 1")]
+        [DataRow(3000000000U, DisplayName = "Write 3 Billion")]
+        [DataRow(4294967295U, DisplayName = "Write Max Unsigned Int32")]
+        public async Task Write32_VariousUnsignedValues_WritesCorrectValue(uint value)
+        {
+            // Arrange
+            var address = "0x02000010";
+
+            // Act
+            var writeResponse = await _client.PostAsync($"/core/write32?address={address}&value={value}", null);
+
+            var readResponse = await _client.GetAsync($"/core/read32?address={address}");
+            var readContent = await readResponse.Content.ReadAsStringAsync();
+            var readValue = uint.Parse(readContent);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, writeResponse.StatusCode);
+            Assert.AreEqual(value, readValue);
+        }
+
         public void Dispose()
         {
             _client.Dispose();
