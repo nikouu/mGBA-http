@@ -14,7 +14,6 @@ using System.Runtime.InteropServices;
 
 var version = Assembly.GetExecutingAssembly().GetName().Version;
 var programVersionString = $"v{version?.Major}.{version?.Minor}.{version?.Build}";
-var swaggerVersionString = $"v{version?.Major}.{version?.Minor}";
 
 SetupConsoleAnsiSupport();
 
@@ -40,7 +39,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc(swaggerVersionString, new OpenApiInfo
+    options.SwaggerDoc(programVersionString, new OpenApiInfo
     {
         Title = "mGBA-http",
         Description = "An HTTP interface for mGBA scripting.",
@@ -83,12 +82,12 @@ app.UseRequestResponseLogging();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint($"/swagger/{swaggerVersionString}/swagger.json", swaggerVersionString);
+    options.SwaggerEndpoint($"/swagger/{programVersionString}/swagger.json", programVersionString);
     options.RoutePrefix = string.Empty;
 });
 
 Console.WriteLine("Swagger UI: /index.html");
-Console.WriteLine($"Swagger JSON: /swagger/{swaggerVersionString}/swagger.json\n");
+Console.WriteLine($"Swagger JSON: /swagger/{programVersionString}/swagger.json\n");
 
 app.MapCoreEndpoints();
 app.MapConsoleEndpoints();

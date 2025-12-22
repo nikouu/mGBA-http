@@ -1459,7 +1459,7 @@
           {
             "name": "value",
             "in": "query",
-            "description": "16-bit decimal value to write (0-65535).",
+            "description": "16-bit unsigned integer value to write (0-65535).",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1502,7 +1502,7 @@
           {
             "name": "value",
             "in": "query",
-            "description": "32-bit decimal value to write.",
+            "description": "32-bit unsigned integer value to write.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2002,8 +2002,8 @@
         "tags": [
           "MemoryDomain"
         ],
-        "summary": "Write a 16-bit value to the given offset.",
-        "description": "Write a 16-bit value to the given offset in the specified memory domain.",
+        "summary": "Write a 16-bit value from the given offset.",
+        "description": "Write a 16-bit value from the given offset in the specified memory domain.",
         "parameters": [
           {
             "name": "memoryDomain",
@@ -2026,7 +2026,7 @@
           {
             "name": "value",
             "in": "query",
-            "description": "16-bit decimal value to write (0-65535). Not hex.",
+            "description": "16-bit unsigned integer value to write (0-65535). Not hex.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2054,8 +2054,8 @@
         "tags": [
           "MemoryDomain"
         ],
-        "summary": "Write a 32-bit value to the given offset.",
-        "description": "Write a 32-bit value to the given offset in the specified memory domain.",
+        "summary": "Write a 32-bit value from the given offset.",
+        "description": "Write a 32-bit value from the given offset in the specified memory domain.",
         "parameters": [
           {
             "name": "memoryDomain",
@@ -2078,7 +2078,7 @@
           {
             "name": "value",
             "in": "query",
-            "description": "32-bit decimal value to write. Not hex.",
+            "description": "32-bit unsigned integer value to write (0-4294967295). Not hex.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2106,8 +2106,8 @@
         "tags": [
           "MemoryDomain"
         ],
-        "summary": "Write an 8-bit value to the given offset.",
-        "description": "Write an 8-bit value to the given offset in the specified memory domain.",
+        "summary": "Write an 8-bit value from the given offset.",
+        "description": "Write an 8-bit value from the given offset in the specified memory domain.",
         "parameters": [
           {
             "name": "memoryDomain",
@@ -2130,7 +2130,7 @@
           {
             "name": "value",
             "in": "query",
-            "description": "8-bit decimal value to write (0-255). Not hex.",
+            "description": "8-bit integer value to write (0-255). Not hex.",
             "required": true,
             "schema": {
               "type": "integer",

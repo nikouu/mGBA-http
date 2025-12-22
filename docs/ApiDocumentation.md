@@ -1,7 +1,6 @@
 # API Documentation
 
 The following is generated from the [swagger.json](swagger.json) file via https://swagger-markdown-ui.netlify.app/ 
-
 # mGBA-http
 An HTTP interface for mGBA scripting.
 
@@ -973,7 +972,7 @@ Write a 16-bit value from the given bus address.
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | address | query | Address in hex, e.g. 0x0300 | Yes | string |
-| value | query | 16-bit decimal value to write (0-65535). | Yes | integer |
+| value | query | 16-bit unsigned integer value to write (0-65535). | Yes | integer |
 
 ##### Responses
 
@@ -997,7 +996,7 @@ Write a 32-bit value from the given bus address.
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | address | query | Address in hex, e.g. 0x0300 | Yes | string |
-| value | query | 32-bit decimal value to write. | Yes | integer |
+| value | query | 32-bit unsigned integer value to write. | Yes | integer |
 
 ##### Responses
 
@@ -1304,11 +1303,11 @@ Get the size of this memory domain in bytes.
 #### POST
 ##### Summary:
 
-Write a 16-bit value to the given offset.
+Write a 16-bit value from the given offset.
 
 ##### Description:
 
-Write a 16-bit value to the given offset in the specified memory domain.
+Write a 16-bit value from the given offset in the specified memory domain.
 
 ##### Parameters
 
@@ -1316,7 +1315,7 @@ Write a 16-bit value to the given offset in the specified memory domain.
 | ---- | ---------- | ----------- | -------- | ---- |
 | memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
 | address | query | Address as hex string with 0x prefix (e.g., '0x0300'). | Yes | string |
-| value | query | 16-bit decimal value to write (0-65535). Not hex. | Yes | integer |
+| value | query | 16-bit unsigned integer value to write (0-65535). Not hex. | Yes | integer |
 
 ##### Responses
 
@@ -1329,11 +1328,11 @@ Write a 16-bit value to the given offset in the specified memory domain.
 #### POST
 ##### Summary:
 
-Write a 32-bit value to the given offset.
+Write a 32-bit value from the given offset.
 
 ##### Description:
 
-Write a 32-bit value to the given offset in the specified memory domain.
+Write a 32-bit value from the given offset in the specified memory domain.
 
 ##### Parameters
 
@@ -1341,7 +1340,7 @@ Write a 32-bit value to the given offset in the specified memory domain.
 | ---- | ---------- | ----------- | -------- | ---- |
 | memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
 | address | query | Address as hex string with 0x prefix (e.g., '0x0300'). | Yes | string |
-| value | query | 32-bit decimal value to write. Not hex. | Yes | integer |
+| value | query | 32-bit unsigned integer value to write (0-4294967295). Not hex. | Yes | integer |
 
 ##### Responses
 
@@ -1354,11 +1353,11 @@ Write a 32-bit value to the given offset in the specified memory domain.
 #### POST
 ##### Summary:
 
-Write an 8-bit value to the given offset.
+Write an 8-bit value from the given offset.
 
 ##### Description:
 
-Write an 8-bit value to the given offset in the specified memory domain.
+Write an 8-bit value from the given offset in the specified memory domain.
 
 ##### Parameters
 
@@ -1366,7 +1365,7 @@ Write an 8-bit value to the given offset in the specified memory domain.
 | ---- | ---------- | ----------- | -------- | ---- |
 | memoryDomain | query | Memory domain name (e.g., 'wram', 'cart0', 'bios', etc). | Yes | string |
 | address | query | Address as hex string with 0x prefix (e.g., '0x0300'). | Yes | string |
-| value | query | 8-bit decimal value to write (0-255). Not hex. | Yes | integer |
+| value | query | 8-bit integer value to write (0-255). Not hex. | Yes | integer |
 
 ##### Responses
 
