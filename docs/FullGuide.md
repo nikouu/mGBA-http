@@ -61,14 +61,41 @@ The following configuration is available:
 | `Kestrel.Endpoints`                                   | These are the mGBA-http listening ports                              |
 | `mgba-http`                                           | These are the socket configurations for connecting mGBA-http to mGBA |
 
-The image below shows to changes to the default settings:
-1. `IncludeJsonDetails` to true
-1. Update the mGBA-http listening ports
+##### Enabling HTTPS (optional)
 
-![](Images/UpdatedSettingsExample.jpg)
+By default, mGBA-http runs on HTTP only. If you need HTTPS, add an `Https` endpoint to the `Kestrel.Endpoints` section in `appsettings.json`:
 
+```json
+"Kestrel": {
+  "Endpoints": {
+    "Http": {
+      "Url": "http://localhost:5000"
+    },
+    "Https": {
+      "Url": "https://localhost:5001"
+    }
+  }
+}
+```
 
-#### mGBASocketServer.lua
+HTTPS requires a valid certificate. The easiest way to get this going is by having the [.NET SDK installed](https://dotnet.microsoft.com/en-us/download), then you can generate and trust a development certificate by running:
+
+```
+dotnet dev-certs https --trust
+```
+
+If you are using a self-contained build without the .NET SDK, you will need to provide a certificate file explicitly:
+
+```json
+"Https": {
+  "Url": "https://localhost:5001",
+  "Certificate": {
+    "Path": "path/to/cert.pfx",
+    "Password": "your-password"
+  }
+}
+```
+### mGBASocketServer.lua
 
 At the top, there is the `logLevel` flag. This will output timestamped logs to the scripting console based on the severity of the log entry. By default it is set to **2 - Information**:
 
@@ -87,6 +114,15 @@ At the top, there is the `logLevel` flag. This will output timestamped logs to t
 
 
 ### Examples
+
+The image below shows to changes to the default settings:
+1. `IncludeJsonDetails` to true
+1. Update the mGBA-http listening ports
+
+![](Images/UpdatedSettingsExample.jpg)
+
+For more:
+
 1. See the [examples page](Examples.md).
 1. There is a [C# test console project](/testing/) where you can send keys to mGBA.
 1. The [CPU-Plays-Pokemon repo](https://github.com/nikouu/CPU-Plays-Pokemon).
