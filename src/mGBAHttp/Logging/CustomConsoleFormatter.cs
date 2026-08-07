@@ -145,6 +145,11 @@ public sealed class CustomConsoleFormatter : ConsoleFormatter, IDisposable
 
 public sealed class mGBAHttpConsoleFormatterOptions : ConsoleFormatterOptions
 {
-    public string TimestampFormat { get; set; } = "[yyyy-MM-dd HH:mm:ss] ";
+    public mGBAHttpConsoleFormatterOptions()
+    {
+        // Base TimestampFormat defaults to null; default it so timestamps show without config.
+        TimestampFormat = "[yyyy-MM-dd HH:mm:ss] ";
+    }
+
     public bool IncludeJsonDetails { get; set; } = false; // Defaults to false if not specified
 }
