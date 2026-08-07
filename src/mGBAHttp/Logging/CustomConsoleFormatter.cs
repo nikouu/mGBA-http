@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace mGBAHttp.Logging;
 
-public sealed class CustomConsoleFormatter : ConsoleFormatter
+public sealed class CustomConsoleFormatter : ConsoleFormatter, IDisposable
 {
     private const string DefaultForegroundColor = "\x1B[39m";
     private const string ResetAll = "\x1B[0m";
