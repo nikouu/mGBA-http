@@ -1,4 +1,5 @@
-﻿using mGBAHttp.Domain;
+﻿using mGBAHttp;
+using mGBAHttp.Domain;
 using mGBAHttp.Endpoints;
 using mGBAHttp.Logging;
 using mGBAHttp.Models;
@@ -61,9 +62,12 @@ builder.Services.TryAddSingleton(serviceProvider =>
 {
     var provider = serviceProvider.GetRequiredService<ObjectPoolProvider>();
     var socketOptions = serviceProvider.GetRequiredService<IOptions<SocketOptions>>();
-    var policy = new ReusableSocketPooledObjectPolicy(socketOptions.Value.IpAddress, socketOptions.Value.Port);
+    var policy = new ReusableSocketPooledObjectPolicy(socketOptions.Value);
     return provider.Create(policy);
 });
+
+builder.Services.AddExceptionHandler<MgbaExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole(options =>
@@ -76,6 +80,8 @@ builder.Logging.AddConsole(options =>
 });
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 app.UseRequestResponseLogging();
 

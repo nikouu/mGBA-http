@@ -1,24 +1,20 @@
-﻿using Microsoft.Extensions.ObjectPool;
+using mGBAHttp.Models;
+using Microsoft.Extensions.ObjectPool;
 
 namespace mGBAHttp.Domain
 {
     public class ReusableSocketPooledObjectPolicy : IPooledObjectPolicy<ReusableSocket>
     {
-        private readonly string _ipAddress;
-        private readonly int _port;
+        private readonly SocketOptions _options;
 
-        public ReusableSocketPooledObjectPolicy(string ipAddress, int port)
+        public ReusableSocketPooledObjectPolicy(SocketOptions options)
         {
-            _ipAddress = ipAddress;
-            _port = port;
+            _options = options;
         }
 
         public ReusableSocket Create()
         {
-            // stampeding cache problem here too?
-            var socket = new ReusableSocket(_ipAddress, _port);
-            socket.Connect();
-            return socket;
+            return new ReusableSocket(_options);
         }
 
         public bool Return(ReusableSocket obj)

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.ObjectPool;
+﻿using mGBAHttp.Models;
+using Microsoft.Extensions.ObjectPool;
 using Microsoft.IO;
 using System.Buffers;
 using System.Net;
@@ -12,6 +13,8 @@ namespace mGBAHttp.Domain
         private Socket _socket;
         private bool _responseStarted;
         private readonly IPEndPoint _ipEndpoint;
+        private readonly int _readTimeout;
+        private readonly int _writeTimeout;
         private const int _maxRetries = 3;
         private const int _initialDelay = 400;
         private const int _maxDelay = 2000;
@@ -19,20 +22,13 @@ namespace mGBAHttp.Domain
         private const string _terminationString = "<|END|>";
         private static readonly byte[] _terminationBytes = Encoding.UTF8.GetBytes(_terminationString);
 
-        public ReusableSocket(string ipAddress, int port)
+        public ReusableSocket(SocketOptions options)
         {
-
-            var address = IPAddress.Parse(ipAddress);
-            _ipEndpoint = new IPEndPoint(address, port);
+            var address = IPAddress.Parse(options.IpAddress);
+            _ipEndpoint = new IPEndPoint(address, options.Port);
+            _readTimeout = options.ReadTimeout;
+            _writeTimeout = options.WriteTimeout;
             _socket = new Socket(_ipEndpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-        }
-
-        public void Connect()
-        {
-            if (!_socket.Connected)
-            {
-                _socket.Connect(_ipEndpoint);
-            }
         }
 
         public async Task<string> SendMessageAsync(string message)
@@ -99,22 +95,31 @@ namespace mGBAHttp.Domain
 
         private async Task ConnectAndSendAsync(string message)
         {
-            if (!_socket.Connected)
+            using var cts = new CancellationTokenSource(_writeTimeout);
+            try
             {
-                await _socket.ConnectAsync(_ipEndpoint);
-            }
+                if (!_socket.Connected)
+                {
+                    await _socket.ConnectAsync(_ipEndpoint, cts.Token);
+                }
 
-            var messageBytes = Encoding.UTF8.GetBytes(message + _terminationString);
-            var totalSent = 0;
-            while (totalSent < messageBytes.Length)
+                var messageBytes = Encoding.UTF8.GetBytes(message + _terminationString);
+                var totalSent = 0;
+                while (totalSent < messageBytes.Length)
+                {
+                    totalSent += await _socket.SendAsync(messageBytes.AsMemory(totalSent), SocketFlags.None, cts.Token);
+                }
+            }
+            catch (OperationCanceledException)
             {
-                totalSent += await _socket.SendAsync(messageBytes.AsMemory(totalSent), SocketFlags.None);
+                throw new TimeoutException($"Could not reach mGBA within {_writeTimeout}ms. Is mGBA running with the Lua script loaded?");
             }
         }
 
         private async Task<string> ReadAsync()
         {
             _responseStarted = false;
+            using var cts = new CancellationTokenSource(_readTimeout);
             var buffer = ArrayPool<byte>.Shared.Rent(1024);
             try
             {
@@ -123,7 +128,16 @@ namespace mGBAHttp.Domain
 
                 while (true)
                 {
-                    var bytesRead = await _socket.ReceiveAsync(buffer, SocketFlags.None);
+                    int bytesRead;
+                    try
+                    {
+                        bytesRead = await _socket.ReceiveAsync(buffer, SocketFlags.None, cts.Token);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        throw new TimeoutException($"No response from mGBA within {_readTimeout}ms. Is mGBA running with the Lua script loaded?");
+                    }
+
                     if (bytesRead == 0)
                     {
                         throw new SocketException((int)SocketError.Disconnecting);
