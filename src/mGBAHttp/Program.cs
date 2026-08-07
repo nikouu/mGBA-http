@@ -55,7 +55,13 @@ builder.Services.AddSwaggerGen(options =>
     options.SchemaFilter<EnumSchemaFilter>();
 });
 
-builder.Services.Configure<SocketOptions>(builder.Configuration.GetSection(SocketOptions.Section));
+builder.Services.AddOptions<SocketOptions>()
+    .Bind(builder.Configuration.GetSection(SocketOptions.Section))
+    .Validate(o => System.Net.IPAddress.TryParse(o.IpAddress, out _), "mgba-http:Socket:IpAddress must be a valid IP address.")
+    .Validate(o => o.Port is > 0 and <= 65535, "mgba-http:Socket:Port must be between 1 and 65535.")
+    .Validate(o => o.ReadTimeout > 0, "mgba-http:Socket:ReadTimeout must be greater than 0 (milliseconds).")
+    .Validate(o => o.WriteTimeout > 0, "mgba-http:Socket:WriteTimeout must be greater than 0 (milliseconds).")
+    .ValidateOnStart();
 builder.Services.TryAddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
 
 builder.Services.TryAddSingleton(serviceProvider =>
