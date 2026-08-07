@@ -10,6 +10,7 @@ namespace mGBAHttp.Domain
     public class ReusableSocket : IResettable, IDisposable
     {
         private Socket _socket;
+        private bool _responseStarted;
         private readonly IPEndPoint _ipEndpoint;
         private const int _maxRetries = 3;
         private const int _initialDelay = 400;
@@ -39,12 +40,17 @@ namespace mGBAHttp.Domain
             var attempts = 0;
             var delay = _initialDelay;
 
-            while (attempts < _maxRetries)
+            while (true)
             {
+                attempts++;
+                var requestSent = false;
+
                 try
                 {
-                    attempts++;
-                    var response = await SendAsync(message);
+                    await ConnectAndSendAsync(message);
+                    requestSent = true;
+
+                    var response = await ReadAsync();
 
                     if (response.Contains("<|ERROR|>"))
                     {
@@ -59,28 +65,20 @@ namespace mGBAHttp.Domain
                 }
                 catch (Exception ex)
                 {
-                    if (attempts >= _maxRetries)
+                    // The socket may hold a half-written request or half-read response, so
+                    // it must not be reused as-is by the next attempt or the pool.
+                    RecreateSocket();
+
+                    if (!ShouldRetry(requestSent, _responseStarted, ex is SocketException)
+                        || attempts >= _maxRetries)
                     {
                         throw;
-                    }
-
-                    if (ex is SocketException sockEx &&
-                        (sockEx.SocketErrorCode
-                        is SocketError.ConnectionReset
-                        or SocketError.NotConnected
-                        or SocketError.IsConnected
-                        or SocketError.ConnectionAborted
-                        or SocketError.Disconnecting))
-                    {
-                        RecreateSocket();
                     }
 
                     await Task.Delay(delay);
                     delay = Math.Min(delay * 3, _maxDelay);
                 }
             }
-
-            throw new Exception("How did we get here?");
         }
 
         private void RecreateSocket()
@@ -94,7 +92,12 @@ namespace mGBAHttp.Domain
             _socket = new Socket(_ipEndpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         }
 
-        private async Task<string> SendAsync(string message)
+        // Resend only when mGBA cannot have run the command: it never fully sent,
+        // or the socket died before any reply arrived.
+        internal static bool ShouldRetry(bool requestFullySent, bool responseStarted, bool isSocketException) =>
+            !requestFullySent || (isSocketException && !responseStarted);
+
+        private async Task ConnectAndSendAsync(string message)
         {
             if (!_socket.Connected)
             {
@@ -102,13 +105,16 @@ namespace mGBAHttp.Domain
             }
 
             var messageBytes = Encoding.UTF8.GetBytes(message + _terminationString);
-            await _socket.SendAsync(messageBytes, SocketFlags.None);
-
-            return await ReadAsync();
+            var totalSent = 0;
+            while (totalSent < messageBytes.Length)
+            {
+                totalSent += await _socket.SendAsync(messageBytes.AsMemory(totalSent), SocketFlags.None);
+            }
         }
 
         private async Task<string> ReadAsync()
         {
+            _responseStarted = false;
             var buffer = ArrayPool<byte>.Shared.Rent(1024);
             try
             {
@@ -123,6 +129,7 @@ namespace mGBAHttp.Domain
                         throw new SocketException((int)SocketError.Disconnecting);
                     }
 
+                    _responseStarted = true;
                     await memoryStream.WriteAsync(buffer.AsMemory(0, bytesRead));
                     totalBytes += bytesRead;
 
