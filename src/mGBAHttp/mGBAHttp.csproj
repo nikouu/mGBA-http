@@ -4,7 +4,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>0.8.2</Version>
+    <Version>0.9.0</Version>
+	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>  
   </PropertyGroup>
 
   <PropertyGroup Label="Normalise stack trace file locations" Condition="$(BuildingInsideVisualStudio) != 'true'">

@@ -87,7 +87,7 @@ public sealed class CustomConsoleFormatter : ConsoleFormatter, IDisposable
     {
         string? correlationId = null;
 
-        scopeProvider?.ForEachScope<Dictionary<string, object>>((scope, _) =>
+        scopeProvider?.ForEachScope<object?>((scope, _) =>
         {
             if (scope is IEnumerable<KeyValuePair<string, object>> pairs)
             {

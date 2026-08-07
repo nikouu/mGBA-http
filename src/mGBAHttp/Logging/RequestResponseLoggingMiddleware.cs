@@ -35,11 +35,12 @@ public class RequestResponseLoggingMiddleware
         }
 
         // Get or create correlation ID
-        var correlationId = context.Request.Headers.Keys
+        var correlationId = (context.Request.Headers.Keys
             .FirstOrDefault(k => k.Equals(CorrelationIdHeaderName, StringComparison.OrdinalIgnoreCase))
             is string headerKey
                 ? context.Request.Headers[headerKey].FirstOrDefault()
-                : Activity.Current?.Id ?? Guid.NewGuid().ToString();
+                : Activity.Current?.Id)
+            ?? Guid.NewGuid().ToString();
 
         // Add correlation ID to response headers
         context.Response.Headers[CorrelationIdHeaderName] = correlationId;
