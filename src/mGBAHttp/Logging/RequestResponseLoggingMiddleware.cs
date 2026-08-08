@@ -80,8 +80,13 @@ public class RequestResponseLoggingMiddleware
             memoryStream.Position = 0;
             await memoryStream.CopyToAsync(originalBodyStream);
 
+            const int maxLoggedBodyLength = 500;
+            var loggedBody = responseBody.Length <= maxLoggedBodyLength
+                ? responseBody
+                : $"{responseBody[..maxLoggedBodyLength]}... ({responseBody.Length} chars total)";
+
             logger.LogInformation("Outgoing response from {Path}: {Response}",
-                context.Request.Path, responseBody);
+                context.Request.Path, loggedBody);
         }
         finally
         {
