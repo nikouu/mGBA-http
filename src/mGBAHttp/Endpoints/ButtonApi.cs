@@ -20,7 +20,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Adds a single button.";
                 o.Description = "A custom convenience API that mimics /core/addkey but uses button names as opposed to a bitmask.";
-                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Parameters[0].Description = "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -34,7 +34,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Adds multiple buttons.";
                 o.Description = "A custom convenience API that mimics /core/addkeys but uses button names as opposed to their number value.";
-                o.Parameters[0].Description = "Key values of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Parameters[0].Description = "Key values of: A, B, Select, Start, Right, Left, Up, Down, R, or L.";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -48,7 +48,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Remove a single button.";
                 o.Description = "A custom convenience API that mimics /core/clearkey but uses button names as opposed to their number value.";
-                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Parameters[0].Description = "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -62,7 +62,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Remove multiple buttons.";
                 o.Description = "A custom convenience API that mimics /core/clearkeys but uses button names as opposed to a bitmask.";
-                o.Parameters[0].Description = "Key values of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Parameters[0].Description = "Key values of: A, B, Select, Start, Right, Left, Up, Down, R, or L.";
                 o.Responses["200"].Description = "Empty success response.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -76,7 +76,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Get the active state of a given button.";
                 o.Description = "A custom convenience API that mimics /core/getkey but uses button names as opposed to their number value.";
-                o.Parameters[0].Description = "Button value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Parameters[0].Description = "Button value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.";
                 o.Responses["200"].Description = "0 if key is not pressed or 1 if the key is pressed.";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("1");
                 return o;
@@ -103,7 +103,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Sends button presses.";
                 o.Description = "A custom convenience API that implements a key press and release. This is as opposed to the key based core API that sends only either a press or release message.";
-                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Parameters[0].Description = "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.";
                 o.Responses["200"].Description = "Empty success response";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
                 return o;
@@ -116,7 +116,7 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Sends multiple button presses simultaneously.";
-                o.Description = "A custom convenience API that implements multiple simultaneously keys being pressed and released. This is as opposed to the key based core API that sends only either a press or release message.";
+                o.Description = "A custom convenience API that implements multiple simultaneous keys being pressed and released. This is as opposed to the key based core API that sends only either a press or release message.";
                 o.Parameters[0].Description = "A key array.";
                 o.Responses["200"].Description = "Empty success response";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
@@ -131,7 +131,7 @@ namespace mGBAHttp.Endpoints
             {
                 o.Summary = "Sends a held down button for a given duration in frames.";
                 o.Description = "A custom convenience API that implements a held down button for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.";
-                o.Parameters[0].Description = "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.";
+                o.Parameters[0].Description = "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.";
                 o.Parameters[1].Description = "Duration in frames.";
                 o.Responses["200"].Description = "Empty success response";
                 o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
@@ -145,7 +145,7 @@ namespace mGBAHttp.Endpoints
             }).WithOpenApi(o =>
             {
                 o.Summary = "Sends multiple button presses simultaneously for a given duration in frames.";
-                o.Description = "A custom convenience API that implements multiple simultaneously keys being pressed and released for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.";
+                o.Description = "A custom convenience API that implements multiple simultaneous keys being pressed and released for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.";
                 o.Parameters[0].Description = "A key array.";
                 o.Parameters[1].Description = "Duration in frames.";
                 o.Responses["200"].Description = "Empty success response";

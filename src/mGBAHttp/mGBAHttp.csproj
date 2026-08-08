@@ -15,7 +15,6 @@
   <PropertyGroup>
     <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
     <ApplicationIcon>mGBA-http icon.ico</ApplicationIcon>
-	<PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=X:\</PathMap>
   </PropertyGroup>
 
   <ItemGroup>
