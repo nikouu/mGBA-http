@@ -23,7 +23,7 @@ A custom convenience API that mimics /core/addkey but uses button names as oppos
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| button | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
+| button | query | Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
 
 ##### Responses
 
@@ -46,7 +46,7 @@ A custom convenience API that mimics /core/addkeys but uses button names as oppo
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| buttons | query | Key values of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ [ButtonEnum](#ButtonEnum) ] |
+| buttons | query | Key values of: A, B, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ [ButtonEnum](#ButtonEnum) ] |
 
 ##### Responses
 
@@ -69,7 +69,7 @@ A custom convenience API that mimics /core/clearkey but uses button names as opp
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| button | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
+| button | query | Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
 
 ##### Responses
 
@@ -92,7 +92,7 @@ A custom convenience API that mimics /core/clearkeys but uses button names as op
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| buttons | query | Key values of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ [ButtonEnum](#ButtonEnum) ] |
+| buttons | query | Key values of: A, B, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ [ButtonEnum](#ButtonEnum) ] |
 
 ##### Responses
 
@@ -115,7 +115,7 @@ A custom convenience API that mimics /core/getkey but uses button names as oppos
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| button | query | Button value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
+| button | query | Button value of: A, B, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
 
 ##### Responses
 
@@ -155,7 +155,7 @@ A custom convenience API that implements a key press and release. This is as opp
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| button | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
+| button | query | Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
 
 ##### Responses
 
@@ -172,7 +172,7 @@ Sends multiple button presses simultaneously.
 
 ##### Description:
 
-A custom convenience API that implements multiple simultaneously keys being pressed and released. This is as opposed to the key based core API that sends only either a press or release message.
+A custom convenience API that implements multiple simultaneous keys being pressed and released. This is as opposed to the key based core API that sends only either a press or release message.
 
 ##### Parameters
 
@@ -201,7 +201,7 @@ A custom convenience API that implements a held down button for a given duration
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| button | query | Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
+| button | query | Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L. | Yes | [ButtonEnum](#ButtonEnum) |
 | duration | query | Duration in frames. | Yes | integer |
 
 ##### Responses
@@ -219,7 +219,7 @@ Sends multiple button presses simultaneously for a given duration in frames.
 
 ##### Description:
 
-A custom convenience API that implements multiple simultaneously keys being pressed and released for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.
+A custom convenience API that implements multiple simultaneous keys being pressed and released for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.
 
 ##### Parameters
 
