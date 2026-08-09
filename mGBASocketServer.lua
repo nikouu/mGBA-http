@@ -369,8 +369,9 @@ function updateKeys()
 		end
 	end
 
-	for _, i in ipairs(indexesToRemove) do
-		table.remove(keyEventQueue, i)
+	-- Remove in reverse so earlier removals don't shift the later indexes
+	for i = #indexesToRemove, 1, -1 do
+		table.remove(keyEventQueue, indexesToRemove[i])
 	end
 end
 
