@@ -1,6 +1,6 @@
 -- ***********************
 -- mGBA-http
--- Version: 0.8.2
+-- Version: 0.9.0
 -- Lua interface for mGBA-http
 -- https://github.com/nikouu/mGBA-http
 -- https://github.com/nikouu/mGBA-http/blob/main/docs/FullGuide-lua.md
@@ -32,7 +32,8 @@ function beginSocket()
 		server, error = socket.bind(nil, port)
 		if error then
 			if error == socket.ERRORS.ADDRESS_IN_USE then
-				port = port + 1
+				logError("Port " .. port .. " is already in use. Close whatever is using it, or change 'port' in this script and mgba-http:Socket:Port in appsettings.json to match.")
+				break
 			else
 				logError(formatSocketMessage("Bind", error, true))
 				break
@@ -44,7 +45,7 @@ function beginSocket()
 				server:close()
 				logError(formatSocketMessage("Listen", error, true))
 			else
-				logWithOverride("mGBA script server 0.8.2 ready. Listening on port " .. port, 4)
+				logWithOverride("mGBA script server 0.9.0 ready. Listening on port " .. port, 4)
 				server:add("received", socketAccept)
 			end
 		end
