@@ -34,6 +34,8 @@ A rough, non-committal roadmap.
   - `mgba-http.button.getAll`
   
 - Consistent casing for Lua endpoint keys
+- ✅ Improve socket retries
+- ✅ Small Lua file fixes
 
 ## Version 0.10.0
 
