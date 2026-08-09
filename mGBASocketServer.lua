@@ -115,8 +115,8 @@ function socketStop(id)
 	sock:close()
 end
 
-function socketError(id, error)
-	logError(formatSocketMessage(id, error, true))
+function socketError(id)
+	logError(formatSocketMessage(id, "Socket error", true))
 	socketStop(id)
 end
 
