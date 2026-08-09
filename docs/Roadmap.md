@@ -30,20 +30,21 @@ A rough, non-committal roadmap.
 - Explore new AOT options
   - Including swapping out Swashbuckle
 - ✅ Return to looking at loadfile and how that needs brackets at the moment to be parsed correctly
-- Re-explore `TextBuffer`
-- Re-explore how arrays are sent and recieved
-  - `core.loadStateBuffer`
-  - `core.savestatebuffer`
-  - `core.readRange`
-  - `memoryDomain.readRange`
-  - `coreAdapter.memory`
-  - `memoryDomain.readRange`
-  - `mgba-http.button.addMany`
-  - `mgba-http.button.clearMany`
-  - `mgba-http.button.getAll`
-  
-- Consistent casing for Lua endpoint keys
+
  
 ## Version 1.0.0
 
+- Completely re-look at the API to be properly consistent and be ready for future changes in mGBA 
+  - Re-explore `TextBuffer`
+  - Re-explore how arrays are sent and recieved
+    - `core.loadStateBuffer`
+    - `core.savestatebuffer`
+    - `core.readRange`
+    - `memoryDomain.readRange`
+    - `coreAdapter.memory`
+    - `memoryDomain.readRange`
+    - `mgba-http.button.addMany`
+    - `mgba-http.button.clearMany`
+    - `mgba-http.button.getAll`  
+- Consistent casing for Lua endpoint keys
 - Cleanup
