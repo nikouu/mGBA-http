@@ -20,7 +20,7 @@
           {
             "name": "button",
             "in": "query",
-            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "description": "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/ButtonEnum"
@@ -53,7 +53,7 @@
           {
             "name": "buttons",
             "in": "query",
-            "description": "Key values of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "description": "Key values of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
               "type": "array",
@@ -89,7 +89,7 @@
           {
             "name": "button",
             "in": "query",
-            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "description": "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/ButtonEnum"
@@ -122,7 +122,7 @@
           {
             "name": "buttons",
             "in": "query",
-            "description": "Key values of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "description": "Key values of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
               "type": "array",
@@ -158,7 +158,7 @@
           {
             "name": "button",
             "in": "query",
-            "description": "Button value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "description": "Button value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/ButtonEnum"
@@ -213,7 +213,7 @@
           {
             "name": "button",
             "in": "query",
-            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "description": "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/ButtonEnum"
@@ -241,7 +241,7 @@
           "Button"
         ],
         "summary": "Sends multiple button presses simultaneously.",
-        "description": "A custom convenience API that implements multiple simultaneously keys being pressed and released. This is as opposed to the key based core API that sends only either a press or release message.",
+        "description": "A custom convenience API that implements multiple simultaneous keys being pressed and released. This is as opposed to the key based core API that sends only either a press or release message.",
         "parameters": [
           {
             "name": "buttons",
@@ -282,7 +282,7 @@
           {
             "name": "button",
             "in": "query",
-            "description": "Key value of: A, B, Start, Select, Start, Right, Left, Up, Down, R, or L.",
+            "description": "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/ButtonEnum"
@@ -320,7 +320,7 @@
           "Button"
         ],
         "summary": "Sends multiple button presses simultaneously for a given duration in frames.",
-        "description": "A custom convenience API that implements multiple simultaneously keys being pressed and released for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.",
+        "description": "A custom convenience API that implements multiple simultaneous keys being pressed and released for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.",
         "parameters": [
           {
             "name": "buttons",
