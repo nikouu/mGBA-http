@@ -392,10 +392,6 @@ function splitStringToTable(inputstr, sep)
     return t
 end
 
-function numberStringToHex(string)
-	return string.format('%x', tonumber(string, 16))
-end
-
 function toBoolean(str)
     local bool = false
     if string.lower(str) == "true" then
