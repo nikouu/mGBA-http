@@ -11,7 +11,7 @@ public class OpenApiContractTests : VerifyBase
         await using var factory = new WebApplicationFactory<Program>();
         using var client = factory.CreateClient();
 
-        var json = await client.GetStringAsync("/swagger/v0.9.0/swagger.json");
+        var json = await client.GetStringAsync("/openapi/v1.json");
 
         using var document = JsonDocument.Parse(json);
         var pretty = JsonSerializer.Serialize(document.RootElement, new JsonSerializerOptions { WriteIndented = true });

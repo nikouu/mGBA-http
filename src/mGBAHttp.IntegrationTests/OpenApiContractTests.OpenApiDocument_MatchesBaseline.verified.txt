@@ -1,464 +1,19 @@
 ﻿{
-  "openapi": "3.0.4",
+  "openapi": "3.1.1",
   "info": {
     "title": "mGBA-http",
     "description": "An HTTP interface for mGBA scripting.",
     "contact": {
-      "name": "GitHub Repository",
+      "name": "mGBA-http GitHub Repository",
       "url": "https://github.com/nikouu/mGBA-http/"
-    }
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/nikouu/mGBA-http/blob/main/LICENSE"
+    },
+    "version": "0.10.0"
   },
   "paths": {
-    "/mgba-http/button/add": {
-      "post": {
-        "tags": [
-          "Button"
-        ],
-        "summary": "Adds a single button.",
-        "description": "A custom convenience API that mimics /core/addkey but uses button names as opposed to a bitmask.",
-        "parameters": [
-          {
-            "name": "button",
-            "in": "query",
-            "description": "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ButtonEnum"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Empty success response.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": ""
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mgba-http/button/addmany": {
-      "post": {
-        "tags": [
-          "Button"
-        ],
-        "summary": "Adds multiple buttons.",
-        "description": "A custom convenience API that mimics /core/addkeys but uses button names as opposed to their number value.",
-        "parameters": [
-          {
-            "name": "buttons",
-            "in": "query",
-            "description": "Key values of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/ButtonEnum"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Empty success response.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": ""
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mgba-http/button/clear": {
-      "post": {
-        "tags": [
-          "Button"
-        ],
-        "summary": "Remove a single button.",
-        "description": "A custom convenience API that mimics /core/clearkey but uses button names as opposed to their number value.",
-        "parameters": [
-          {
-            "name": "button",
-            "in": "query",
-            "description": "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ButtonEnum"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Empty success response.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": ""
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mgba-http/button/clearmany": {
-      "post": {
-        "tags": [
-          "Button"
-        ],
-        "summary": "Remove multiple buttons.",
-        "description": "A custom convenience API that mimics /core/clearkeys but uses button names as opposed to a bitmask.",
-        "parameters": [
-          {
-            "name": "buttons",
-            "in": "query",
-            "description": "Key values of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/ButtonEnum"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Empty success response.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": ""
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mgba-http/button/get": {
-      "get": {
-        "tags": [
-          "Button"
-        ],
-        "summary": "Get the active state of a given button.",
-        "description": "A custom convenience API that mimics /core/getkey but uses button names as opposed to their number value.",
-        "parameters": [
-          {
-            "name": "button",
-            "in": "query",
-            "description": "Button value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ButtonEnum"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "0 if key is not pressed or 1 if the key is pressed.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": "1"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mgba-http/button/getall": {
-      "get": {
-        "tags": [
-          "Button"
-        ],
-        "summary": "Gets all active buttons.",
-        "description": "A custom convenience API that gets all active buttons.",
-        "responses": {
-          "200": {
-            "description": "Comma separated string with all active keys",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": "A,B,Start"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mgba-http/button/tap": {
-      "post": {
-        "tags": [
-          "Button"
-        ],
-        "summary": "Sends button presses.",
-        "description": "A custom convenience API that implements a key press and release. This is as opposed to the key based core API that sends only either a press or release message.",
-        "parameters": [
-          {
-            "name": "button",
-            "in": "query",
-            "description": "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ButtonEnum"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Empty success response",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": ""
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mgba-http/button/tapmany": {
-      "post": {
-        "tags": [
-          "Button"
-        ],
-        "summary": "Sends multiple button presses simultaneously.",
-        "description": "A custom convenience API that implements multiple simultaneous keys being pressed and released. This is as opposed to the key based core API that sends only either a press or release message.",
-        "parameters": [
-          {
-            "name": "buttons",
-            "in": "query",
-            "description": "A key array.",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/ButtonEnum"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Empty success response",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": ""
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mgba-http/button/hold": {
-      "post": {
-        "tags": [
-          "Button"
-        ],
-        "summary": "Sends a held down button for a given duration in frames.",
-        "description": "A custom convenience API that implements a held down button for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.",
-        "parameters": [
-          {
-            "name": "button",
-            "in": "query",
-            "description": "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ButtonEnum"
-            }
-          },
-          {
-            "name": "duration",
-            "in": "query",
-            "description": "Duration in frames.",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Empty success response",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": ""
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mgba-http/button/holdmany": {
-      "post": {
-        "tags": [
-          "Button"
-        ],
-        "summary": "Sends multiple button presses simultaneously for a given duration in frames.",
-        "description": "A custom convenience API that implements multiple simultaneous keys being pressed and released for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.",
-        "parameters": [
-          {
-            "name": "buttons",
-            "in": "query",
-            "description": "A key array.",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/ButtonEnum"
-              }
-            }
-          },
-          {
-            "name": "duration",
-            "in": "query",
-            "description": "Duration in frames.",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Empty success response",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": ""
-              }
-            }
-          }
-        }
-      }
-    },
-    "/console/error": {
-      "post": {
-        "tags": [
-          "Console"
-        ],
-        "summary": "Print an error to the console.",
-        "description": "Print an error to the console. This will be shown as red text on light red background.",
-        "parameters": [
-          {
-            "name": "message",
-            "in": "query",
-            "description": "The error message to display in console.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Empty success response.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": ""
-              }
-            }
-          }
-        }
-      }
-    },
-    "/console/log": {
-      "post": {
-        "tags": [
-          "Console"
-        ],
-        "summary": "Print a log to the console.",
-        "description": "Print a log to the console. This will be shown as regular text.",
-        "parameters": [
-          {
-            "name": "message",
-            "in": "query",
-            "description": "The log message to display in console.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Empty success response.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": ""
-              }
-            }
-          }
-        }
-      }
-    },
-    "/console/warn": {
-      "post": {
-        "tags": [
-          "Console"
-        ],
-        "summary": "Print a warning to the console.",
-        "description": "Print a warning to the console. This will be shown as yellow text on light yellow background.",
-        "parameters": [
-          {
-            "name": "message",
-            "in": "query",
-            "description": "The warning message to display in console.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Empty success response.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": ""
-              }
-            }
-          }
-        }
-      }
-    },
     "/core/addkey": {
       "post": {
         "tags": [
@@ -473,7 +28,11 @@
             "description": "Key value of: 0-9",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -485,8 +44,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -507,7 +65,11 @@
             "description": "The bitmask of keys to add. Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -519,8 +81,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -585,7 +146,11 @@
             "description": "Key value of: 0-9",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -597,8 +162,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -619,7 +183,11 @@
             "description": "The bitmask of keys to clear. Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -631,8 +199,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -763,7 +330,11 @@
             "description": "Key value of: 0-9",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -886,26 +457,28 @@
           "Core"
         ],
         "summary": "Load state from a buffer.",
-        "description": "Load state from a hex array string buffer in the format: [d3,00,ea,66,...].",
+        "description": "Load state from a hex array string buffer in the format: [d3,00,ea,66,...]. Send the buffer as the\r\ntext/plain request body, for example [d3,00,00,ea,66,00,00,ea,0c,00,00,ea,fe,ff,ff,ea].",
         "parameters": [
           {
             "name": "flags",
             "in": "query",
             "description": "State flags bitmask. Default 29 excludes screenshot flag (all except SCREENSHOT). Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.",
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32",
               "default": 29
             }
           }
         ],
         "requestBody": {
-          "description": "State buffer data as hex array string format: [d3,00,ea,66,...]",
           "content": {
             "text/plain": {
               "schema": {
-                "type": "string",
-                "example": "[d3,00,00,ea,66,00,00,ea,0c,00,00,ea,fe,ff,ff,ea]"
+                "type": "string"
               }
             }
           },
@@ -948,7 +521,11 @@
             "in": "query",
             "description": "State flags bitmask. Default 29 excludes screenshot flag. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.",
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32",
               "default": 29
             }
@@ -991,7 +568,11 @@
             "in": "query",
             "description": "State flags bitmask. Default 29 excludes screenshot flag. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.",
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32",
               "default": 29
             }
@@ -1243,7 +824,11 @@
             "in": "query",
             "description": "State flags bitmask. Default 31 includes all flags (screenshot, metadata, etc). Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.",
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32",
               "default": 31
             }
@@ -1286,7 +871,11 @@
             "in": "query",
             "description": "State flags bitmask. Default 31 includes all flags. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.",
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32",
               "default": 31
             }
@@ -1329,7 +918,11 @@
             "in": "query",
             "description": "State flags bitmask. Default 31 includes all flags. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.",
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32",
               "default": 31
             }
@@ -1375,8 +968,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -1397,7 +989,11 @@
             "description": "The bitmask of keys to set as active. Bitmasking has the keys from the mGBA scripting documentation where each key has a value that goes up in that order in binary: A = 1, B = 2, Select = 4, Start = 8, etc. A bitmask of 12 is Start and Select.",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -1409,8 +1005,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -1431,8 +1026,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -1462,8 +1056,12 @@
             "description": "16-bit unsigned integer value to write (0-65535).",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "uint32"
             }
           }
         ],
@@ -1474,8 +1072,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -1505,8 +1102,12 @@
             "description": "32-bit unsigned integer value to write.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "uint32"
             }
           }
         ],
@@ -1517,8 +1118,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -1548,7 +1148,11 @@
             "description": "8-bit decimal value to write (0-255).",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -1560,8 +1164,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -1591,7 +1194,11 @@
             "description": "Decimal value to write to the register.",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -1603,8 +1210,103 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/console/error": {
+      "post": {
+        "tags": [
+          "Console"
+        ],
+        "summary": "Print an error to the console.",
+        "description": "Print an error to the console. This will be shown as red text on light red background.",
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "description": "The error message to display in console.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/console/log": {
+      "post": {
+        "tags": [
+          "Console"
+        ],
+        "summary": "Print a log to the console.",
+        "description": "Print a log to the console. This will be shown as regular text.",
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "description": "The log message to display in console.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/console/warn": {
+      "post": {
+        "tags": [
+          "Console"
+        ],
+        "summary": "Print a warning to the console.",
+        "description": "Print a warning to the console. This will be shown as yellow text on light yellow background.",
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "description": "The warning message to display in console.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -1625,8 +1327,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -1638,8 +1339,8 @@
         "tags": [
           "CoreAdapter"
         ],
-        "summary": "Get the platform specific set of memory domains.",
-        "description": "Get the platform specific set of memory domains.",
+        "summary": "Get the names of the platform-specific memory domains.",
+        "description": "Get the names of the platform-specific memory domains.",
         "responses": {
           "200": {
             "description": "The memory domains as a comma separated string.",
@@ -1649,39 +1350,6 @@
                   "type": "string"
                 },
                 "example": "cart2,wram,cart0,oam,iwram,bios,vram,io,palette,cart1"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/mgba-http/extension/loadfile": {
-      "post": {
-        "tags": [
-          "Extension"
-        ],
-        "summary": "Load a ROM file.",
-        "description": "Load a ROM file into the current state of this core. This convenience API handles the ROM load and reset of the emulator.",
-        "parameters": [
-          {
-            "name": "path",
-            "in": "query",
-            "description": "Path to ROM file to load.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success status as a boolean.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": "true"
               }
             }
           }
@@ -2029,8 +1697,12 @@
             "description": "16-bit unsigned integer value to write (0-65535). Not hex.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "uint32"
             }
           }
         ],
@@ -2041,8 +1713,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -2081,8 +1752,12 @@
             "description": "32-bit unsigned integer value to write (0-4294967295). Not hex.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "uint32"
             }
           }
         ],
@@ -2093,8 +1768,7 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
-                },
-                "example": ""
+                }
               }
             }
           }
@@ -2133,7 +1807,11 @@
             "description": "8-bit integer value to write (0-255). Not hex.",
             "required": true,
             "schema": {
-              "type": "integer",
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32"
             }
           }
@@ -2145,8 +1823,391 @@
               "text/plain": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/add": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Adds a single button.",
+        "description": "A custom convenience API that mimics /core/addkey but uses button names as opposed to a bitmask.",
+        "parameters": [
+          {
+            "name": "button",
+            "in": "query",
+            "description": "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ButtonEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/addmany": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Adds multiple buttons.",
+        "description": "A custom convenience API that mimics /core/addkeys but uses button names as opposed to their number value.",
+        "parameters": [
+          {
+            "name": "buttons",
+            "in": "query",
+            "description": "Key values of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ButtonEnum"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/clear": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Remove a single button.",
+        "description": "A custom convenience API that mimics /core/clearkey but uses button names as opposed to their number value.",
+        "parameters": [
+          {
+            "name": "button",
+            "in": "query",
+            "description": "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ButtonEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/clearmany": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Remove multiple buttons.",
+        "description": "A custom convenience API that mimics /core/clearkeys but uses button names as opposed to a bitmask.",
+        "parameters": [
+          {
+            "name": "buttons",
+            "in": "query",
+            "description": "Key values of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ButtonEnum"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/get": {
+      "get": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Get the active state of a given button.",
+        "description": "A custom convenience API that mimics /core/getkey but uses button names as opposed to their number value.",
+        "parameters": [
+          {
+            "name": "button",
+            "in": "query",
+            "description": "Button value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ButtonEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "0 if key is not pressed or 1 if the key is pressed.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
                 },
-                "example": ""
+                "example": "1"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/getall": {
+      "get": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Gets all active buttons.",
+        "description": "A custom convenience API that gets all active buttons.",
+        "responses": {
+          "200": {
+            "description": "Comma separated string with all active keys",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "A,B,Start"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/tap": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Sends button presses.",
+        "description": "A custom convenience API that implements a key press and release. This is as opposed to the key based core API that sends only either a press or release message.",
+        "parameters": [
+          {
+            "name": "button",
+            "in": "query",
+            "description": "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ButtonEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/tapmany": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Sends multiple button presses simultaneously.",
+        "description": "A custom convenience API that implements multiple simultaneous keys being pressed and released. This is as opposed to the key based core API that sends only either a press or release message.",
+        "parameters": [
+          {
+            "name": "buttons",
+            "in": "query",
+            "description": "A key array.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ButtonEnum"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/hold": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Sends a held down button for a given duration in frames.",
+        "description": "A custom convenience API that implements a held down button for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.",
+        "parameters": [
+          {
+            "name": "button",
+            "in": "query",
+            "description": "Key value of: A, B, Select, Start, Right, Left, Up, Down, R, or L.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ButtonEnum"
+            }
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "description": "Duration in frames.",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/button/holdmany": {
+      "post": {
+        "tags": [
+          "Button"
+        ],
+        "summary": "Sends multiple button presses simultaneously for a given duration in frames.",
+        "description": "A custom convenience API that implements multiple simultaneous keys being pressed and released for a given duration in frames. This is as opposed to the key based core API that sends only either a press or release message.",
+        "parameters": [
+          {
+            "name": "buttons",
+            "in": "query",
+            "description": "A key array.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ButtonEnum"
+              }
+            }
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "description": "Duration in frames.",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empty success response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mgba-http/extension/loadfile": {
+      "post": {
+        "tags": [
+          "Extension"
+        ],
+        "summary": "Load a ROM file.",
+        "description": "Load a ROM file into the current state of this core. This convenience API handles the ROM load and reset of the emulator.",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "description": "Path to ROM file to load.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success status as a boolean.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "true"
               }
             }
           }
@@ -2168,9 +2229,38 @@
           "Down",
           "R",
           "L"
-        ],
-        "type": "string"
+        ]
       }
     }
+  },
+  "tags": [
+    {
+      "name": "Core",
+      "description": "Endpoints for the mGBA Core scripting API."
+    },
+    {
+      "name": "Console",
+      "description": "Endpoints for the mGBA scripting console."
+    },
+    {
+      "name": "CoreAdapter",
+      "description": "Endpoints for the mGBA CoreAdapter scripting API."
+    },
+    {
+      "name": "MemoryDomain",
+      "description": "Endpoints for the mGBA MemoryDomain scripting API."
+    },
+    {
+      "name": "Button",
+      "description": "mGBA-http convenience layer using button names instead of key bitmasks."
+    },
+    {
+      "name": "Extension",
+      "description": "mGBA-http convenience layer for miscellaneous helpers."
+    }
+  ],
+  "externalDocs": {
+    "description": "mGBA scripting API docs",
+    "url": "https://mgba.io/docs/scripting.html"
   }
 }

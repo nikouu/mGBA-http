@@ -4,8 +4,12 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>0.9.0</Version>
-	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>  
+    <Version>0.10.0</Version>
+	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- CS1591: don't require XML docs on every public member; only the endpoints carry them.
+         CS1573: endpoint handlers document their API params but not DI params (socketPool, HttpContext). -->
+    <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Label="Normalise stack trace file locations" Condition="$(BuildingInsideVisualStudio) != 'true'">
@@ -36,9 +40,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
+    <PackageReference Include="Microsoft.OpenApi" Version="2.11.0" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.16.18" />
   </ItemGroup>
 
 </Project>
