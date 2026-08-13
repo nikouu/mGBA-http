@@ -469,8 +469,7 @@
                 "integer",
                 "string"
               ],
-              "format": "int32",
-              "default": 29
+              "format": "int32"
             }
           }
         ],
@@ -526,8 +525,7 @@
                 "integer",
                 "string"
               ],
-              "format": "int32",
-              "default": 29
+              "format": "int32"
             }
           }
         ],
@@ -573,8 +571,7 @@
                 "integer",
                 "string"
               ],
-              "format": "int32",
-              "default": 29
+              "format": "int32"
             }
           }
         ],
@@ -829,8 +826,7 @@
                 "integer",
                 "string"
               ],
-              "format": "int32",
-              "default": 31
+              "format": "int32"
             }
           }
         ],
@@ -876,8 +872,7 @@
                 "integer",
                 "string"
               ],
-              "format": "int32",
-              "default": 31
+              "format": "int32"
             }
           }
         ],
@@ -923,8 +918,7 @@
                 "integer",
                 "string"
               ],
-              "format": "int32",
-              "default": 31
+              "format": "int32"
             }
           }
         ],

@@ -1,4 +1,3 @@
-using Microsoft.IO;
 using System.Diagnostics;
 
 namespace mGBAHttp.Logging;
@@ -7,19 +6,19 @@ public class RequestResponseLoggingMiddleware
 {
     private const string CorrelationIdHeaderName = "X-Correlation-ID";
     private readonly RequestDelegate _next;
-    private readonly RecyclableMemoryStreamManager _streamManager;
 
     public RequestResponseLoggingMiddleware(RequestDelegate next)
     {
         _next = next;
-        _streamManager = new RecyclableMemoryStreamManager();
     }
 
     public async Task InvokeAsync(HttpContext context)
     {
-        bool isSwaggerRequest = context.Request.Path.StartsWithSegments("/swagger", StringComparison.OrdinalIgnoreCase);
+        // Keep the API docs UI and document out of the request log.
+        bool isDocsRequest = context.Request.Path.StartsWithSegments("/scalar", StringComparison.OrdinalIgnoreCase)
+            || context.Request.Path.StartsWithSegments("/openapi", StringComparison.OrdinalIgnoreCase);
 
-        if (isSwaggerRequest)
+        if (isDocsRequest)
         {
             await _next(context);
             return;
@@ -65,7 +64,7 @@ public class RequestResponseLoggingMiddleware
         var originalBodyStream = context.Response.Body;
 
         // Create a temporary memory stream to capture the response
-        using var memoryStream = _streamManager.GetStream();
+        using var memoryStream = new MemoryStream();
         context.Response.Body = memoryStream;
 
         try

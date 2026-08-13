@@ -202,13 +202,13 @@ namespace mGBAHttp.Endpoints
         /// </remarks>
         /// <param name="flags">State flags bitmask. Default 29 excludes screenshot flag (all except SCREENSHOT). Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.</param>
         /// <response code="200">Success status as a boolean.</response>
-        public static async Task<string> LoadStateBuffer(ObjectPool<ReusableSocket> socketPool, HttpContext context, int flags = 29)
+        public static async Task<string> LoadStateBuffer(ObjectPool<ReusableSocket> socketPool, HttpContext context, int? flags)
         {
             using var reader = new StreamReader(context.Request.Body);
             var buffer = await reader.ReadToEndAsync();
             var cleanedBuffer = Regex.Replace(buffer, @"\s", string.Empty);
 
-            var messageModel = new MessageModel("core.loadStateBuffer", cleanedBuffer, flags.ToString()).ToString();
+            var messageModel = new MessageModel("core.loadStateBuffer", cleanedBuffer, (flags ?? 29).ToString()).ToString();
             return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
         }
 
@@ -217,9 +217,9 @@ namespace mGBAHttp.Endpoints
         /// <param name="path">Path to state file to load.</param>
         /// <param name="flags">State flags bitmask. Default 29 excludes screenshot flag. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.</param>
         /// <response code="200">Success status as a boolean.</response>
-        public static async Task<string> LoadStateFile(ObjectPool<ReusableSocket> socketPool, string path, int flags = 29)
+        public static async Task<string> LoadStateFile(ObjectPool<ReusableSocket> socketPool, string path, int? flags)
         {
-            var messageModel = new MessageModel("core.loadStateFile", path, flags.ToString()).ToString();
+            var messageModel = new MessageModel("core.loadStateFile", path, (flags ?? 29).ToString()).ToString();
             return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
         }
 
@@ -228,9 +228,9 @@ namespace mGBAHttp.Endpoints
         /// <param name="slot">State slot number to load from.</param>
         /// <param name="flags">State flags bitmask. Default 29 excludes screenshot flag. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.</param>
         /// <response code="200">Success status as a boolean.</response>
-        public static async Task<string> LoadStateSlot(ObjectPool<ReusableSocket> socketPool, string slot, int flags = 29)
+        public static async Task<string> LoadStateSlot(ObjectPool<ReusableSocket> socketPool, string slot, int? flags)
         {
-            var messageModel = new MessageModel("core.loadStateSlot", slot, flags.ToString()).ToString();
+            var messageModel = new MessageModel("core.loadStateSlot", slot, (flags ?? 29).ToString()).ToString();
             return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
         }
 
@@ -308,9 +308,9 @@ namespace mGBAHttp.Endpoints
         /// <remarks>Save state and return as a buffer. This can be used with /core/loadstatebuffer to restore state.</remarks>
         /// <param name="flags">State flags bitmask. Default 31 includes all flags (screenshot, metadata, etc). Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.</param>
         /// <response code="200">Comma separated hex values.</response>
-        public static async Task<string> SaveStateBuffer(ObjectPool<ReusableSocket> socketPool, int flags = 31)
+        public static async Task<string> SaveStateBuffer(ObjectPool<ReusableSocket> socketPool, int? flags)
         {
-            var messageModel = new MessageModel("core.saveStateBuffer", flags.ToString()).ToString();
+            var messageModel = new MessageModel("core.saveStateBuffer", (flags ?? 31).ToString()).ToString();
             return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
         }
 
@@ -319,9 +319,9 @@ namespace mGBAHttp.Endpoints
         /// <param name="path">Path where state file will be saved.</param>
         /// <param name="flags">State flags bitmask. Default 31 includes all flags. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.</param>
         /// <response code="200">Success status as a boolean.</response>
-        public static async Task<string> SaveStateFile(ObjectPool<ReusableSocket> socketPool, string path, int flags = 31)
+        public static async Task<string> SaveStateFile(ObjectPool<ReusableSocket> socketPool, string path, int? flags)
         {
-            var messageModel = new MessageModel("core.saveStateFile", path, flags.ToString()).ToString();
+            var messageModel = new MessageModel("core.saveStateFile", path, (flags ?? 31).ToString()).ToString();
             return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
         }
 
@@ -330,9 +330,9 @@ namespace mGBAHttp.Endpoints
         /// <param name="slot">State slot number to save to.</param>
         /// <param name="flags">State flags bitmask. Default 31 includes all flags. Flags: SCREENSHOT=1, SAVEDATA=2, CHEATS=4, RTC=8, METADATA=16.</param>
         /// <response code="200">Success status as a boolean.</response>
-        public static async Task<string> SaveStateSlot(ObjectPool<ReusableSocket> socketPool, string slot, int flags = 31)
+        public static async Task<string> SaveStateSlot(ObjectPool<ReusableSocket> socketPool, string slot, int? flags)
         {
-            var messageModel = new MessageModel("core.saveStateSlot", slot, flags.ToString()).ToString();
+            var messageModel = new MessageModel("core.saveStateSlot", slot, (flags ?? 31).ToString()).ToString();
             return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
         }
 

@@ -5,6 +5,7 @@ using mGBAHttp.Logging;
 using mGBAHttp.Models;
 using mGBAHttp.OpenApi;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
@@ -33,7 +34,12 @@ Console.WriteLine("""
 
 """);
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateSlimBuilder(args);
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+});
 
 builder.Services.AddOpenApi(options =>
 {
@@ -66,10 +72,11 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole(options =>
 {
     options.FormatterName = "CustomFormat";
-}).AddConsoleFormatter<CustomConsoleFormatter, mGBAHttpConsoleFormatterOptions>(options =>
-{
-    builder.Configuration.GetSection("Logging:Console:FormatterOptions").Bind(options);
 });
+
+builder.Services.Configure<mGBAHttpConsoleFormatterOptions>(
+    builder.Configuration.GetSection("Logging:Console:FormatterOptions"));
+builder.Services.AddSingleton<ConsoleFormatter, CustomConsoleFormatter>();
 
 var app = builder.Build();
 
