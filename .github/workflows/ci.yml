@@ -16,10 +16,10 @@ jobs:
   # Build + the OpenAPI contract snapshot test.
   # Have to filter the integration tests out as mgba can't be setup by commandline
   test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - run: dotnet build src/mGBAHttp/mGBAHttp.csproj -c Release
@@ -41,11 +41,10 @@ jobs:
           - { os: windows-latest,   rid: win-x86,     bin: mGBAHttp.exe }
           - { os: windows-11-arm,   rid: win-arm64,   bin: mGBAHttp.exe }
           - { os: macos-latest,     rid: osx-arm64,   bin: mGBAHttp }
-          - { os: macos-13,         rid: osx-x64,     bin: mGBAHttp }
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: Publish trimmed single-file (${{ matrix.rid }})
@@ -74,16 +73,16 @@ jobs:
           echo "smoke OK: ${{ matrix.rid }}"
           kill "$APP_PID" 2>/dev/null || true
 
-  # linux-arm is 32-bit ARM and no runners have this, so a build is the only thing to do
+  # Not booted, just cross-compiled to confirm they publish clean. No runners for these architectures
   build-only:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        rid: [linux-arm]
+        rid: [linux-arm, osx-x64]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
           global-json-file: global.json
       - name: Publish ${{ matrix.rid }}
@@ -97,6 +96,6 @@ jobs:
   lua:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: sudo apt-get update && sudo apt-get install -y lua5.4
       - run: luac5.4 -p mGBASocketServer.lua && echo "Lua syntax OK"

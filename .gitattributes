@@ -1,0 +1,5 @@
+# Verify snapshot baselines must stay LF on every OS.
+# Windows autocrlf would rewrite them to CRLF on checkout, and Verify
+# generates the received doc as LF, so a CRLF baseline fails the compare.
+*.verified.* text eol=lf
+*.received.* text eol=lf
