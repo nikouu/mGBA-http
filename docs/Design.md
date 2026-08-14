@@ -30,7 +30,7 @@ Developer:
 - Code does not need needless abstractions or overengineering. 
 - It needs to remain readable and workable by an intermediate skill level .NET developer as long as they're up to date with features.
 - Unless there is a compelling reason, the UI will be a simple console.
-	- The UI for the bundled in SwaggerUI for quick prototyping is outside of the scope of this document.
+	- The UI for the bundled in ScalarUI for quick prototyping is outside of the scope of this document.
 - The Lua script should remain in a single file to ease file management for the end user.
 - The PowerShell build script should remain accessible, easy to run, easy to understand, and quickly modifiable. 
 
@@ -61,7 +61,7 @@ As mentioned earlier in this document, mGBA-http needs to remain readable and wo
 
 Similarly to *Cross Platform* above if a developer wants to clone/fork the code and develop in a non-Windows or non-Visual Studio environment, they should have the freedom to do so. 
 
-It should be easy to develop against mGBA-http. Unless there is a compelling reason, just GET and POST calls should be used. Swagger is included in this project both as the `swagger.json` file and the interactive SwaggerUI to help and ease protyping.
+It should be easy to develop against mGBA-http. Unless there is a compelling reason, just GET and POST calls should be used. Scalar is included in this project both as the `openapi.json` file and the interactive ScalarUI to help and ease protyping.
 
 Keeping most logic complexity in the Lua file further enables others who want to create their own wrappers as the key logic is there for them already to hook into. Where this wouldn't be the case if it were mostly in the C# code of mGBA-http.
 

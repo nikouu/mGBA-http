@@ -1,7 +1,7 @@
-﻿using mGBAHttp.Domain;
+using mGBAHttp.Domain;
 using mGBAHttp.Models;
+using mGBAHttp.OpenApi;
 using Microsoft.Extensions.ObjectPool;
-using Microsoft.OpenApi.Models;
 
 namespace mGBAHttp.Endpoints
 {
@@ -12,33 +12,28 @@ namespace mGBAHttp.Endpoints
             var group = routes.MapGroup("/coreadapter");
             group.WithTags("CoreAdapter");
 
-            group.MapPost("/reset", async (ObjectPool<ReusableSocket> socketPool) =>
-            {
-                var messageModel = new MessageModel("coreAdapter.reset").ToString();
-                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
-            }).WithOpenApi(o =>
-            {
-                o.Summary = "Reset the emulation.";
-                o.Description = "Reset the emulation and calls the reset callback.";
-                o.Responses["200"].Description = "Empty success response.";
-                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("");
-                return o;
-            });
-
-            group.MapGet("/memory", async (ObjectPool<ReusableSocket> socketPool) =>
-            {
-                var messageModel = new MessageModel("coreAdapter.memory").ToString();
-                return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
-            }).WithOpenApi(o =>
-            {
-                o.Summary = "Get the platform specific set of memory domains.";
-                o.Description = "Get the platform specific set of memory domains.";
-                o.Responses["200"].Description = "The memory domains as a comma separated string.";
-                o.Responses["200"].Content["text/plain"].Example = new Microsoft.OpenApi.Any.OpenApiString("cart2,wram,cart0,oam,iwram,bios,vram,io,palette,cart1");
-                return o;
-            });
+            group.MapPost("/reset", Reset);
+            group.MapGet("/memory", Memory).WithMetadata(new ResponseExample("cart2,wram,cart0,oam,iwram,bios,vram,io,palette,cart1"));
 
             return group;
+        }
+
+        /// <summary>Reset the emulation.</summary>
+        /// <remarks>Reset the emulation and calls the reset callback.</remarks>
+        /// <response code="200">Empty success response.</response>
+        public static async Task<string> Reset(ObjectPool<ReusableSocket> socketPool)
+        {
+            var messageModel = new MessageModel("coreAdapter.reset").ToString();
+            return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
+        }
+
+        /// <summary>Get the names of the platform-specific memory domains.</summary>
+        /// <remarks>Get the names of the platform-specific memory domains.</remarks>
+        /// <response code="200">The memory domains as a comma separated string.</response>
+        public static async Task<string> Memory(ObjectPool<ReusableSocket> socketPool)
+        {
+            var messageModel = new MessageModel("coreAdapter.memory").ToString();
+            return await PooledSocketHelper.SendMessageAsync(socketPool, messageModel);
         }
     }
 }

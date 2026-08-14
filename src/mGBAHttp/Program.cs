@@ -3,15 +3,14 @@ using mGBAHttp.Domain;
 using mGBAHttp.Endpoints;
 using mGBAHttp.Logging;
 using mGBAHttp.Models;
-using mGBAHttp.SchemaFilter;
+using mGBAHttp.OpenApi;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Scalar.AspNetCore;
 using System.Reflection;
 using System.Runtime.InteropServices;
-
-
 
 var version = Assembly.GetExecutingAssembly().GetName().Version;
 var programVersionString = $"v{version?.Major}.{version?.Minor}.{version?.Build}";
@@ -35,24 +34,17 @@ Console.WriteLine("""
 
 """);
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateSlimBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+builder.Services.ConfigureHttpJsonOptions(options =>
 {
-    options.SwaggerDoc(programVersionString, new OpenApiInfo
-    {
-        Title = "mGBA-http",
-        Description = "An HTTP interface for mGBA scripting.",
-        Contact = new OpenApiContact
-        {
-            Name = "GitHub Repository",
-            Url = new Uri("https://github.com/nikouu/mGBA-http/")
-        }
-    });
+    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+});
 
-    // allows enums to be displayed and used as strings
-    options.SchemaFilter<EnumSchemaFilter>();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<DocumentInfoTransformer>();
+    options.AddOperationTransformer<ResponseExampleTransformer>();
 });
 
 builder.Services.AddOptions<SocketOptions>()
@@ -62,6 +54,7 @@ builder.Services.AddOptions<SocketOptions>()
     .Validate(o => o.ReadTimeout > 0, "mgba-http:Socket:ReadTimeout must be greater than 0 (milliseconds).")
     .Validate(o => o.WriteTimeout > 0, "mgba-http:Socket:WriteTimeout must be greater than 0 (milliseconds).")
     .ValidateOnStart();
+
 builder.Services.TryAddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
 
 builder.Services.TryAddSingleton(serviceProvider =>
@@ -79,11 +72,11 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole(options =>
 {
     options.FormatterName = "CustomFormat";
-}).AddConsoleFormatter<CustomConsoleFormatter, mGBAHttpConsoleFormatterOptions>(options =>
-{
-    // This will read from configuration if present, otherwise use defaults
-    builder.Configuration.GetSection("Logging:Console:FormatterOptions").Bind(options);
 });
+
+builder.Services.Configure<mGBAHttpConsoleFormatterOptions>(
+    builder.Configuration.GetSection("Logging:Console:FormatterOptions"));
+builder.Services.AddSingleton<ConsoleFormatter, CustomConsoleFormatter>();
 
 var app = builder.Build();
 
@@ -91,15 +84,16 @@ app.UseExceptionHandler();
 
 app.UseRequestResponseLogging();
 
-app.UseSwagger();
-app.UseSwaggerUI(options =>
+app.MapOpenApi();
+app.MapScalarApiReference(options =>
 {
-    options.SwaggerEndpoint($"/swagger/{programVersionString}/swagger.json", programVersionString);
-    options.RoutePrefix = string.Empty;
+    options
+        .WithClassicLayout()
+        .WithTheme(ScalarTheme.Purple);
 });
 
-Console.WriteLine("Swagger UI: /index.html");
-Console.WriteLine($"Swagger JSON: /swagger/{programVersionString}/swagger.json\n");
+Console.WriteLine("Scalar UI: /scalar");
+Console.WriteLine("OpenAPI JSON: /openapi/v1.json\n");
 
 app.MapCoreEndpoints();
 app.MapConsoleEndpoints();

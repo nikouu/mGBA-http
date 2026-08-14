@@ -1,6 +1,5 @@
 ﻿using mGBAHttp.Models;
 using Microsoft.Extensions.ObjectPool;
-using Microsoft.IO;
 using System.Buffers;
 using System.Net;
 using System.Net.Sockets;
@@ -18,7 +17,6 @@ namespace mGBAHttp.Domain
         private const int _maxRetries = 3;
         private const int _initialDelay = 400;
         private const int _maxDelay = 2000;
-        private static readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager = new();
         private const string _terminationString = "<|END|>";
         private static readonly byte[] _terminationBytes = Encoding.UTF8.GetBytes(_terminationString);
 
@@ -121,17 +119,24 @@ namespace mGBAHttp.Domain
             _responseStarted = false;
             using var cts = new CancellationTokenSource(_readTimeout);
             var buffer = ArrayPool<byte>.Shared.Rent(1024);
+            var totalBytes = 0;
+            
             try
             {
-                using var memoryStream = _recyclableMemoryStreamManager.GetStream();
-                int totalBytes = 0;
-
                 while (true)
                 {
+                    if (totalBytes == buffer.Length)
+                    {
+                        var largerBuffer = ArrayPool<byte>.Shared.Rent(buffer.Length * 2);
+                        buffer.AsSpan(0, totalBytes).CopyTo(largerBuffer);
+                        ArrayPool<byte>.Shared.Return(buffer);
+                        buffer = largerBuffer;
+                    }
+
                     int bytesRead;
                     try
                     {
-                        bytesRead = await _socket.ReceiveAsync(buffer, SocketFlags.None, cts.Token);
+                        bytesRead = await _socket.ReceiveAsync(buffer.AsMemory(totalBytes), SocketFlags.None, cts.Token);
                     }
                     catch (OperationCanceledException)
                     {
@@ -144,18 +149,12 @@ namespace mGBAHttp.Domain
                     }
 
                     _responseStarted = true;
-                    await memoryStream.WriteAsync(buffer.AsMemory(0, bytesRead));
                     totalBytes += bytesRead;
 
-                    // Check for termination marker in the accumulated buffer
-                    var mem = memoryStream.GetBuffer().AsSpan(0, totalBytes);
-                    int markerIndex = mem.IndexOf(_terminationBytes);
+                    int markerIndex = buffer.AsSpan(0, totalBytes).IndexOf(_terminationBytes);
                     if (markerIndex >= 0)
                     {
-                        // Found marker, extract message up to marker
-                        var messageBytes = mem.Slice(0, markerIndex);
-                        var response = Encoding.UTF8.GetString(messageBytes);
-                        return response;
+                        return Encoding.UTF8.GetString(buffer.AsSpan(0, markerIndex));
                     }
                 }
             }

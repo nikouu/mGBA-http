@@ -1,3 +1,4 @@
+using mGBAHttp;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
@@ -13,7 +14,7 @@ public sealed class CustomConsoleFormatter : ConsoleFormatter, IDisposable
     private const string DarkerGray = "\x1B[90m";  // Using bright black which appears as dark gray
 
     private readonly IDisposable? _optionsReloadToken;
-    private readonly JsonSerializerOptions _jsonOptions;
+    private readonly AppJsonSerializerContext _jsonContext;
     private mGBAHttpConsoleFormatterOptions _formatterOptions;
 
     public CustomConsoleFormatter(IOptionsMonitor<mGBAHttpConsoleFormatterOptions> options)
@@ -21,11 +22,11 @@ public sealed class CustomConsoleFormatter : ConsoleFormatter, IDisposable
     {
         _optionsReloadToken = options.OnChange(ReloadLoggerOptions);
         _formatterOptions = options.CurrentValue;
-        _jsonOptions = new JsonSerializerOptions
+        _jsonContext = new AppJsonSerializerContext(new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             WriteIndented = false
-        };
+        });
     }
 
     private void ReloadLoggerOptions(mGBAHttpConsoleFormatterOptions options) => _formatterOptions = options;
@@ -67,17 +68,15 @@ public sealed class CustomConsoleFormatter : ConsoleFormatter, IDisposable
             textWriter.Write("    "); // Indent
             textWriter.Write(DarkerGray);
 
-            var jsonLog = new
-            {
-                EventId = logEntry.EventId.Id,
-                Level = logEntry.LogLevel.ToString(),
-                Category = logEntry.Category,
-                Message = message,
-                Timestamp = timestamp.ToString("O"),
-                CorrelationId = GetCorrelationId(scopeProvider)
-            };
+            var jsonLog = new LogDetail(
+                logEntry.EventId.Id,
+                logEntry.LogLevel.ToString(),
+                logEntry.Category,
+                message,
+                timestamp.ToString("O"),
+                GetCorrelationId(scopeProvider));
 
-            textWriter.Write(JsonSerializer.Serialize(jsonLog, _jsonOptions));
+            textWriter.Write(JsonSerializer.Serialize(jsonLog, _jsonContext.LogDetail));
             textWriter.Write(ResetAll);
             textWriter.WriteLine();
         }
@@ -153,3 +152,11 @@ public sealed class mGBAHttpConsoleFormatterOptions : ConsoleFormatterOptions
 
     public bool IncludeJsonDetails { get; set; } = false; // Defaults to false if not specified
 }
+
+public sealed record LogDetail(
+    int EventId,
+    string Level,
+    string Category,
+    string Message,
+    string Timestamp,
+    string? CorrelationId);

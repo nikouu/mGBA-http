@@ -16,7 +16,7 @@ $projectFilePath = "src\mGBAHttp\mGBAHttp.csproj"
 $xml = [xml](Get-Content $projectFilePath)
 $version = $xml.Project.PropertyGroup.Version[0]
 
-# Enforce lua script 
+# Enforce lua script
 $luaVersionLine = (Get-Content "mGBASocketServer.lua")[2];
 $luaVersion = ($luaVersionLine -split ' ')[2].Trim()
 
@@ -38,12 +38,7 @@ foreach ($folder in @(".\release", ".\releaseStaging")) {
 
 # Create releases
 foreach ($rid in $rids) {
-  dotnet publish src\mGBAHttp\mGBAHttp.csproj -r $rid -p:SelfContained=false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)"  
-
-  Remove-EmptyStaticWebAssetsFiles -folder ".\releaseStaging"
-  Move-Item -Path ".\releaseStaging\*.*" -Destination ".\release" -Force
-
-  dotnet publish src\mGBAHttp\mGBAHttp.csproj -r $rid -p:SelfContained=true  -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)-self-contained" -p:TrimMode=partial -p:PublishTrimmed=false -p:IncludeAllContentForSelfExtract=true -p:JsonSerializerIsReflectionEnabledByDefault=true
+  dotnet publish src\mGBAHttp\mGBAHttp.csproj -r $rid -c Release -p:SelfContained=true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)"
 
   Remove-EmptyStaticWebAssetsFiles -folder ".\releaseStaging"
   Move-Item -Path ".\releaseStaging\*.*" -Destination ".\release" -Force

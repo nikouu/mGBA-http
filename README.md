@@ -8,7 +8,7 @@ An HTTP interface for mGBA scripting. As long as you make HTTP requests, you'll 
 
 ## Features
 - Interact with mGBA with any language that supports HTTP
-- Full Swagger API documentation (swagger.json and SwaggerUI) for fast prototyping and integration
+- Full OpenAPI API documentation for fast prototyping and integration
 - Maps 1 to 1 with most of the mGBA scripting API
 - Custom button APIs for easy button interaction
 - Cross platform

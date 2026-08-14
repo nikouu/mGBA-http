@@ -1,0 +1,43 @@
+name: Pages
+
+# Publishes the Scalar API reference to GitHub Pages.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one Pages deploy at a time; do not cancel an in-progress deploy.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+      - name: Generate OpenAPI document
+        run: dotnet build src/mGBAHttp/mGBAHttp.csproj -c Release -t:GenerateOpenApiDocuments
+      - name: Assemble site
+        run: |
+          mkdir -p site
+          cp docs/site/index.html site/index.html
+          cp src/mGBAHttp/obj/openapi/mGBAHttp.json site/openapi.json
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
