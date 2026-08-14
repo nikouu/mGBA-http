@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Build-time OpenAPI document generation for the GitHub Pages Scalar site">
-    <!-- Off during normal builds (generation boots the app host); the Pages workflow calls the
-         GenerateOpenApiDocuments target explicitly. Emits <ProjectName>.json into this directory. -->
+    <!-- Off during normal builds (generation boots the app host); the Pages workflow turns it on
+         with -p:OpenApiGenerateDocumentsOnBuild=true. Emits <ProjectName>.json into this directory. -->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
     <OpenApiDocumentsDirectory>$(MSBuildProjectDirectory)/obj/openapi</OpenApiDocumentsDirectory>
   </PropertyGroup>

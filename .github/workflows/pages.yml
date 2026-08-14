@@ -29,7 +29,7 @@ jobs:
         with:
           global-json-file: global.json
       - name: Generate OpenAPI document
-        run: dotnet build src/mGBAHttp/mGBAHttp.csproj -c Release -t:GenerateOpenApiDocuments
+        run: dotnet build src/mGBAHttp/mGBAHttp.csproj -c Release -p:OpenApiGenerateDocumentsOnBuild=true
       - name: Assemble site
         run: |
           mkdir -p site
