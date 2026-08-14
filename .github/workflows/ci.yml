@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Build + the OpenAPI contract snapshot test.
+  # Have to filter the integration tests out as mgba can't be setup by commandline
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - run: dotnet build src/mGBAHttp/mGBAHttp.csproj -c Release
+      - name: Contract test
+        run: dotnet test src/mGBAHttp.IntegrationTests --configuration Release --filter "FullyQualifiedName~OpenApiContractTests"
+        env:
+          DiffEngine_Disabled: 'true'
+
+  # Publish the real trimmed + compressed single-file per platform and run it.
+  # Catches trim-only runtime failures.
+  smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest,    rid: linux-x64,   bin: mGBAHttp }
+          - { os: ubuntu-24.04-arm, rid: linux-arm64,  bin: mGBAHttp }
+          - { os: windows-latest,   rid: win-x64,     bin: mGBAHttp.exe }
+          - { os: windows-latest,   rid: win-x86,     bin: mGBAHttp.exe }
+          - { os: windows-11-arm,   rid: win-arm64,   bin: mGBAHttp.exe }
+          - { os: macos-latest,     rid: osx-arm64,   bin: mGBAHttp }
+          - { os: macos-13,         rid: osx-x64,     bin: mGBAHttp }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Publish trimmed single-file (${{ matrix.rid }})
+        run: >
+          dotnet publish src/mGBAHttp/mGBAHttp.csproj -r ${{ matrix.rid }} -c Release
+          -p:SelfContained=true -p:PublishSingleFile=true -p:PublishTrimmed=true
+          -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+          -o out
+      - name: Boot and probe
+        shell: bash
+        run: |
+          set -e
+          BIN="out/${{ matrix.bin }}"
+          if [ "${{ runner.os }}" != "Windows" ]; then chmod +x "$BIN"; fi
+          "$BIN" > app.log 2>&1 &
+          APP_PID=$!
+          for i in {1..30}; do
+            curl -sf http://localhost:5000/openapi/v1.json >/dev/null 2>&1 && break
+            sleep 1
+          done
+          echo "---- probing ----"
+          curl -sf http://localhost:5000/openapi/v1.json | grep -q '"openapi"' \
+            || { echo "openapi check FAILED"; cat app.log; exit 1; }
+          CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:5000/scalar/)
+          [ "$CODE" = "200" ] || { echo "scalar returned $CODE"; cat app.log; exit 1; }
+          echo "smoke OK: ${{ matrix.rid }}"
+          kill "$APP_PID" 2>/dev/null || true
+
+  # linux-arm is 32-bit ARM and no runners have this, so a build is the only thing to do
+  build-only:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rid: [linux-arm]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Publish ${{ matrix.rid }}
+        run: >
+          dotnet publish src/mGBAHttp/mGBAHttp.csproj -r ${{ matrix.rid }} -c Release
+          -p:SelfContained=true -p:PublishSingleFile=true -p:PublishTrimmed=true
+          -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+          -o out
+
+  # Parse-check the Lua script
+  lua:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y lua5.4
+      - run: luac5.4 -p mGBASocketServer.lua && echo "Lua syntax OK"
