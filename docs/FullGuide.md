@@ -26,8 +26,8 @@ This guide is for using the full mGBA-http application. If you only need to use 
 
 When running, mGBA-http presents as a mostly non-interactiable console, with the default start information of:
 - The bound address. This is the root for the commands. Default: `http://localhost:5000`
-- The SwaggerUI address. Default: `http://localhost:5000/index.html`
-- The Swagger JSON address. Default: `http://localhost:5000/swagger/v1/swagger.json`
+- The ScalarUI address. Default: `http://localhost:5000/scalar`
+- The OpenAPI JSON address. Default: `http://localhost:5000/openapi/v1.json`
 
 Log entries of what commands are being sent as well as errors will show up in this console.
 ![](Images/ConsoleOutputExample.jpg)
@@ -39,8 +39,8 @@ A quick way to begin to sending commands is heading to the SwaggerUI address and
 See below for more examples, and the [mGBA scripting documentation](https://mgba.io/docs/scripting.html).
 
 - To see what mGBA scripting APIs are implemented, see the [implemented APIs document](ImplementedApis.md).
-- To see an overview of the swagger.json file, see the [API documentation](ApiDocumentation.md).
-- Finally, the full [swagger.json](swagger.json) file.
+- To explore the API (not live), see the [GitHub Pages Scalar API documentation]().
+- Finally, the full [OpenAPI JSON file]().
 
 ### Configuration
 If needed, there are minimal configuration points
