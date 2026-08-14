@@ -1,6 +1,5 @@
 -- ***********************
 -- mGBA-http
--- Version: 0.9.0
 -- Lua interface for mGBA-http
 -- https://github.com/nikouu/mGBA-http
 -- https://github.com/nikouu/mGBA-http/blob/main/docs/FullGuide-lua.md
@@ -14,6 +13,7 @@
 -- 5 = None
 local logLevel = 2
 local truncateLogs = true
+local VERSION <const> = "0.10.0"
 local TERMINATION_MARKER <const> = "<|END|>"
 local DEFAULT_RETURN <const> = "<|SUCCESS|>";
 local ERROR_RETURN <const> = "<|ERROR|>";
@@ -28,24 +28,25 @@ local nextID = 1
 local port = 8888
 
 function beginSocket()
+	local err
 	while not server do
-		server, error = socket.bind(nil, port)
-		if error then
-			if error == socket.ERRORS.ADDRESS_IN_USE then
+		server, err = socket.bind(nil, port)
+		if err then
+			if err == socket.ERRORS.ADDRESS_IN_USE then
 				logError("Port " .. port .. " is already in use. Close whatever is using it, or change 'port' in this script and mgba-http:Socket:Port in appsettings.json to match.")
 				break
 			else
-				logError(formatSocketMessage("Bind", error, true))
+				logError(formatSocketMessage("Bind", err, true))
 				break
 			end
 		else
 			local ok
-			ok, error = server:listen()
-			if error then
+			ok, err = server:listen()
+			if err then
 				server:close()
-				logError(formatSocketMessage("Listen", error, true))
+				logError(formatSocketMessage("Listen", err, true))
 			else
-				logWithOverride("mGBA script server 0.9.0 ready. Listening on port " .. port, 4)
+				logWithOverride("mGBA script server " .. VERSION .. " ready. Listening on port " .. port, 4)
 				server:add("received", socketAccept)
 			end
 		end
@@ -53,9 +54,9 @@ function beginSocket()
 end
 
 function socketAccept()
-	local sock, error = server:accept()
-	if error then
-		logError(formatSocketMessage("Accept", error, true))
+	local sock, err = server:accept()
+	if err then
+		logError(formatSocketMessage("Accept", err, true))
 		return
 	end
 	local id = nextID
@@ -71,7 +72,7 @@ function socketReceived(id)
     if not sock then return end
     sock._buffer = sock._buffer or ""
     while true do
-        local chunk, error = sock:receive(1024)
+        local chunk, err = sock:receive(1024)
         if chunk then
             sock._buffer = sock._buffer .. chunk
             while true do
@@ -92,16 +93,16 @@ function socketReceived(id)
                     sock:send(returnValue .. TERMINATION_MARKER)
                 end
             end
-        elseif error then
+        elseif err then
             -- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
-            if error ~= socket.ERRORS.AGAIN then
-                if error == "disconnected" then
-                    logDebug(formatSocketMessage(id, error, false))
-                elseif error == socket.ERRORS.UNKNOWN_ERROR then
-                    -- for some reason this error sometimes comes happens instead of disconnected
+            if err ~= socket.ERRORS.AGAIN then
+                if err == "disconnected" then
+                    logDebug(formatSocketMessage(id, err, false))
+                elseif err == socket.ERRORS.UNKNOWN_ERROR then
+                    -- for some reason this error sometimes happens instead of disconnected
                     logDebug(formatSocketMessage(id, "disconnected*", false))
                 else
-                    logError(formatSocketMessage(id, error, true))
+                    logError(formatSocketMessage(id, err, true))
                 end
                 socketStop(id)
             end
@@ -113,7 +114,9 @@ end
 function socketStop(id)
 	local sock = socketList[id]
 	socketList[id] = nil
-	sock:close()
+	if sock then
+		sock:close()
+	end
 end
 
 function socketError(id)
@@ -128,7 +131,7 @@ function formatSocketMessage(id, msg, isError)
 	else
 		prefix = prefix .. " Received: "
 	end
-	return prefix .. (msg and tostring(msg) or "Probably exceeding limit")
+	return prefix .. (msg and tostring(msg) or "Unknown")
 end
 
 -- ***********************
@@ -258,7 +261,7 @@ function messageRouter(rawMessage)
 	elseif messageType == "memoryDomain.write16" then returnValue = emu.memory[messageValue1]:write16(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write32" then returnValue = emu.memory[messageValue1]:write32(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write8" then returnValue = emu.memory[messageValue1]:write8(tonumber(messageValue2), tonumber(messageValue3))
-	elseif (rawMessage ~= nil or rawMessage ~= '') then logInformation("Unable to route raw message: " .. rawMessage)
+	elseif (rawMessage ~= nil and rawMessage ~= '') then logInformation("Unable to route raw message: " .. rawMessage)
 	else logInformation(messageType)	
 	end
 	
@@ -459,7 +462,7 @@ end
 
 function formatLogMessage(message)
     if truncateLogs and #message > 500 then
-        return string.sub(message, 1, 97) .. "..."
+        return string.sub(message, 1, 497) .. "..."
     end
     return message
 end
