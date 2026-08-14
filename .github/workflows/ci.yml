@@ -16,7 +16,7 @@ jobs:
   # Build + the OpenAPI contract snapshot test.
   # Have to filter the integration tests out as mgba can't be setup by commandline
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-dotnet@v5
@@ -66,8 +66,14 @@ jobs:
             sleep 1
           done
           echo "---- probing ----"
-          curl -sf http://localhost:5000/openapi/v1.json | grep -q '"openapi"' \
-            || { echo "openapi check FAILED"; cat app.log; exit 1; }
+          # Capture then test: piping into `grep -q` lets grep close the pipe early,
+          # SIGPIPE-killing curl, which trips pipefail even on a valid doc.
+          BODY=$(curl -sf http://localhost:5000/openapi/v1.json) \
+            || { echo "openapi request FAILED"; cat app.log; exit 1; }
+          case "$BODY" in
+            *'"openapi"'*) ;;
+            *) echo "openapi check FAILED"; cat app.log; exit 1 ;;
+          esac
           CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:5000/scalar/)
           [ "$CODE" = "200" ] || { echo "scalar returned $CODE"; cat app.log; exit 1; }
           echo "smoke OK: ${{ matrix.rid }}"
