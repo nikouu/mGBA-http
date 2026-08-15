@@ -1,6 +1,6 @@
 using mGBAHttp.Domain;
 
-namespace mGBAHttp.IntegrationTests
+namespace mGBAHttp.UnitTests
 {
     [TestClass]
     public sealed class ReusableSocketTests

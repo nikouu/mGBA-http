@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Text.Json;
-namespace mGBAHttp.IntegrationTests;
+namespace mGBAHttp.UnitTests;
 
 [TestClass]
 public class OpenApiContractTests : VerifyBase

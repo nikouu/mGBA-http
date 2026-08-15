@@ -13,8 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Build + the OpenAPI contract snapshot test.
-  # Have to filter the integration tests out as mgba can't be setup by commandline
+  # Build + the unit tests. The integration tests are excluded by project: they need a running mGBA instance.
   test:
     runs-on: windows-latest
     steps:
@@ -23,8 +22,8 @@ jobs:
         with:
           global-json-file: global.json
       - run: dotnet build src/mGBAHttp/mGBAHttp.csproj -c Release
-      - name: Contract test
-        run: dotnet test src/mGBAHttp.IntegrationTests --configuration Release --filter "FullyQualifiedName~OpenApiContractTests"
+      - name: Unit tests
+        run: dotnet test src/mGBAHttp.UnitTests --configuration Release
         env:
           DiffEngine_Disabled: 'true'
 
@@ -79,7 +78,7 @@ jobs:
           echo "smoke OK: ${{ matrix.rid }}"
           kill "$APP_PID" 2>/dev/null || true
 
-  # Not booted, just cross-compiled to confirm they publish clean. No runners for these architectures
+  # Not run, just cross-compiled to confirm they publish clean. No runners for these architectures
   build-only:
     runs-on: ubuntu-latest
     strategy:

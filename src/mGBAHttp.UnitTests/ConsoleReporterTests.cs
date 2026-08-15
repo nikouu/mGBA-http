@@ -1,7 +1,7 @@
 using mGBAHttp.Logging;
 using Microsoft.Extensions.Options;
 
-namespace mGBAHttp.IntegrationTests
+namespace mGBAHttp.UnitTests
 {
     [TestClass]
     public sealed class ConsoleReporterTests

@@ -2,7 +2,7 @@ using mGBAHttp.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
-namespace mGBAHttp.IntegrationTests
+namespace mGBAHttp.UnitTests
 {
     [TestClass]
     public sealed class RequestReportingMiddlewareTests

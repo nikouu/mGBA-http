@@ -2,7 +2,7 @@ using mGBAHttp;
 using Microsoft.AspNetCore.Http;
 using System.Net.Sockets;
 
-namespace mGBAHttp.IntegrationTests
+namespace mGBAHttp.UnitTests
 {
     [TestClass]
     public sealed class MgbaExceptionHandlerTests
