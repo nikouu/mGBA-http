@@ -45,11 +45,21 @@ namespace mGBAHttp.IntegrationTests
         }
 
         [TestMethod]
-        public async Task UnknownException_IsNotHandled()
+        public async Task BadHttpRequest_Maps400AndPassesMessage()
         {
-            var (handled, status, _) = await Handle(new InvalidOperationException());
-            Assert.IsFalse(handled);
-            Assert.AreEqual(200, status); // status left untouched
+            var (handled, status, body) = await Handle(new BadHttpRequestException("bad param", 400));
+            Assert.IsTrue(handled);
+            Assert.AreEqual(400, status);
+            Assert.AreEqual("bad param", body);
+        }
+
+        [TestMethod]
+        public async Task UnknownException_Maps500AndPassesMessage()
+        {
+            var (handled, status, body) = await Handle(new InvalidOperationException("boom"));
+            Assert.IsTrue(handled);
+            Assert.AreEqual(500, status);
+            Assert.AreEqual("boom", body);
         }
     }
 }

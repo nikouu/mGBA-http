@@ -5,7 +5,6 @@ using mGBAHttp.Logging;
 using mGBAHttp.Models;
 using mGBAHttp.OpenApi;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
@@ -18,21 +17,6 @@ var programVersionString = $"v{version?.Major}.{version?.Minor}.{version?.Build}
 SetupConsoleAnsiSupport();
 
 Console.Title = $"mGBA-http {programVersionString}";
-
-Console.WriteLine(
-$"\x1B[1m\x1B[35m{"""
-                ____ ____    _         _     _   _         
-     _ __ ___  / ___| __ )  / \       | |__ | |_| |_ _ __  
-    | '_ ` _ \| |  _|  _ \ / _ \ _____| '_ \| __| __| '_ \ 
-    | | | | | | |_| | |_) / ___ \_____| | | | |_| |_| |_) |
-    |_| |_| |_|\____|____/_/   \_\    |_| |_|\__|\__| .__/ 
-                                                    |_|                                                       
-"""}\x1B[0m");
-
-Console.WriteLine("""
-    https://github.com/nikouu/mGBA-http
-
-""");
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -68,21 +52,23 @@ builder.Services.TryAddSingleton(serviceProvider =>
 builder.Services.AddExceptionHandler<MgbaExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole(options =>
-{
-    options.FormatterName = "CustomFormat";
-});
+// For binding request errors
+builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = true);
 
-builder.Services.Configure<mGBAHttpConsoleFormatterOptions>(
-    builder.Configuration.GetSection("Logging:Console:FormatterOptions"));
-builder.Services.AddSingleton<ConsoleFormatter, CustomConsoleFormatter>();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Error);
+
+builder.Services.Configure<ConsoleOptions>(builder.Configuration.GetSection(ConsoleOptions.Section));
+builder.Services.AddSingleton<ConsoleReporter>();
 
 var app = builder.Build();
 
-app.UseExceptionHandler();
+app.Services.GetRequiredService<ConsoleReporter>().Header(builder.Configuration["Urls"] ?? "http://localhost:5000");
 
-app.UseRequestResponseLogging();
+app.UseRequestReporting();
+
+app.UseExceptionHandler();
 
 app.MapOpenApi();
 app.MapScalarApiReference(options =>
@@ -91,9 +77,6 @@ app.MapScalarApiReference(options =>
         .WithClassicLayout()
         .WithTheme(ScalarTheme.Purple);
 });
-
-Console.WriteLine("Scalar UI: /scalar");
-Console.WriteLine("OpenAPI JSON: /openapi/v1.json\n");
 
 app.MapCoreEndpoints();
 app.MapConsoleEndpoints();
