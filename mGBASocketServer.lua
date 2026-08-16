@@ -211,8 +211,7 @@ function messageRouter(rawMessage)
 		"\n\tmessageValue2: ", messageValue2 or "",
 		"\n\tmessageValue3: ", messageValue3 or "")
 
-	if rawMessage == "<|ACK|>" then logInformation("Connecting.")
-	elseif messageType == "mgba-http.button.add" then addButton(messageValue1)
+	if messageType == "mgba-http.button.add" then addButton(messageValue1)
 	elseif messageType == "mgba-http.button.addMany" then addButtons(messageValue1)
 	elseif messageType == "mgba-http.button.clear" then clearButton(messageValue1)
 	elseif messageType == "mgba-http.button.clearMany" then clearButtons(messageValue1)
