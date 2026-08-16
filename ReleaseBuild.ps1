@@ -17,8 +17,8 @@ $xml = [xml](Get-Content $projectFilePath)
 $version = $xml.Project.PropertyGroup.Version[0]
 
 # Enforce lua script
-$luaVersionLine = (Get-Content "mGBASocketServer.lua")[2];
-$luaVersion = ($luaVersionLine -split ' ')[2].Trim()
+$luaVersionLine = Get-Content "mGBASocketServer.lua" | Where-Object { $_ -like '*local VERSION*' } | Select-Object -First 1
+$luaVersion = $luaVersionLine.Split('"')[1]
 
 if ($luaVersion -ne $version){
   throw "mGBASocketServer.lua version should be $($version). Currently is $($luaVersion)";
