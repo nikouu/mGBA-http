@@ -14,24 +14,24 @@ namespace mGBAHttp.Domain
         private readonly IPEndPoint _ipEndpoint;
         private readonly int _readTimeout;
         private readonly int _writeTimeout;
-        private readonly int _maxRetries;
+        private readonly int _maxAttempts;
         private readonly int _initialDelay;
         private readonly int _maxDelay;
         private const string _terminationString = "<|END|>";
         private static readonly byte[] _terminationBytes = Encoding.UTF8.GetBytes(_terminationString);
 
         public ReusableSocket(SocketOptions options)
-            : this(options, maxRetries: 3, initialDelay: 400, maxDelay: 2000)
+            : this(options, maxAttempts: 3, initialDelay: 400, maxDelay: 2000)
         {
         }
 
-        internal ReusableSocket(SocketOptions options, int maxRetries, int initialDelay, int maxDelay)
+        internal ReusableSocket(SocketOptions options, int maxAttempts, int initialDelay, int maxDelay)
         {
             var address = IPAddress.Parse(options.IpAddress);
             _ipEndpoint = new IPEndPoint(address, options.Port);
             _readTimeout = options.ReadTimeout;
             _writeTimeout = options.WriteTimeout;
-            _maxRetries = maxRetries;
+            _maxAttempts = maxAttempts;
             _initialDelay = initialDelay;
             _maxDelay = maxDelay;
             _socket = new Socket(_ipEndpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -71,8 +71,7 @@ namespace mGBAHttp.Domain
                     // it must not be reused as-is by the next attempt or the pool.
                     RecreateSocket();
 
-                    if (!ShouldRetry(requestSent, _responseStarted, ex is SocketException)
-                        || attempts >= _maxRetries)
+                    if (attempts >= _maxAttempts || ShouldGiveUp(ex, requestSent, _responseStarted))
                     {
                         throw;
                     }
@@ -94,10 +93,17 @@ namespace mGBAHttp.Domain
             _socket = new Socket(_ipEndpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         }
 
-        // Resend only when mGBA cannot have run the command: it never fully sent,
-        // or the socket died before any reply arrived.
-        internal static bool ShouldRetry(bool requestFullySent, bool responseStarted, bool isSocketException) =>
-            !requestFullySent || (isSocketException && !responseStarted);
+        // Give up when mGBA may already have run the command, or when a resend cannot help.
+        internal static bool ShouldGiveUp(Exception exception, bool requestFullySent, bool responseStarted) =>
+            exception switch
+            {
+                // Nothing is listening, so resending cannot help.
+                SocketException { SocketErrorCode: SocketError.ConnectionRefused } => true,
+                // The socket died after a reply started, so the command may have run.
+                SocketException => requestFullySent && responseStarted,
+                // Timeouts and anything else: once it was sent, the command may have run.
+                _ => requestFullySent,
+            };
 
         private async Task ConnectAndSendAsync(string message)
         {

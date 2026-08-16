@@ -1,15 +1,27 @@
 using mGBAHttp.Domain;
 using mGBAHttp.Models;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Sockets;
 
 namespace mGBAHttp.UnitTests
 {
     [TestClass]
     public sealed class ReusableSocketProtocolTests
     {
+        private static int ClosedPort()
+        {
+            var listener = new TcpListener(IPAddress.Loopback, 0);
+            listener.Start();
+            var port = ((IPEndPoint)listener.LocalEndpoint).Port;
+            listener.Stop();
+            return port;
+        }
+
         private static ReusableSocket Connect(FakeMgbaServer server, int readTimeout = 2000) =>
             new(
                 new SocketOptions { IpAddress = "127.0.0.1", Port = server.Port, ReadTimeout = readTimeout, WriteTimeout = 2000 },
-                maxRetries: 3,
+                maxAttempts: 3,
                 initialDelay: 1,
                 maxDelay: 2);
 
@@ -90,6 +102,25 @@ namespace mGBAHttp.UnitTests
 
             Assert.AreEqual("recovered", await socket.SendMessageAsync("core.getGameTitle,,,"));
             Assert.AreEqual(2, attempts);
+        }
+
+        [TestMethod]
+        public async Task SendMessage_whenNothingIsListening_doesNotRetry()
+        {
+            const int retryDelay = 5000;
+            using var socket = new ReusableSocket(
+                new SocketOptions { IpAddress = "127.0.0.1", Port = ClosedPort(), ReadTimeout = 8000, WriteTimeout = 8000 },
+                maxAttempts: 3,
+                initialDelay: retryDelay,
+                maxDelay: retryDelay);
+
+            var elapsed = Stopwatch.StartNew();
+            await Assert.ThrowsExactlyAsync<SocketException>(() => socket.SendMessageAsync("core.getGameTitle,,,"));
+            elapsed.Stop();
+
+            Assert.IsTrue(
+                elapsed.ElapsedMilliseconds < retryDelay,
+                $"Expected no retry delay, took {elapsed.ElapsedMilliseconds}ms");
         }
 
         [TestMethod]

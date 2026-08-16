@@ -1,20 +1,39 @@
 using mGBAHttp.Domain;
+using System.Net.Sockets;
 
 namespace mGBAHttp.UnitTests
 {
     [TestClass]
     public sealed class ReusableSocketTests
     {
-        // fullySent, responseStarted, isSocketException, expectedRetry
-        [DataTestMethod]
-        [DataRow(false, false, true, true)]    // never fully sent -> safe
-        [DataRow(false, false, false, true)]   // never fully sent -> safe
-        [DataRow(true, false, true, true)]     // dead socket, no reply -> safe
-        [DataRow(true, true, true, false)]     // reply started then died -> may have run
-        [DataRow(true, false, false, false)]   // read timeout -> may have run
-        [DataRow(true, true, false, false)]    // reply started then errored -> may have run
-        public void ShouldRetry_onlyWhenCommandCannotHaveExecuted(
-            bool fullySent, bool responseStarted, bool isSocketException, bool expected) =>
-            Assert.AreEqual(expected, ReusableSocket.ShouldRetry(fullySent, responseStarted, isSocketException));
+        private static SocketException Refused() => new((int)SocketError.ConnectionRefused);
+
+        private static SocketException Dropped() => new((int)SocketError.ConnectionReset);
+
+        [TestMethod]
+        public void ConnectionRefused_givesUp() =>
+            Assert.IsTrue(ReusableSocket.ShouldGiveUp(Refused(), requestFullySent: false, responseStarted: false));
+
+        [TestMethod]
+        public void RequestNeverFullySent_retries()
+        {
+            Assert.IsFalse(ReusableSocket.ShouldGiveUp(Dropped(), requestFullySent: false, responseStarted: false));
+            Assert.IsFalse(ReusableSocket.ShouldGiveUp(new TimeoutException(), requestFullySent: false, responseStarted: false));
+        }
+
+        [TestMethod]
+        public void SocketDiedBeforeAnyReply_retries() =>
+            Assert.IsFalse(ReusableSocket.ShouldGiveUp(Dropped(), requestFullySent: true, responseStarted: false));
+
+        [TestMethod]
+        public void SocketDiedAfterReplyStarted_givesUp() =>
+            Assert.IsTrue(ReusableSocket.ShouldGiveUp(Dropped(), requestFullySent: true, responseStarted: true));
+
+        [TestMethod]
+        public void TimeoutAfterSending_givesUp()
+        {
+            Assert.IsTrue(ReusableSocket.ShouldGiveUp(new TimeoutException(), requestFullySent: true, responseStarted: false));
+            Assert.IsTrue(ReusableSocket.ShouldGiveUp(new TimeoutException(), requestFullySent: true, responseStarted: true));
+        }
     }
 }
