@@ -102,11 +102,20 @@ namespace mGBAHttp.UnitTests
         [TestMethod]
         public void Header_writesUrlAndDocLinks()
         {
-            var output = Capture(false, r => r.Header("http://localhost:5000"));
+            var output = Capture(false, r => r.Header(["http://localhost:5000"]));
 
             StringAssert.Contains(output, "Listening on http://localhost:5000");
             StringAssert.Contains(output, "/scalar");
             StringAssert.Contains(output, "/openapi/v1.json");
+        }
+
+        [TestMethod]
+        public void Header_writesEveryBoundAddress()
+        {
+            var output = Capture(false, r => r.Header(["http://localhost:5000", "https://localhost:5001"]));
+
+            StringAssert.Contains(output, "Listening on http://localhost:5000");
+            StringAssert.Contains(output, "Listening on https://localhost:5001");
         }
     }
 }

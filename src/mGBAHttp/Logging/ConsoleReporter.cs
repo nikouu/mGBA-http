@@ -30,13 +30,18 @@ public sealed class ConsoleReporter
 
     public ConsoleReporter(IOptions<ConsoleOptions> options) => _detailed = options.Value.Detailed;
 
-    public void Header(string url)
+    public void Header(IEnumerable<string> urls)
     {
         lock (_gate)
         {
             Console.WriteLine($"{Purple}{Banner}{Reset}");
             Console.WriteLine("    https://github.com/nikouu/mGBA-http\n");
-            Console.WriteLine($"Listening on {url}");
+
+            foreach (var url in urls)
+            {
+                Console.WriteLine($"Listening on {url}");
+            }
+
             Console.WriteLine("Scalar UI: /scalar");
             Console.WriteLine("OpenAPI JSON: /openapi/v1.json\n");
         }

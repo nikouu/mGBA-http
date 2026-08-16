@@ -4,6 +4,8 @@ using mGBAHttp.Endpoints;
 using mGBAHttp.Logging;
 using mGBAHttp.Models;
 using mGBAHttp.OpenApi;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
@@ -75,7 +77,12 @@ builder.Services.AddSingleton<ConsoleReporter>();
 
 var app = builder.Build();
 
-app.Services.GetRequiredService<ConsoleReporter>().Header(builder.Configuration["Urls"] ?? "http://localhost:5000");
+// Printed once the server is up so the addresses are the ones actually bound, not the ones configured.
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    var addresses = app.Services.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>()?.Addresses;
+    app.Services.GetRequiredService<ConsoleReporter>().Header(addresses ?? []);
+});
 
 app.UseRequestReporting();
 
