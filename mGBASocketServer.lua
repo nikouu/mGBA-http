@@ -7,7 +7,7 @@
 
 -- logLevel values
 -- 1 = Debug
--- 2 = Information
+-- 2 = Information (default)
 -- 3 = Warning
 -- 4 = Error
 -- 5 = None
@@ -33,7 +33,7 @@ function beginSocket()
 		server, err = socket.bind(nil, port)
 		if err then
 			if err == socket.ERRORS.ADDRESS_IN_USE then
-				logError("Port " .. port .. " is already in use. Close whatever is using it, or change 'port' in this script and mgba-http:Socket:Port in appsettings.json to match.")
+				logError("Port ", port, " is already in use. Close whatever is using it, or change 'port' in this script and mgba-http:Socket:Port in appsettings.json to match.")
 				break
 			else
 				logError(formatSocketMessage("Bind", err, true))
@@ -80,14 +80,15 @@ function socketReceived(id)
                 if not marker_start then break end
                 local message = sock._buffer:sub(1, marker_start - 1)
                 sock._buffer = sock._buffer:sub(marker_end + 1)
-                logDebug(formatSocketMessage(id, message:match("^(.-)%s*$")))
-                
+                local trimmedMessage = message:match("^(.-)%s*$")
+                logDebug("Socket ", id, " Received: ", trimmedMessage)
+
                 local success, returnValue = pcall(function()
-                    return messageRouter(message:match("^(.-)%s*$"))
+                    return messageRouter(trimmedMessage)
                 end)
-                
+
                 if not success then
-                    logError("Error executing command: " .. tostring(returnValue))
+                    logError("Error executing command: ", tostring(returnValue))
                     sock:send(ERROR_RETURN .. TERMINATION_MARKER)
                 else
                     sock:send(returnValue .. TERMINATION_MARKER)
@@ -152,6 +153,11 @@ local keyValues = {
 }
 
 function messageRouter(rawMessage)
+    if rawMessage == nil or rawMessage == "" then
+        logError("Received an empty message")
+        return ERROR_RETURN
+    end
+
     local messageType, rest = rawMessage:match("^([^,]+),(.*)$")
     
     local messageValue1, messageValue2, messageValue3
@@ -196,7 +202,14 @@ function messageRouter(rawMessage)
 
 	local returnValue = DEFAULT_RETURN;
 
-	logInformation("messageRouter: \n\tRaw message: " .. rawMessage .. "\n\tmessageType: " .. (messageType or "") .. "\n\tmessageValue1: " .. (messageValue1 or "") .. "\n\tmessageValue2: " .. (messageValue2 or "") .. "\n\tmessageValue3: " .. (messageValue3 or ""))
+	logInformation("Received: ", rawMessage)
+
+	logDebug("messageRouter:",
+		"\n\tRaw message: ", rawMessage,
+		"\n\tmessageType: ", messageType or "",
+		"\n\tmessageValue1: ", messageValue1 or "",
+		"\n\tmessageValue2: ", messageValue2 or "",
+		"\n\tmessageValue3: ", messageValue3 or "")
 
 	if rawMessage == "<|ACK|>" then logInformation("Connecting.")
 	elseif messageType == "mgba-http.button.add" then addButton(messageValue1)
@@ -261,13 +274,14 @@ function messageRouter(rawMessage)
 	elseif messageType == "memoryDomain.write16" then returnValue = emu.memory[messageValue1]:write16(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write32" then returnValue = emu.memory[messageValue1]:write32(tonumber(messageValue2), tonumber(messageValue3))
 	elseif messageType == "memoryDomain.write8" then returnValue = emu.memory[messageValue1]:write8(tonumber(messageValue2), tonumber(messageValue3))
-	elseif (rawMessage ~= nil and rawMessage ~= '') then logInformation("Unable to route raw message: " .. rawMessage)
-	else logInformation(messageType)	
+	else
+		logError("Unable to route raw message: ", rawMessage)
+		returnValue = ERROR_RETURN
 	end
-	
+
 	returnValue = tostring(returnValue or DEFAULT_RETURN);
 
-	logInformation("Returning: " .. returnValue)
+	logInformation("Returning: ", returnValue)
 	return returnValue;
 end
 
@@ -431,7 +445,7 @@ end
 function convertByteStringToBinary(bracketedBytes)
     local hexString = bracketedBytes:match("%[(.+)%]")
     if not hexString then
-        logError("Failed to parse bracketed bytes: " .. tostring(bracketedBytes))
+        logError("Failed to parse bracketed bytes: ", tostring(bracketedBytes))
         return nil
     end
     
@@ -441,7 +455,7 @@ function convertByteStringToBinary(bracketedBytes)
         if byte then
             table.insert(bytes, string.char(byte))
         else
-            logError("Invalid hex byte: " .. tostring(hexByte))
+            logError("Invalid hex byte: ", tostring(hexByte))
             return nil
         end
     end
@@ -460,45 +474,50 @@ end
 -- Logging
 -- ***********************
 
-function formatLogMessage(message)
-    if truncateLogs and #message > 500 then
-        return string.sub(message, 1, 497) .. "..."
+function truncate(text)
+    if truncateLogs and #text > 500 then
+        return string.sub(text, 1, 497) .. "..."
     end
-    return message
+    return text
 end
 
-function logDebug(message)
+-- Each part is truncated on its own so one long value cannot crowd out the others.
+function formatLogMessage(...)
+    local parts = table.pack(...)
+    for i = 1, parts.n do
+        parts[i] = truncate(tostring(parts[i]))
+    end
+    return "[" .. os.date("%X") .. "] " .. table.concat(parts, "", 1, parts.n)
+end
+
+-- The log functions take the message in parts, so nothing is joined unless it is actually written.
+function logDebug(...)
     if logLevel <= 1 then
-        local timestamp = "[" .. os.date("%X", os.time()) .. "] "
-        console:log(timestamp .. formatLogMessage(message))
+        console:log(formatLogMessage(...))
     end
 end
 
-function logInformation(message)
+function logInformation(...)
     if logLevel <= 2 then
-        local timestamp = "[" .. os.date("%X", os.time()) .. "] "
-        console:log(timestamp .. formatLogMessage(message))
+        console:log(formatLogMessage(...))
     end
 end
 
-function logWarning(message)
+function logWarning(...)
     if logLevel <= 3 then
-        local timestamp = "[" .. os.date("%X", os.time()) .. "] "
-        console:warn(timestamp .. formatLogMessage(message))
+        console:warn(formatLogMessage(...))
     end
 end
 
-function logError(message)
+function logError(...)
     if logLevel <= 4 then
-        local timestamp = "[" .. os.date("%X", os.time()) .. "] "
-        console:error(timestamp .. formatLogMessage(message))
+        console:error(formatLogMessage(...))
     end
 end
 
 function logWithOverride(message, overrideLogLevel)
     if logLevel <= overrideLogLevel then
-        local timestamp = "[" .. os.date("%X", os.time()) .. "] "
-        console:log(timestamp .. formatLogMessage(message))
+        console:log(formatLogMessage(message))
     end
 end
 
