@@ -15,32 +15,29 @@ namespace mGBAHttp.Domain
         private readonly int _readTimeout;
         private readonly int _writeTimeout;
         private readonly int _maxAttempts;
-        private readonly int _initialDelay;
-        private readonly int _maxDelay;
+        private readonly int _retryDelay;
         private const string _terminationString = "<|END|>";
         private static readonly byte[] _terminationBytes = Encoding.UTF8.GetBytes(_terminationString);
 
         public ReusableSocket(SocketOptions options)
-            : this(options, maxAttempts: 3, initialDelay: 400, maxDelay: 2000)
+            : this(options, maxAttempts: 3, retryDelay: 200)
         {
         }
 
-        internal ReusableSocket(SocketOptions options, int maxAttempts, int initialDelay, int maxDelay)
+        internal ReusableSocket(SocketOptions options, int maxAttempts, int retryDelay)
         {
             var address = IPAddress.Parse(options.IpAddress);
             _ipEndpoint = new IPEndPoint(address, options.Port);
             _readTimeout = options.ReadTimeout;
             _writeTimeout = options.WriteTimeout;
             _maxAttempts = maxAttempts;
-            _initialDelay = initialDelay;
-            _maxDelay = maxDelay;
+            _retryDelay = retryDelay;
             _socket = new Socket(_ipEndpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         }
 
         public async Task<string> SendMessageAsync(string message)
         {
             var attempts = 0;
-            var delay = _initialDelay;
 
             while (true)
             {
@@ -76,8 +73,7 @@ namespace mGBAHttp.Domain
                         throw;
                     }
 
-                    await Task.Delay(delay);
-                    delay = Math.Min(delay * 3, _maxDelay);
+                    await Task.Delay(_retryDelay);
                 }
             }
         }

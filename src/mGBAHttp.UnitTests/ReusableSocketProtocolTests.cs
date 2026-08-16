@@ -22,8 +22,7 @@ namespace mGBAHttp.UnitTests
             new(
                 new SocketOptions { IpAddress = "127.0.0.1", Port = server.Port, ReadTimeout = readTimeout, WriteTimeout = 2000 },
                 maxAttempts: 3,
-                initialDelay: 1,
-                maxDelay: 2);
+                retryDelay: 1);
 
         [TestMethod]
         public async Task SendMessage_returnsServerReply()
@@ -111,8 +110,7 @@ namespace mGBAHttp.UnitTests
             using var socket = new ReusableSocket(
                 new SocketOptions { IpAddress = "127.0.0.1", Port = ClosedPort(), ReadTimeout = 8000, WriteTimeout = 8000 },
                 maxAttempts: 3,
-                initialDelay: retryDelay,
-                maxDelay: retryDelay);
+                retryDelay: retryDelay);
 
             var elapsed = Stopwatch.StartNew();
             await Assert.ThrowsExactlyAsync<SocketException>(() => socket.SendMessageAsync("core.getGameTitle,,,"));
