@@ -20,6 +20,15 @@ Console.Title = $"mGBA-http {programVersionString}";
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
+// Short aliases for the settings users override most. The full keys (--mgba-http:Socket:Port)
+// and the built in --urls keep working.
+builder.Configuration.AddCommandLine(args, new Dictionary<string, string>
+{
+    ["--mgba-ip"] = "mgba-http:Socket:IpAddress",
+    ["--mgba-port"] = "mgba-http:Socket:Port",
+    ["--detailed"] = "mgba-http:Console:Detailed"
+});
+
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
