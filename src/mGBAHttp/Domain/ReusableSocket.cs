@@ -1,5 +1,4 @@
 ﻿using mGBAHttp.Models;
-using Microsoft.Extensions.ObjectPool;
 using System.Buffers;
 using System.Net;
 using System.Net.Sockets;
@@ -7,7 +6,7 @@ using System.Text;
 
 namespace mGBAHttp.Domain
 {
-    public class ReusableSocket : IResettable, IDisposable
+    public class ReusableSocket : IDisposable
     {
         private Socket _socket;
         private bool _responseStarted;
@@ -43,6 +42,7 @@ namespace mGBAHttp.Domain
             {
                 attempts++;
                 var requestSent = false;
+                _responseStarted = false;
 
                 try
                 {
@@ -126,7 +126,6 @@ namespace mGBAHttp.Domain
 
         private async Task<string> ReadAsync()
         {
-            _responseStarted = false;
             using var cts = new CancellationTokenSource(_readTimeout);
             var buffer = ArrayPool<byte>.Shared.Rent(1024);
             var totalBytes = 0;
@@ -172,11 +171,6 @@ namespace mGBAHttp.Domain
             {
                 ArrayPool<byte>.Shared.Return(buffer);
             }
-        }
-
-        public bool TryReset()
-        {
-            return true;
         }
 
         public void Dispose()
