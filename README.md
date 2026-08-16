@@ -80,7 +80,7 @@ If you're a .NET developer, the setup simple and familiar opening the [solution 
 
 If you're not a .NET developer, check out the comprehensive [C# learning website](https://dotnet.microsoft.com/en-us/learn/csharp) from Microsoft. You can program in C# on whatever platform whether it's Windows, Mac, or Linux.
 
-In terms of the .NET work, the project uses [ASP.NET Core minimal API](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-8.0).
+In terms of the .NET work, the project uses [ASP.NET Core minimal API](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis).
 
 #### Design Document
 The rough design philosphy is outlined in the [design document](docs/Design.md). Please understand and follow this when considering a contribution.
@@ -91,7 +91,7 @@ The PowerShell release script [ReleaseBuild.ps1](ReleaseBuild.ps1) creates the f
 The script generates binaries closely aligned with the desktop operating systems and architectures that [mGBA provides downloads](https://mgba.io/downloads.html) for.
 
 #### Cross Platform
-To reduce the barrier of entry, mGBA-http also has [self-contained](https://learn.microsoft.com/en-us/dotnet/core/deploying/#publish-self-contained) builds. These are the larger binaries with "self-contained" in the filename and bring the entirity of .NET needed to run the executable - meaning the user does not need to download the [.NET runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) to use mGBA-http.
+mGBA-http targets a lot of the platforms mGBA does. Windows, OSX, Linux, and various architeectures.
 
 ## Contact
 If there's a problem feel free to start an issue, otherwise see [my about page](https://www.nikouusitalo.com/about/#contact) on how to contact me. 

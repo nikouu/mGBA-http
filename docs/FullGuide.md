@@ -6,18 +6,15 @@ This guide is for using the full mGBA-http application. If you only need to use 
 
 1. Ensure you have [mGBA](https://mgba.io/downloads.html)
 1. Download both mGBA-http and `mGBASocketServer.lua` from the [Releases](https://github.com/nikouu/mGBA-http/releases/latest) section.
-	- **Which mGBA-http?** 
-		- If you have .NET installed download the smaller file type for your system. That is, the one without "self-contained" in the filename. 
-		- If you do not have .NET installed, or are unsure, download the larger file type for your system. That is, the one with "self-contained" in the filename.
-1. Run mGBA-http
+2. Run mGBA-http
 ![](Images/mgba-httpStart.jpg)
 1. Open mGBA and click Tools > Scripting to open the Scripting window.
 ![](Images/ScripingMenuItem.jpg)
 1. In the scripting window click File > Load script to bring up the file picker dialog.
 ![](Images/LoadScript.jpg)
 1. Select the `mGBASocketServer.lua` file you downloaded earlier
-1. Load up a ROM in mGBA
-1. Done. mGBA is now ready to accept commands from mGBA-http.
+2. Load up a ROM in mGBA
+3. Done. mGBA is now ready to accept commands from mGBA-http.
 
 ![](Images/ReadyToGo.jpg)
 
@@ -39,8 +36,8 @@ A quick way to begin to sending commands is heading to the SwaggerUI address and
 See below for more examples, and the [mGBA scripting documentation](https://mgba.io/docs/scripting.html).
 
 - To see what mGBA scripting APIs are implemented, see the [implemented APIs document](ImplementedApis.md).
-- To explore the API (not live), see the [GitHub Pages Scalar API documentation]().
-- Finally, the full [OpenAPI JSON file]().
+- To explore the API (not live), see the [GitHub Pages Scalar API documentation](https://nikouu.github.io/mGBA-http/).
+- Finally, the full [OpenAPI JSON file](https://nikouu.github.io/mGBA-http/openapi.json).
 
 ### Configuration
 If needed, there are minimal configuration points
@@ -48,34 +45,27 @@ If needed, there are minimal configuration points
 #### appsettings.json
 This file is **not** required for running mGBA-http normally. 
 
-However, if you need further configuration, download this file from the releases page and put it in the same directory as mGBA-http. mGBA-http will pick up on these settings when run. See the [ASP.NET Core logging documentation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-8.0#configure-logging) for more.
+However, if you need further configuration, download this file from the releases page and put it in the same directory as mGBA-http. mGBA-http will pick up on these settings when run. See the [ASP.NET Core logging documentation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/#configure-logging) for more.
 
 The following configuration is available:
 
-| Config                                                | Notes                                                                |
-| ----------------------------------------------------- | -------------------------------------------------------------------- |
-| `Logging.LogLevel`                                    | Configure log levels                                                 |
-| `Logging.LogFilters`                                  | Filter log levels                                                    |
-| `Logging.Console.FormatterOptions.IncludeJsonDetails` | Includes a more full log entry in the console as a JSON string       |
-| `Logging.Console.FormatterOptions.TimestampFormat`    | Update the timestamp format of the console log entries.              |
-| `Kestrel.Endpoints`                                   | These are the mGBA-http listening ports                              |
-| `mgba-http`                                           | These are the socket configurations for connecting mGBA-http to mGBA |
+| Config                          | Default                 | Command line  | Notes                                                                  |
+| ------------------------------- | ----------------------- | ------------- | ---------------------------------------------------------------------- |
+| `Urls`                          | `http://localhost:5000` | `--urls`      | The address mGBA-http listens on.                                      |
+| `mgba-http:Console:Detailed`    | `false`                 | `--detailed`  | Adds a correlation ID, status code and timing under each request line. |
+| `mgba-http:Socket:IpAddress`    | `127.0.0.1`             | `--mgba-ip`   | The address mGBA is on.                                                |
+| `mgba-http:Socket:Port`         | `8888`                  | `--mgba-port` | The port mGBA is on. Must match `port` in the Lua script.              |
+| `mgba-http:Socket:ReadTimeout`  | `3000`                  |               | Milliseconds to wait for mGBA to reply.                                |
+| `mgba-http:Socket:WriteTimeout` | `3000`                  |               | Milliseconds to wait for mGBA to accept a command.                     |
+
+Command line arguments override `appsettings.json`. They take a value rather than acting as flags, so use `--detailed true`.
 
 ##### Enabling HTTPS (optional)
 
-By default, mGBA-http runs on HTTP only. If you need HTTPS, add an `Https` endpoint to the `Kestrel.Endpoints` section in `appsettings.json`:
+By default, mGBA-http runs on HTTP only. To add HTTPS, add an `https` address to `Urls` in `appsettings.json`:
 
 ```json
-"Kestrel": {
-  "Endpoints": {
-    "Http": {
-      "Url": "http://localhost:5000"
-    },
-    "Https": {
-      "Url": "https://localhost:5001"
-    }
-  }
-}
+"Urls": "http://localhost:5000;https://localhost:5001"
 ```
 
 HTTPS requires a valid certificate. The easiest way to get this going is by having the [.NET SDK installed](https://dotnet.microsoft.com/en-us/download), then you can generate and trust a development certificate by running:
@@ -84,17 +74,27 @@ HTTPS requires a valid certificate. The easiest way to get this going is by havi
 dotnet dev-certs https --trust
 ```
 
-If you are using a self-contained build without the .NET SDK, you will need to provide a certificate file explicitly:
+If you do not have the .NET SDK, you must provide a certificate file explicitly:
 
 ```json
-"Https": {
-  "Url": "https://localhost:5001",
-  "Certificate": {
-    "Path": "path/to/cert.pfx",
-    "Password": "your-password"
+"Kestrel": {
+  "Endpoints": {
+    "Http": {
+      "Url": "http://localhost:5000"
+    },
+    "Https": {
+      "Url": "https://localhost:5001",
+      "Certificate": {
+        "Path": "path/to/cert.pfx",
+        "Password": "your-password"
+      }
+    }
   }
 }
 ```
+
+Note: Delete the Urls setting when you use the Kestrel section. The Kestrel endpoints replace Urls, and the startup banner shows the unused Urls address.
+
 ### mGBASocketServer.lua
 
 At the top, there is the `logLevel` flag. This will output timestamped logs to the scripting console based on the severity of the log entry. By default it is set to **2 - Information**:

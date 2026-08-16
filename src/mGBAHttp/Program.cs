@@ -20,6 +20,8 @@ Console.Title = $"mGBA-http {programVersionString}";
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
+builder.WebHost.UseKestrelHttpsConfiguration();
+
 // Short aliases for the settings users override most. The full keys (--mgba-http:Socket:Port)
 // and the built in --urls keep working.
 builder.Configuration.AddCommandLine(args, new Dictionary<string, string>
