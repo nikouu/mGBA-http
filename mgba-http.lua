@@ -13,7 +13,7 @@
 -- 5 = None
 local logLevel = 2
 local truncateLogs = true
-local VERSION <const> = "0.10.0"
+local VERSION <const> = "1.0.0"
 local TERMINATION_MARKER <const> = "<|END|>"
 local DEFAULT_RETURN <const> = "<|SUCCESS|>";
 local ERROR_RETURN <const> = "<|ERROR|>";
