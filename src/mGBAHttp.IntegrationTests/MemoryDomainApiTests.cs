@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
-using System.Text.Json;
 
 namespace mGBAHttp.IntegrationTests
 {
@@ -33,7 +32,7 @@ namespace mGBAHttp.IntegrationTests
             var responseContent = await response.Content.ReadAsStringAsync();
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);            
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual(0, int.Parse(responseContent));
         }
 
@@ -122,7 +121,7 @@ namespace mGBAHttp.IntegrationTests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var values = responseContent.Trim('[', ']').Split(',').Select(x => Convert.ToInt32(x.Trim(), 16)).ToArray();
             CollectionAssert.AreEqual(expected, values);
         }
@@ -236,7 +235,7 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var writeResponse = await _client.PostAsync($"/memorydomain/write32?memoryDomain={WRam}&address={WriteAddress + offset}&value={value}", null);
-            
+
             var readResponse = await _client.GetAsync($"/memorydomain/read32?memoryDomain={WRam}&address={WriteAddress + offset}");
             var readContent = await readResponse.Content.ReadAsStringAsync();
             var readValue = uint.Parse(readContent);
@@ -255,7 +254,7 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var writeResponse = await _client.PostAsync($"/memorydomain/write32?memoryDomain={WRam}&address={WriteAddress + offset}&value={value}", null);
-            
+
             var readResponse = await _client.GetAsync($"/memorydomain/read32?memoryDomain={WRam}&address={WriteAddress + offset}");
             var readContent = await readResponse.Content.ReadAsStringAsync();
             var readValue = uint.Parse(readContent);
@@ -293,7 +292,7 @@ namespace mGBAHttp.IntegrationTests
 
             // Act
             var writeResponse = await _client.PostAsync($"/memorydomain/write16?memoryDomain={WRam}&address={WriteAddress + offset}&value={value}", null);
-            
+
             var readResponse = await _client.GetAsync($"/memorydomain/read16?memoryDomain={WRam}&address={WriteAddress + offset}");
             var readContent = await readResponse.Content.ReadAsStringAsync();
             var readValue = ushort.Parse(readContent);

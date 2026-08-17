@@ -1,5 +1,5 @@
-using System.Text.Json.Serialization;
 using mGBAHttp.Models;
+using System.Text.Json.Serialization;
 
 namespace mGBAHttp
 {

@@ -68,7 +68,7 @@ namespace mGBAHttp.Domain
                     // it must not be reused as-is by the next attempt or the pool.
                     RecreateSocket();
 
-                    if (attempts >= _maxAttempts || ShouldGiveUp(ex, requestSent, _responseStarted))
+                    if (attempts >= _maxAttempts || ShouldGiveUp(ex, requestSent, _responseStarted, attempts))
                     {
                         throw;
                     }
@@ -90,12 +90,12 @@ namespace mGBAHttp.Domain
         }
 
         // Give up when mGBA may already have run the command, or when a resend cannot help.
-        internal static bool ShouldGiveUp(Exception exception, bool requestFullySent, bool responseStarted) =>
+        internal static bool ShouldGiveUp(Exception exception, bool requestFullySent, bool responseStarted, int attempts) =>
             exception switch
             {
-                // Nothing is listening, so resending cannot help.
-                SocketException { SocketErrorCode: SocketError.ConnectionRefused } => true,
-                // The socket died after a reply started, so the command may have run.
+                // Usually nothing is listening, but a full listen backlog also refuses, so allow one retry.
+                SocketException { SocketErrorCode: SocketError.ConnectionRefused } => attempts > 1,
+                // The socket died after a reply started, so the command may have run and cannot be safely repeated.
                 SocketException => requestFullySent && responseStarted,
                 // Timeouts and anything else: once it was sent, the command may have run.
                 _ => requestFullySent,
@@ -129,7 +129,7 @@ namespace mGBAHttp.Domain
             using var cts = new CancellationTokenSource(_readTimeout);
             var buffer = ArrayPool<byte>.Shared.Rent(1024);
             var totalBytes = 0;
-            
+
             try
             {
                 while (true)

@@ -104,7 +104,7 @@ namespace mGBAHttp.UnitTests
         }
 
         [TestMethod]
-        public async Task SendMessage_whenNothingIsListening_doesNotRetry()
+        public async Task SendMessage_whenNothingIsListening_retriesAtMostOnce()
         {
             const int retryDelay = 5000;
             using var socket = new ReusableSocket(
@@ -116,9 +116,11 @@ namespace mGBAHttp.UnitTests
             await Assert.ThrowsExactlyAsync<SocketException>(() => socket.SendMessageAsync("core.getGameTitle,,,"));
             elapsed.Stop();
 
+            // One retry costs one delay. No retry is near-instant and two cost two delays,
+            // so this pins the retry count from both sides.
             Assert.IsTrue(
-                elapsed.ElapsedMilliseconds < retryDelay,
-                $"Expected no retry delay, took {elapsed.ElapsedMilliseconds}ms");
+                elapsed.ElapsedMilliseconds >= retryDelay && elapsed.ElapsedMilliseconds < retryDelay * 2,
+                $"Expected exactly one retry delay, took {elapsed.ElapsedMilliseconds}ms");
         }
 
         [TestMethod]

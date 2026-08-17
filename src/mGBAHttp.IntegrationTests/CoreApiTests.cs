@@ -1,7 +1,5 @@
-using mGBAHttp.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
-using System.Text.Json;
 
 namespace mGBAHttp.IntegrationTests
 {
@@ -452,7 +450,7 @@ namespace mGBAHttp.IntegrationTests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var valuesLength = responseContent.Split(',').Length;
             Assert.IsNotNull(responseContent);
             Assert.AreEqual(length, valuesLength);
@@ -471,7 +469,7 @@ namespace mGBAHttp.IntegrationTests
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            
+
             var valuesLength = responseContent.Split(',').Length;
             Assert.IsNotNull(responseContent);
             Assert.AreEqual(length, valuesLength);

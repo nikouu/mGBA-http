@@ -36,7 +36,7 @@ function beginSocket()
 				logError("Port ", port, " is already in use. Close whatever is using it, or change 'port' in this script and mgba-http:Socket:Port in appsettings.json to match.")
 				break
 			else
-				logError(formatSocketMessage("Bind", err, true))
+				logError(formatSocketMessage("Bind", err))
 				break
 			end
 		else
@@ -44,7 +44,7 @@ function beginSocket()
 			ok, err = server:listen()
 			if err then
 				server:close()
-				logError(formatSocketMessage("Listen", err, true))
+				logError(formatSocketMessage("Listen", err))
 			else
 				logWithOverride("mGBA script server " .. VERSION .. " ready. Listening on port " .. port, 4)
 				server:add("received", socketAccept)
@@ -56,7 +56,7 @@ end
 function socketAccept()
 	local sock, err = server:accept()
 	if err then
-		logError(formatSocketMessage("Accept", err, true))
+		logError(formatSocketMessage("Accept", err))
 		return
 	end
 	local id = nextID
@@ -64,7 +64,7 @@ function socketAccept()
 	socketList[id] = sock
 	sock:add("received", function() socketReceived(id) end)
 	sock:add("error", function() socketError(id) end)
-	logDebug(formatSocketMessage(id, "Connected"))
+	logDebug("Socket ", id, " connected")
 end
 
 function socketReceived(id)
@@ -89,27 +89,43 @@ function socketReceived(id)
 
                 if not success then
                     logError("Error executing command: ", tostring(returnValue))
-                    sock:send(ERROR_RETURN .. TERMINATION_MARKER)
+                    sendReply(id, sock, ERROR_RETURN)
                 else
-                    sock:send(returnValue .. TERMINATION_MARKER)
+                    sendReply(id, sock, returnValue)
                 end
             end
         elseif err then
             -- seems to go into this SOCKETERRORAGAIN state for each call, but it seems fine.
             if err ~= socket.ERRORS.AGAIN then
                 if err == "disconnected" then
-                    logDebug(formatSocketMessage(id, err, false))
+                    logDebug("Socket ", id, " disconnected")
                 elseif err == socket.ERRORS.UNKNOWN_ERROR then
                     -- for some reason this error sometimes happens instead of disconnected
-                    logDebug(formatSocketMessage(id, "disconnected*", false))
+                    logDebug("Socket ", id, " disconnected*")
                 else
-                    logError(formatSocketMessage(id, err, true))
+                    logError(formatSocketMessage(id, err))
                 end
                 socketStop(id)
             end
             return
         end
     end
+end
+
+-- mGBA sometimes accepts only part of a reply, which truncates it and leaves the client waiting.
+-- This doesn't fully fix the problem, but does surface it. 1.0.0 will redo Lua socket work to guarantee
+-- the socket is drained properly
+function sendReply(id, sock, payload)
+	local message = payload .. TERMINATION_MARKER
+	local sent, err = sock:send(message)
+
+	if err then
+		logError("Socket ", id, " send of ", #message, " bytes failed: ", tostring(err))
+	elseif sent ~= #message then
+		logWarning("Socket ", id, " sent only ", tostring(sent), " of ", #message, " bytes")
+	else
+		logDebug("Socket ", id, " sent ", #message, " bytes")
+	end
 end
 
 function socketStop(id)
@@ -121,18 +137,12 @@ function socketStop(id)
 end
 
 function socketError(id)
-	logError(formatSocketMessage(id, "Socket error", true))
+	logError(formatSocketMessage(id, "Socket error"))
 	socketStop(id)
 end
 
-function formatSocketMessage(id, msg, isError)
-	local prefix = "Socket " .. id
-	if isError then
-		prefix = prefix .. " Error: "
-	else
-		prefix = prefix .. " Received: "
-	end
-	return prefix .. (msg and tostring(msg) or "Unknown")
+function formatSocketMessage(id, msg)
+	return "Socket " .. id .. " Error: " .. (msg and tostring(msg) or "Unknown")
 end
 
 -- ***********************
@@ -276,6 +286,12 @@ function messageRouter(rawMessage)
 	else
 		logError("Unable to route raw message: ", rawMessage)
 		returnValue = ERROR_RETURN
+	end
+
+	logDebug("Raw return: ", tostring(returnValue), " (", type(returnValue), ")")
+
+	if returnValue == false then
+		logWarning("mGBA reported failure for: ", rawMessage)
 	end
 
 	returnValue = tostring(returnValue or DEFAULT_RETURN);
