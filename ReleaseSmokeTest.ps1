@@ -102,7 +102,7 @@ function Invoke-Check {
             }
             $reason = "$reason $shownBody"
         }
-        Write-Host ("fail {0,-4} {1} {2}" -f $Method, $shownPath, $reason) -ForegroundColor Red
+        Write-Host ("[FAIL] {0,-4} {1} {2}" -f $Method, $shownPath, $reason) -ForegroundColor Red
     }
 
     return [pscustomobject]@{
@@ -182,6 +182,8 @@ try {
     if (-not $ready) {
         throw "$($binary.Name) did not start listening on port $Port within 30 seconds."
     }
+
+    $checks += Invoke-Check -Method "GET" -Path "/scalar"
 
     $checks += Invoke-Check -Method "POST" -Path "/console/log?message=mGBA-http-release-smoke-test"
 

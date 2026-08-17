@@ -403,7 +403,7 @@ FodyWeavers.xsd
 *.sav
 
 # Release 
-./release
-./releaseStaging
+release/
+releaseStaging/
 screenshot.png
 *.ss*

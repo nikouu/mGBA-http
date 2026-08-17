@@ -1,16 +1,3 @@
-# Removes empty static web assets files
-function Remove-EmptyStaticWebAssetsFiles {
-  param (
-      [string]$folder
-  )
-  Get-ChildItem "$folder\*.staticwebassets.endpoints.json" | ForEach-Object {
-      $content = Get-Content $_.FullName -Raw
-      if ($content -eq '{"Version":1,"ManifestType":"Publish","Endpoints":[]}') {
-          Remove-Item $_.FullName -Force
-      }
-  }
-}
-
 # Get version
 $projectFilePath = "src\mGBAHttp\mGBAHttp.csproj"
 $xml = [xml](Get-Content $projectFilePath)
@@ -22,6 +9,13 @@ $luaVersion = $luaVersionLine.Split('"')[1]
 
 if ($luaVersion -ne $version){
   throw "mGBASocketServer.lua version should be $($version). Currently is $($luaVersion)";
+}
+
+$luaLogLevelLine = Get-Content "mGBASocketServer.lua" | Where-Object { $_ -like '*local logLevel*' } | Select-Object -First 1
+$luaLogLevel = $luaLogLevelLine.Split('=')[1].Trim()
+
+if ($luaLogLevel -ne "2"){
+  throw "mGBASocketServer.lua logLevel should be 2. Currently is $($luaLogLevel)";
 }
 
 # Setup publish variables
@@ -40,13 +34,22 @@ foreach ($folder in @(".\release", ".\releaseStaging")) {
 foreach ($rid in $rids) {
   dotnet publish src\mGBAHttp\mGBAHttp.csproj -r $rid -c Release -p:SelfContained=true -p:PublishSingleFile=true -p:PublishTrimmed=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o .\releaseStaging -p:AssemblyName="$($filenamePrefix)-$($rid)"
 
-  Remove-EmptyStaticWebAssetsFiles -folder ".\releaseStaging"
-  Move-Item -Path ".\releaseStaging\*.*" -Destination ".\release" -Force
+  # Do not move the whole folder. Publish also emits an XML doc file, the IIS in-process handler
+  # and static web asset manifests, and the release needs none of them.
+  $binaryName = "$($filenamePrefix)-$($rid)"
+  $published = @(Get-ChildItem ".\releaseStaging" -File | Where-Object { $_.Name -eq $binaryName -or $_.Name -eq "$($binaryName).exe" })
+
+  if ($published.Count -ne 1) {
+    throw "Publish for $rid did not produce $binaryName. Read the dotnet publish output above."
+  }
+
+  Move-Item -Path $published[0].FullName -Destination ".\release" -Force
 }
 
 
-# Copy over lua script
+# Copy over lua script and the config template
 Copy-Item -Path ".\mGBASocketServer.lua" -Destination ".\release" -Force
+Copy-Item -Path ".\src\mGBAHttp\appsettings.json" -Destination ".\release" -Force
 
 # Cleanup
 Remove-Item .\releaseStaging -Recurse -Force
