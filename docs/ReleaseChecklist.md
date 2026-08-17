@@ -17,3 +17,4 @@ Ensure the following are done, if needed, before each release.
 - Binaries published with latest .NET version
 - A published binary starts and serves
 - Create the list of changes for the release notes
+- Update Scalar JS package if .NET package updated
