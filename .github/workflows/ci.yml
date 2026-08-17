@@ -34,12 +34,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest,    rid: linux-x64,   bin: mGBAHttp }
+          - { os: ubuntu-latest,    rid: linux-x64,   bin: mGBAHttp,     https: true }
           - { os: ubuntu-24.04-arm, rid: linux-arm64,  bin: mGBAHttp }
-          - { os: windows-latest,   rid: win-x64,     bin: mGBAHttp.exe }
+          - { os: windows-latest,   rid: win-x64,     bin: mGBAHttp.exe, https: true }
           - { os: windows-latest,   rid: win-x86,     bin: mGBAHttp.exe }
           - { os: windows-11-arm,   rid: win-arm64,   bin: mGBAHttp.exe }
-          - { os: macos-latest,     rid: osx-arm64,   bin: mGBAHttp }
+          - { os: macos-latest,     rid: osx-arm64,   bin: mGBAHttp,     https: true }
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
@@ -76,6 +76,43 @@ jobs:
           CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:5000/scalar/)
           [ "$CODE" = "200" ] || { echo "scalar returned $CODE"; cat app.log; exit 1; }
           echo "smoke OK: ${{ matrix.rid }}"
+          kill "$APP_PID" 2>/dev/null || true
+
+      - name: Boot and probe over HTTPS (${{ matrix.rid }})
+        if: matrix.https
+        shell: bash
+        run: |
+          set -e
+          cd out
+          # MSYS_NO_PATHCONV stops Git Bash on the Windows runner rewriting /CN=localhost into a file path.
+          export MSYS_NO_PATHCONV=1
+          openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=localhost" -keyout key.pem -out cert.pem
+          openssl pkcs12 -export -out cert.pfx -inkey key.pem -in cert.pem -passout pass:smoketest
+          cat > appsettings.json <<'JSON'
+          {
+            "Kestrel": {
+              "Endpoints": {
+                "Https": {
+                  "Url": "https://localhost:5001",
+                  "Certificate": { "Path": "cert.pfx", "Password": "smoketest" }
+                }
+              }
+            }
+          }
+          JSON
+          "./${{ matrix.bin }}" > https.log 2>&1 &
+          APP_PID=$!
+          for i in {1..30}; do
+            curl -ksf https://localhost:5001/openapi/v1.json >/dev/null 2>&1 && break
+            sleep 1
+          done
+          BODY=$(curl -ksf https://localhost:5001/openapi/v1.json) \
+            || { echo "https request FAILED"; cat https.log; exit 1; }
+          case "$BODY" in
+            *'"openapi"'*) ;;
+            *) echo "https openapi check FAILED"; cat https.log; exit 1 ;;
+          esac
+          echo "https smoke OK: ${{ matrix.rid }}"
           kill "$APP_PID" 2>/dev/null || true
 
   # Not run, just cross-compiled to confirm they publish clean. No runners for these architectures

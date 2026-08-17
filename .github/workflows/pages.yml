@@ -30,11 +30,13 @@ jobs:
           global-json-file: global.json
       - name: Generate OpenAPI document
         run: dotnet build src/mGBAHttp/mGBAHttp.csproj -c Release -p:OpenApiGenerateDocumentsOnBuild=true
+      # The note goes into the hosted copy only as it's not live
       - name: Assemble site
         run: |
           mkdir -p site
           cp docs/site/index.html site/index.html
-          cp src/mGBAHttp/obj/openapi/mGBAHttp.json site/openapi.json
+          jq '.info.description += "\n\nThis page is a static reference. Request button disabled. Run mGBA-http locally and navigate to /scalar to make requests."' \
+            src/mGBAHttp/obj/openapi/mGBAHttp.json > site/openapi.json
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
