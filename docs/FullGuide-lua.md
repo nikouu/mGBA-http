@@ -6,15 +6,15 @@ This guide is for using the .lua script. If you need to use the full application
 ## Setup
 
 1. Ensure you have [mGBA](https://mgba.io/downloads.html)
-1. Download both mGBA-http and `mGBASocketServer.lua` from the [Releases](https://github.com/nikouu/mGBA-http/releases/latest) section.
-	- **Which version of mGBASocketServer.lua?** 
+1. Download both mGBA-http and `mGBA-http.lua` from the [Releases](https://github.com/nikouu/mGBA-http/releases/latest) section.
+	- **Which version of mGBA-http.lua?** 
 		- [Version 0.5.0](https://github.com/nikouu/mGBA-http/releases/tag/0.5.0) and lower is easier to use. Simply fire off the message
 		- [Version 0.6.0](https://github.com/nikouu/mGBA-http/releases/tag/0.6.0) and higher requires `<|END|>` to be at the end of the request, and will reply with `<|END|>` at the end of the response.
 1. Open mGBA and click Tools > Scripting to open the Scripting window.
 ![](Images/ScripingMenuItem.jpg)
 1. In the scripting window click File > Load script to bring up the file picker dialog.
 ![](Images/LoadScript.jpg)
-1. Select the `mGBASocketServer.lua` file you downloaded earlier
+1. Select the `mGBA-http.lua` file you downloaded earlier
 1. Load up a ROM in mGBA
 1. Done, the lua script is ready to accept commands
 ![](Images/ReadyToGoScript.jpg)

@@ -4,18 +4,18 @@ $xml = [xml](Get-Content $projectFilePath)
 $version = $xml.Project.PropertyGroup.Version[0]
 
 # Enforce lua script
-$luaVersionLine = Get-Content "mGBASocketServer.lua" | Where-Object { $_ -like '*local VERSION*' } | Select-Object -First 1
+$luaVersionLine = Get-Content "mGBA-http.lua" | Where-Object { $_ -like '*local VERSION*' } | Select-Object -First 1
 $luaVersion = $luaVersionLine.Split('"')[1]
 
 if ($luaVersion -ne $version){
-  throw "mGBASocketServer.lua version should be $($version). Currently is $($luaVersion)";
+  throw "mGBA-http.lua version should be $($version). Currently is $($luaVersion)";
 }
 
-$luaLogLevelLine = Get-Content "mGBASocketServer.lua" | Where-Object { $_ -like '*local logLevel*' } | Select-Object -First 1
+$luaLogLevelLine = Get-Content "mGBA-http.lua" | Where-Object { $_ -like '*local logLevel*' } | Select-Object -First 1
 $luaLogLevel = $luaLogLevelLine.Split('=')[1].Trim()
 
 if ($luaLogLevel -ne "2"){
-  throw "mGBASocketServer.lua logLevel should be 2. Currently is $($luaLogLevel)";
+  throw "mGBA-http.lua logLevel should be 2. Currently is $($luaLogLevel)";
 }
 
 # Setup publish variables
@@ -47,8 +47,9 @@ foreach ($rid in $rids) {
 }
 
 
-# Copy over lua script and the config template
-Copy-Item -Path ".\mGBASocketServer.lua" -Destination ".\release" -Force
+# Copy over lua script and the config template.
+# The release copy carries the version so a user can tell which script they loaded without opening it.
+Copy-Item -Path ".\mGBA-http.lua" -Destination ".\release\$($filenamePrefix).lua" -Force
 Copy-Item -Path ".\src\mGBAHttp\appsettings.json" -Destination ".\release" -Force
 
 # Cleanup

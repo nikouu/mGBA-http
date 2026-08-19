@@ -140,4 +140,4 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: sudo apt-get update && sudo apt-get install -y lua5.4
-      - run: luac5.4 -p mGBASocketServer.lua && echo "Lua syntax OK"
+      - run: luac5.4 -p mGBA-http.lua && echo "Lua syntax OK"

@@ -5,14 +5,14 @@ This guide is for using the full mGBA-http application. If you only need to use 
 ## Setup
 
 1. Ensure you have [mGBA](https://mgba.io/downloads.html)
-1. Download both mGBA-http and `mGBASocketServer.lua` from the [Releases](https://github.com/nikouu/mGBA-http/releases/latest) section.
+1. Download both mGBA-http and `mGBA-http.lua` from the [Releases](https://github.com/nikouu/mGBA-http/releases/latest) section.
 2. Run mGBA-http
 ![](Images/mgba-httpStart.jpg)
 1. Open mGBA and click Tools > Scripting to open the Scripting window.
 ![](Images/ScripingMenuItem.jpg)
 1. In the scripting window click File > Load script to bring up the file picker dialog.
 ![](Images/LoadScript.jpg)
-1. Select the `mGBASocketServer.lua` file you downloaded earlier
+1. Select the `mGBA-http.lua` file you downloaded earlier
 2. Load up a ROM in mGBA
 3. Done. mGBA is now ready to accept commands from mGBA-http.
 
@@ -95,7 +95,7 @@ If you do not have the .NET SDK, you must provide a certificate file explicitly:
 
 Note: Delete the Urls setting when you use the Kestrel section. The Kestrel endpoints replace Urls, and the startup banner shows the unused Urls address.
 
-### mGBASocketServer.lua
+### mGBA-http.lua
 
 At the top, there is the `logLevel` flag. This will output timestamped logs to the scripting console based on the severity of the log entry. By default it is set to **2 - Information**:
 
@@ -110,7 +110,7 @@ At the top, there is the `logLevel` flag. This will output timestamped logs to t
 ### Gotchas
 - Make sure not to load the script twice. This causes issues with recieving data. If you need to reload the script, close and reopen mGBA then load up the script again. Closing and reopening the scripting window is not enough. 
 - Most commands require a ROM being loaded into mGBA.
-- Unless you change the ports in both appsettings.json and in mGBASocketServer.lua, you cannot run more than one instance of mGBA-http.
+- Unless you change the ports in both appsettings.json and in mGBA-http.lua, you cannot run more than one instance of mGBA-http.
 
 
 ### Examples

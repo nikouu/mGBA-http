@@ -11,7 +11,7 @@ namespace mGBAHttp
             {
                 MgbaException => (StatusCodes.Status502BadGateway, exception.Message),
                 TimeoutException => (StatusCodes.Status504GatewayTimeout, exception.Message),
-                SocketException => (StatusCodes.Status502BadGateway, "Could not communicate with mGBA. Is mGBA running with mGBASocketServer.lua loaded?"),
+                SocketException => (StatusCodes.Status502BadGateway, "Could not communicate with mGBA. Is mGBA running with mGBA-http.lua loaded?"),
                 BadHttpRequestException badRequest => (badRequest.StatusCode, badRequest.Message),
                 _ => (StatusCodes.Status500InternalServerError, exception.Message)
             };

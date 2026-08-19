@@ -10,7 +10,7 @@ endpoint, so they get only the POST.
 The script prints one line per check, and a count at the end. It exits with code 1 if any check
 failed. The binary writes its own output to a log file in the temporary folder.
 
-mGBA must be running with mGBASocketServer.lua loaded and a ROM loaded.
+mGBA must be running with mGBA-http.lua loaded and a ROM loaded.
 
 The extension check loads BtnTest.gba, which replaces the ROM in mGBA, and the last check resets
 the loaded ROM. Both run after every read-only check. A programmatic load also stops mGBA from
@@ -151,7 +151,7 @@ if (Test-PortOpen -PortNumber $Port) {
     throw "Port $Port is already in use. Stop the other mGBA-http instance, or pass -Port."
 }
 if (-not (Test-PortOpen -PortNumber $MgbaPort)) {
-    throw "Nothing is listening on port $MgbaPort. Start mGBA, load mGBASocketServer.lua, then run this again."
+    throw "Nothing is listening on port $MgbaPort. Start mGBA, load mGBA-http.lua, then run this again."
 }
 if (-not (Test-Path $RomPath -PathType Leaf)) {
     throw "No ROM at $RomPath. The extension check needs one. Pass -RomPath to point at a ROM."

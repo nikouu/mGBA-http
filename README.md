@@ -40,9 +40,9 @@ mGBA-http works with 0.10.2+.
 ### The full mGBA-http experience
 
 1. Ensure you have [mGBA](https://mgba.io/downloads.html)
-1. Download mGBA-http and mGBASocketServer.lua from the [Releases](https://github.com/nikouu/mGBA-http/releases/latest) section 
+1. Download mGBA-http and mGBA-http.lua from the [Releases](https://github.com/nikouu/mGBA-http/releases/latest) section 
 1. Run mGBA-http
-1. In mGBA, go to Tools > Scripting, then File > Load script and load in mGBASocketServer.lua
+1. In mGBA, go to Tools > Scripting, then File > Load script and load in mGBA-http.lua
 
 Once a ROM is loaded, you are now ready to start using mGBA-http.
 
@@ -50,7 +50,7 @@ For a more in-depth guide with pictures, see the [Full Guide (application)](docs
 
 ### Just the script
 
-A lot of users find the [mGBASocketServer.lua](mGBASocketServer.lua) script alone is useful enough for their projects. See the following for which version to download:
+A lot of users find the [mGBA-http.lua](mGBA-http.lua) script alone is useful enough for their projects. See the following for which version to download:
 
 - [Version 0.5.0](https://github.com/nikouu/mGBA-http/releases/tag/0.5.0) and lower is easier to use. Simply fire off the message
 - [Version 0.6.0](https://github.com/nikouu/mGBA-http/releases/tag/0.6.0) and higher requires `<|END|>` to be at the end of the request, and will reply with `<|END|>` at the end of the response.

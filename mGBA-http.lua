@@ -46,7 +46,7 @@ function beginSocket()
 				server:close()
 				logError(formatSocketMessage("Listen", err))
 			else
-				logWithOverride("mGBA script server " .. VERSION .. " ready. Listening on port " .. port, 4)
+				logWithOverride("mGBA-http script server " .. VERSION .. " ready. Listening on port " .. port, 4)
 				server:add("received", socketAccept)
 			end
 		end
