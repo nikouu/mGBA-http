@@ -92,7 +92,6 @@ function socketReceived(id)
                 local message = conn.buffer:sub(1, marker_start - 1)
                 conn.buffer = conn.buffer:sub(marker_end + 1)
                 local trimmedMessage = message:match("^(.-)%s*$")
-                logDebug("Socket ", id, " Received: ", trimmedMessage)
 
                 local success, returnValue = pcall(function()
                     return messageRouter(trimmedMessage)
@@ -173,8 +172,10 @@ function socketStop(id)
 	end
 end
 
+-- Usually when a client disconnects. The real problem will happen on 
+-- the next read or send
 function socketError(id)
-	logError(formatSocketMessage(id, "Socket error"))
+	logDebug("Socket ", id, " error, closing")
 	socketStop(id)
 end
 
@@ -252,7 +253,6 @@ function messageRouter(rawMessage)
 	logInformation("Received: ", rawMessage)
 
 	logDebug("messageRouter:",
-		"\n\tRaw message: ", rawMessage,
 		"\n\tmessageType: ", messageType or "",
 		"\n\tmessageValue1: ", messageValue1 or "",
 		"\n\tmessageValue2: ", messageValue2 or "",
@@ -527,8 +527,8 @@ end
 -- ***********************
 
 function truncate(text)
-    if truncateLogs and #text > 500 then
-        return string.sub(text, 1, 497) .. "..."
+    if truncateLogs and #text > 120 then
+        return string.sub(text, 1, 120) .. "... (" .. #text .. " chars)"
     end
     return text
 end
