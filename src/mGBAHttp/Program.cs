@@ -106,6 +106,9 @@ app.MapScalarApiReference(options =>
         .WithTheme(ScalarTheme.Purple);
 });
 
+// Redirect root to Scalar docs
+app.MapGet("/", () => Results.Redirect("/scalar")).ExcludeFromDescription();
+
 app.MapCoreEndpoints();
 app.MapConsoleEndpoints();
 app.MapCoreAdapterEndpoints();
