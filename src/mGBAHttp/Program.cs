@@ -20,9 +20,11 @@ SetupConsoleAnsiSupport();
 
 Console.Title = $"mGBA-http {programVersionString}";
 
+var commandLineArgs = ExpandValuelessFlags(args);
+
 var builder = WebApplication.CreateSlimBuilder(new WebApplicationOptions
 {
-    Args = args,
+    Args = commandLineArgs,
     // appsettings.json is resolved from the content root, which defaults to the working directory.
     // mGBA-http ships appsettings.json beside the binary, so anything launching it from elsewhere
     // (a script, a shortcut with "Start in" set) would silently ignore the file.
@@ -33,11 +35,12 @@ builder.WebHost.UseKestrelHttpsConfiguration();
 
 // Short aliases for the settings users override most. The full keys (--mgba-http:Socket:Port)
 // and the built in --urls keep working.
-builder.Configuration.AddCommandLine(args, new Dictionary<string, string>
+builder.Configuration.AddCommandLine(commandLineArgs, new Dictionary<string, string>
 {
     ["--mgba-ip"] = "mgba-http:Socket:IpAddress",
     ["--mgba-port"] = "mgba-http:Socket:Port",
-    ["--detailed"] = "mgba-http:Console:Detailed"
+    ["--detailed"] = "mgba-http:Console:Detailed",
+    ["--nologo"] = "mgba-http:Console:NoLogo"
 });
 
 builder.Services.ConfigureHttpJsonOptions(options =>
@@ -111,6 +114,32 @@ app.MapButtonEndpoints();
 app.MapExtensionEndpoints();
 
 app.Run();
+
+// The command line configuration provider has no valueless flags, so a bare --detailed or --nologo
+// is read as a key awaiting a value and dropped without error. Rewriting it to --flag=true makes the
+// bare form work the way it does in other dotnet tools. An explicit value is left alone, so
+// --detailed false still turns the setting off.
+static string[] ExpandValuelessFlags(string[] args)
+{
+    string[] booleanFlags = ["--nologo", "--detailed"];
+    string[]? expanded = null;
+
+    for (var i = 0; i < args.Length; i++)
+    {
+        var isBooleanFlag = Array.Exists(booleanFlags, flag => string.Equals(args[i], flag, StringComparison.OrdinalIgnoreCase));
+        var hasValue = i + 1 < args.Length && !args[i + 1].StartsWith('-');
+
+        if (!isBooleanFlag || hasValue)
+        {
+            continue;
+        }
+
+        expanded ??= (string[])args.Clone();
+        expanded[i] = $"{args[i]}=true";
+    }
+
+    return expanded ?? args;
+}
 
 static void SetupConsoleAnsiSupport()
 {

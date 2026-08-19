@@ -6,6 +6,7 @@ public sealed class ConsoleOptions
 {
     public const string Section = "mgba-http:Console";
     public bool Detailed { get; set; }
+    public bool NoLogo { get; set; }
 }
 
 public sealed class ConsoleReporter
@@ -26,16 +27,24 @@ public sealed class ConsoleReporter
 ";
 
     private readonly bool _detailed;
+    private readonly bool _noLogo;
     private readonly Lock _gate = new();
 
-    public ConsoleReporter(IOptions<ConsoleOptions> options) => _detailed = options.Value.Detailed;
+    public ConsoleReporter(IOptions<ConsoleOptions> options)
+    {
+        _detailed = options.Value.Detailed;
+        _noLogo = options.Value.NoLogo;
+    }
 
     public void Header(IEnumerable<string> urls)
     {
         lock (_gate)
         {
-            Console.WriteLine($"{Purple}{Banner}{Reset}");
-            Console.WriteLine("    https://github.com/nikouu/mGBA-http\n");
+            if (!_noLogo)
+            {
+                Console.WriteLine($"{Purple}{Banner}{Reset}");
+                Console.WriteLine("    https://github.com/nikouu/mGBA-http\n");
+            }
 
             foreach (var url in urls)
             {
