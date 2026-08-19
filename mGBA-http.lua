@@ -23,8 +23,19 @@ local ERROR_RETURN <const> = "<|ERROR|>";
 -- ***********************
 
 local server = nil
-local socketList = {}
-local nextID = 1
+
+-- id -> { id, sock, buffer, sendQueue, sendOffset }
+--
+--   id         - this connection's key in the table above, carried inside the record so functions
+--                that take a connection can log it without also being passed the id.
+--   sock       - the mGBA socket this connection reads from and writes to.
+--   buffer     - bytes received so far. A read can return half a message, or several at once, so
+--                bytes accumulate here until TERMINATION_MARKER shows where a message ends.
+--   sendQueue  - FIFO of replies waiting to go out. Only the reply at the head is ever in flight.
+--   sendOffset - how many bytes of the head reply the socket has accepted. Resets to 0 on dequeue,
+--                so it always refers to whichever reply is at the head.
+local connections = {}
+local nextSocketId = 1
 local port = 8888
 
 function beginSocket()
@@ -59,27 +70,27 @@ function socketAccept()
 		logError(formatSocketMessage("Accept", err))
 		return
 	end
-	local id = nextID
-	nextID = id + 1
-	socketList[id] = sock
+	local id = nextSocketId
+	nextSocketId = id + 1
+	connections[id] = { id = id, sock = sock, buffer = "", sendQueue = {}, sendOffset = 0 }
 	sock:add("received", function() socketReceived(id) end)
 	sock:add("error", function() socketError(id) end)
 	logDebug("Socket ", id, " connected")
 end
 
 function socketReceived(id)
-    local sock = socketList[id]
-    if not sock then return end
-    sock._buffer = sock._buffer or ""
+    local conn = connections[id]
+    if not conn then return end
+    local sock = conn.sock
     while true do
         local chunk, err = sock:receive(1024)
         if chunk then
-            sock._buffer = sock._buffer .. chunk
+            conn.buffer = conn.buffer .. chunk
             while true do
-                local marker_start, marker_end = sock._buffer:find(TERMINATION_MARKER, 1, true)
+                local marker_start, marker_end = conn.buffer:find(TERMINATION_MARKER, 1, true)
                 if not marker_start then break end
-                local message = sock._buffer:sub(1, marker_start - 1)
-                sock._buffer = sock._buffer:sub(marker_end + 1)
+                local message = conn.buffer:sub(1, marker_start - 1)
+                conn.buffer = conn.buffer:sub(marker_end + 1)
                 local trimmedMessage = message:match("^(.-)%s*$")
                 logDebug("Socket ", id, " Received: ", trimmedMessage)
 
@@ -89,9 +100,9 @@ function socketReceived(id)
 
                 if not success then
                     logError("Error executing command: ", tostring(returnValue))
-                    sendReply(id, sock, ERROR_RETURN)
+                    sendReply(conn, ERROR_RETURN)
                 else
-                    sendReply(id, sock, returnValue)
+                    sendReply(conn, returnValue)
                 end
             end
         elseif err then
@@ -112,27 +123,53 @@ function socketReceived(id)
     end
 end
 
--- mGBA sometimes accepts only part of a reply, which truncates it and leaves the client waiting.
--- This doesn't fully fix the problem, but does surface it. 1.0.0 will redo Lua socket work to guarantee
--- the socket is drained properly
-function sendReply(id, sock, payload)
-	local message = payload .. TERMINATION_MARKER
-	local sent, err = sock:send(message)
+-- Script sockets are non-blocking, so send accepts as many bytes as the buffer has room for and
+-- returns the index of the last byte it took. The buffer only drains while mGBA's event loop runs,
+-- and this function is called from a socket callback that is blocking that loop, so retrying here
+-- can't make progress. The unsent remainder stays queued on the connection and continues from the frame callback.
+function sendReply(conn, payload)
+	table.insert(conn.sendQueue, payload .. TERMINATION_MARKER)
+	sendPending(conn)
+end
 
-	if err then
-		logError("Socket ", id, " send of ", #message, " bytes failed: ", tostring(err))
-	elseif sent ~= #message then
-		logWarning("Socket ", id, " sent only ", tostring(sent), " of ", #message, " bytes")
-	else
-		logDebug("Socket ", id, " sent ", #message, " bytes")
+function sendPending(conn)
+	while #conn.sendQueue > 0 do
+		local message = conn.sendQueue[1]
+		local sent, err = conn.sock:send(message, conn.sendOffset + 1)
+
+		if err then
+			logError("Socket ", conn.id, " send of ", #message, " bytes failed: ", tostring(err))
+			conn.sendQueue = {}
+			conn.sendOffset = 0
+			return
+		end
+
+		if sent < #message then
+			-- No progress is possible until the event loop runs again, so stop and wait for the frame.
+			conn.sendOffset = sent
+			logDebug("Socket ", conn.id, " sent ", sent, " of ", #message, " bytes, resuming next frame")
+			return
+		end
+
+		table.remove(conn.sendQueue, 1)
+		conn.sendOffset = 0
+		logDebug("Socket ", conn.id, " sent ", #message, " bytes")
 	end
 end
 
+-- The frame callback is the only continuation point available for sockets that
+-- haven't finished sending
+callbacks:add("frame", function()
+	for _, conn in pairs(connections) do
+		sendPending(conn)
+	end
+end)
+
 function socketStop(id)
-	local sock = socketList[id]
-	socketList[id] = nil
-	if sock then
-		sock:close()
+	local conn = connections[id]
+	connections[id] = nil
+	if conn then
+		conn.sock:close()
 	end
 end
 
