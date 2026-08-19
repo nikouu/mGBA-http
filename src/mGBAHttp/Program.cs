@@ -20,7 +20,14 @@ SetupConsoleAnsiSupport();
 
 Console.Title = $"mGBA-http {programVersionString}";
 
-var builder = WebApplication.CreateSlimBuilder(args);
+var builder = WebApplication.CreateSlimBuilder(new WebApplicationOptions
+{
+    Args = args,
+    // appsettings.json is resolved from the content root, which defaults to the working directory.
+    // mGBA-http ships appsettings.json beside the binary, so anything launching it from elsewhere
+    // (a script, a shortcut with "Start in" set) would silently ignore the file.
+    ContentRootPath = AppContext.BaseDirectory
+});
 
 builder.WebHost.UseKestrelHttpsConfiguration();
 
