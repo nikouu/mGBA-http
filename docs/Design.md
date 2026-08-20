@@ -79,4 +79,4 @@ There are accepted limitations to mGBA-http.
 
 - It takes time for an HTTP request from origin to mGBA-http then time again from mGBA-http to mGBA. 
 	- This makes mGBA-http unsuitable for frame sensitive inputs.
-- Not all mGBA API calls are simple and may return complex objects. Unless there is a complelling reason, these will not be implemented.
+- Not all mGBA API calls are simple and may return complex objects. Unless there is a compelling reason, these will not be implemented.

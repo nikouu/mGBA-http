@@ -27,7 +27,9 @@ Client to mGBA-http relies on HTTP. Pre-1.0.0 it has the downsides of:
 
 #### Text vs JSON
 
-The big choice is whether to move from `text/plain`, extremely simple and matches the mGBA design (both design constraints) to `application/json`. The rest are necessary fixes. It does give a bit more overhead, but any modern language with JSON capabilities is so easily equipped to do this that it's a non-issue. It might even *be* an issue to have to deal with raw strings instead of assumed API JSON objects.
+The big choice is whether to move from `text/plain`, extremely simple and matches the mGBA design (both design constraints) to `application/json`. The rest are necessary fixes. It does give a bit more overhead, but any modern language with JSON capabilities is so easily equipped to do this that it's a non-issue. 
+
+It might even *be* an issue to have to deal with raw strings instead of assumed API JSON objects. Does this make sense with keep data transformations at a minimum? Technically JSON and mGBA don't talk, but since the overall goal is simplicy, and JSON is the de facto API format, then it probably does make sense to move slightly away from the mGBA shape (negative) to a regular API shape (much more positive). 
 
 ## Socket wire changes
 
